@@ -1,73 +1,63 @@
-# 7.23. cudaExternalSemaphoreHandleDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalSemaphoreHandleDesc.html
 
-**Source:** structcudaExternalSemaphoreHandleDesc.html#structcudaExternalSemaphoreHandleDesc
+#  7.23. cudaExternalSemaphoreHandleDesc
 
+`` struct cudaExternalSemaphoreHandleDesc ``
 
-### Public Variables
+External semaphore handle descriptor.
 
-int fd
+Public Members
 
-unsigned int flags
+`` int fd ``
 
-void * handle
+File descriptor referencing the semaphore object.
 
-const void * name
-
-const void * nvSciSyncObj
-
-unsigned int reserved[16]
-
-enumcudaExternalSemaphoreHandleType type
-
-cudaExternalSemaphoreHandleDesc::@13::@14 win32
-
-
-### Variables
-
-int cudaExternalSemaphoreHandleDesc::fd
-
-
-File descriptor referencing the semaphore object. Valid when type is one of the following:
+Valid when type is one of the following:
 
   * cudaExternalSemaphoreHandleTypeOpaqueFd
 
   * cudaExternalSemaphoreHandleTypeTimelineSemaphoreFd
 
+`` unsigned int flags ``
 
-unsigned int cudaExternalSemaphoreHandleDesc::flags
+Flags reserved for the future.
 
+Must be zero.
 
-Flags reserved for the future. Must be zero.
+`` void *handle ``
 
-void * cudaExternalSemaphoreHandleDesc::handle
+Valid NT handle.
 
+Must be NULL if ‘name’ is non-NULL
 
-Valid NT handle. Must be NULL if 'name' is non-NULL
+`` union cudaExternalSemaphoreHandleDesc::[anonymous] handle ``
 
-const void * cudaExternalSemaphoreHandleDesc::name
+`` const void *name ``
 
+Name of a valid synchronization primitive.
 
-Name of a valid synchronization primitive. Must be NULL if 'handle' is non-NULL.
+Must be NULL if ‘handle’ is non-NULL.
 
-const void * cudaExternalSemaphoreHandleDesc::nvSciSyncObj
+`` const void *nvSciSyncObj ``
 
+Valid NvSciSyncObj.
 
-Valid NvSciSyncObj. Must be non NULL
+Must be non NULL
 
-unsigned int cudaExternalSemaphoreHandleDesc::reserved[16]
+`` unsigned int reserved[16] ``
 
+Must be zero.
 
-Must be zero
+`` enum cudaExternalSemaphoreHandleType type ``
 
-enumcudaExternalSemaphoreHandleTypecudaExternalSemaphoreHandleDesc::type
+Type of the handle.
 
+`` struct cudaExternalSemaphoreHandleDesc::[anonymous]::[anonymous] win32 ``
 
-Type of the handle
+Win32 handle referencing the semaphore object.
 
-cudaExternalSemaphoreHandleDesc::@13::@14 cudaExternalSemaphoreHandleDesc::win32
-
-
-Win32 handle referencing the semaphore object. Valid when type is one of the following:
+Valid when type is one of the following:
 
   * cudaExternalSemaphoreHandleTypeOpaqueWin32
 
@@ -79,12 +69,4 @@ Win32 handle referencing the semaphore object. Valid when type is one of the fol
 
   * cudaExternalSemaphoreHandleTypeKeyedMutex
 
-  * cudaExternalSemaphoreHandleTypeTimelineSemaphoreWin32 Exactly one of 'handle' and 'name' must be non-NULL. If type is one of the following: cudaExternalSemaphoreHandleTypeOpaqueWin32KmtcudaExternalSemaphoreHandleTypeKeyedMutexKmt then 'name' must be NULL.
-
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+  * cudaExternalSemaphoreHandleTypeTimelineSemaphoreWin32 Exactly one of ‘handle’ and ‘name’ must be non-NULL. If type is one of the following: cudaExternalSemaphoreHandleTypeOpaqueWin32Kmt cudaExternalSemaphoreHandleTypeKeyedMutexKmt then ‘name’ must be NULL.

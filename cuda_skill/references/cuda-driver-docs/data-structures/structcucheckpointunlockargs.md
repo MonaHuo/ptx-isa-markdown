@@ -1,17 +1,16 @@
-# 7.9. CUcheckpointUnlockArgs
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUcheckpointUnlockArgs.html
 
-**Source:** structCUcheckpointUnlockArgs.html#structCUcheckpointUnlockArgs
+#  7.52. CUcheckpointUnlockArgs
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUcheckpointUnlockArgs ``
 
-cuuint64_t reserved[8]
+CUDA checkpoint optional unlock arguments.
 
+Public Members
 
-### Variables
+`` cuuint64_t reserved[8] ``
 
-cuuint64_t CUcheckpointUnlockArgs::reserved[8]
-
-
-Reserved for future use, must be zeroed
-
+Reserved for future use, must be zeroed.

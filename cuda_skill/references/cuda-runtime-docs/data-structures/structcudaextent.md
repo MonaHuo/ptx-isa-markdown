@@ -1,37 +1,26 @@
-# 7.19. cudaExtent
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExtent.html
 
-**Source:** structcudaExtent.html#structcudaExtent
+#  7.19. cudaExtent
 
+`` struct cudaExtent ``
 
-### Public Variables
+CUDA extent.
 
-size_t depth
+See also
 
-size_t height
+make_cudaExtent
 
-size_t width
+Public Members
 
+`` size_t depth ``
 
-### Variables
+Depth in elements.
 
-size_t cudaExtent::depth
+`` size_t height ``
 
+Height in elements.
 
-Depth in elements
+`` size_t width ``
 
-size_t cudaExtent::height
-
-
-Height in elements
-
-size_t cudaExtent::width
-
-
-Width in elements when referring to array memory, in bytes when referring to linear memory
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width in elements when referring to array memory, in bytes when referring to linear memory.

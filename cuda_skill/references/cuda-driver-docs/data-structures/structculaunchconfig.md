@@ -1,20 +1,52 @@
-# 7.68. CUlaunchConfig
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUlaunchConfig.html
 
-**Source:** structCUlaunchConfig.html#structCUlaunchConfig
+#  7.72. CUlaunchConfig
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUlaunchConfig ``
 
-CUlaunchAttribute * attrs
+CUDA extensible launch configuration.
 
-unsigned int blockDimX
+Public Members
 
-unsigned int blockDimY
+`` unsigned int gridDimX ``
 
-unsigned int blockDimZ
+Width of grid in blocks.
 
-unsigned int gridDimX
+`` unsigned int gridDimY ``
 
-unsigned int gridDimY
+Height of grid in blocks.
 
-unsigned int gridDimZ
+`` unsigned int gridDimZ ``
+
+Depth of grid in blocks.
+
+`` unsigned int blockDimX ``
+
+X dimension of each thread block.
+
+`` unsigned int blockDimY ``
+
+Y dimension of each thread block.
+
+`` unsigned int blockDimZ ``
+
+Z dimension of each thread block.
+
+`` unsigned int sharedMemBytes ``
+
+Dynamic shared-memory size per thread block in bytes.
+
+`` CUstream hStream ``
+
+Stream identifier.
+
+`` CUlaunchAttribute *attrs ``
+
+List of attributes; nullable if CUlaunchConfig::numAttrs == 0.
+
+`` unsigned int numAttrs ``
+
+Number of attributes populated in CUlaunchConfig::attrs.

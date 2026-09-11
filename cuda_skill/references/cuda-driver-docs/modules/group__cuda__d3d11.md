@@ -1,90 +1,101 @@
-# 6.43. Direct3D 11 Interoperability
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__D3D11.html
 
-**Source:** group__CUDA__D3D11.html#group__CUDA__D3D11
+#  6.9. Direct3D 11 Interoperability
 
+This section describes the Direct3D 11 interoperability functions of the low-level CUDA driver application programming interface.
 
-### Modules
+Note that mapping of Direct3D 11 resources is performed with the graphics API agnostic, resource mapping interface described in Graphics Interoperability.
 
-[Direct3D 11 Interoperability [DEPRECATED]](https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__D3D11__DEPRECATED.html#group__CUDA__D3D11__DEPRECATED)
+APIs
 
+Direct3D 11 Interoperability [DEPRECATED]
 
+This section describes deprecated Direct3D 11 interoperability functionality.
 
-### Enumerations
+##  6.9.2. Enumerations
 
-enum CUd3d11DeviceList
+`` enum CUd3d11DeviceList ``
 
+CUDA devices corresponding to a D3D11 device.
 
-### Functions
+_Values:_
 
-CUresult cuD3D11GetDevice ( CUdevice* pCudaDevice, IDXGIAdapter* pAdapter )
+`` enumerator CU_D3D11_DEVICE_LIST_ALL ``
 
+The CUDA devices for all GPUs used by a D3D11 device.
+
+`` enumerator CU_D3D11_DEVICE_LIST_CURRENT_FRAME ``
+
+The CUDA devices for the GPUs used by a D3D11 device in its currently rendering frame.
+
+`` enumerator CU_D3D11_DEVICE_LIST_NEXT_FRAME ``
+
+The CUDA devices for the GPUs to be used by a D3D11 device in the next frame.
+
+##  6.9.3. Functions
+
+`` CUresult cuD3D11GetDevice(CUdevice *pCudaDevice, IDXGIAdapter *pAdapter) ``
 
 Gets the CUDA device corresponding to a display adapter.
 
-######  Parameters
-
-`pCudaDevice`
-    \- Returned CUDA device corresponding to `pAdapter`
-`pAdapter`
-    \- Adapter to query for CUDA device
-
-###### Returns
-
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_NO_DEVICE, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_NOT_FOUND, CUDA_ERROR_UNKNOWN
-
-###### Description
-
-Returns in `*pCudaDevice` the CUDA-compatible device corresponding to the adapter `pAdapter` obtained from IDXGIFactory::EnumAdapters.
+Returns in `*pCudaDevice` the CUDA-compatible device corresponding to the adapter `pAdapter` obtained from ::IDXGIFactory::EnumAdapters.
 
 If no device on `pAdapter` is CUDA-compatible the call will return CUDA_ERROR_NO_DEVICE.
 
-CUresult cuD3D11GetDevices ( unsigned int* pCudaDeviceCount, CUdevice* pCudaDevices, unsigned int  cudaDeviceCount, ID3D11Device* pD3D11Device, CUd3d11DeviceList deviceList )
+See also
 
+cuD3D11GetDevices, ::cudaD3D11GetDevice
 
-Gets the CUDA devices corresponding to a Direct3D 11 device.
+Note
 
-######  Parameters
+Note that this function may also return error codes from previous, asynchronous launches.
 
-`pCudaDeviceCount`
-    \- Returned number of CUDA devices corresponding to `pD3D11Device`
-`pCudaDevices`
-    \- Returned CUDA devices corresponding to `pD3D11Device`
-`cudaDeviceCount`
-    \- The size of the output device array `pCudaDevices`
-`pD3D11Device`
-    \- Direct3D 11 device to query for CUDA devices
-`deviceList`
-    \- The set of devices to return. This set may be CU_D3D11_DEVICE_LIST_ALL for all devices, CU_D3D11_DEVICE_LIST_CURRENT_FRAME for the devices used to render the current frame (in SLI), or CU_D3D11_DEVICE_LIST_NEXT_FRAME for the devices used to render the next frame (in SLI).
+Parameters
 
-###### Returns
+  * **pCudaDevice** – - Returned CUDA device corresponding to `pAdapter`
+
+  * **pAdapter** – - Adapter to query for CUDA device
+
+Returns
 
 CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_NO_DEVICE, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_NOT_FOUND, CUDA_ERROR_UNKNOWN
 
-###### Description
+`` CUresult cuD3D11GetDevices(unsigned int *pCudaDeviceCount, CUdevice *pCudaDevices, unsigned int cudaDeviceCount, ID3D11Device *pD3D11Device, CUd3d11DeviceList deviceList) ``
+
+Gets the CUDA devices corresponding to a Direct3D 11 device.
 
 Returns in `*pCudaDeviceCount` the number of CUDA-compatible device corresponding to the Direct3D 11 device `pD3D11Device`. Also returns in `*pCudaDevices` at most `cudaDeviceCount` of the CUDA-compatible devices corresponding to the Direct3D 11 device `pD3D11Device`.
 
 If any of the GPUs being used to render `pDevice` are not CUDA capable then the call will return CUDA_ERROR_NO_DEVICE.
 
-CUresult cuGraphicsD3D11RegisterResource ( CUgraphicsResource* pCudaResource, ID3D11Resource* pD3DResource, unsigned int  Flags )
+See also
 
+cuD3D11GetDevice, ::cudaD3D11GetDevices
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **pCudaDeviceCount** – - Returned number of CUDA devices corresponding to `pD3D11Device`
+
+  * **pCudaDevices** – - Returned CUDA devices corresponding to `pD3D11Device`
+
+  * **cudaDeviceCount** – - The size of the output device array `pCudaDevices`
+
+  * **pD3D11Device** – - Direct3D 11 device to query for CUDA devices
+
+  * **deviceList** – - The set of devices to return. This set may be CU_D3D11_DEVICE_LIST_ALL for all devices, CU_D3D11_DEVICE_LIST_CURRENT_FRAME for the devices used to render the current frame (in SLI), or CU_D3D11_DEVICE_LIST_NEXT_FRAME for the devices used to render the next frame (in SLI).
+
+Returns
+
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_NO_DEVICE, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_NOT_FOUND, CUDA_ERROR_UNKNOWN
+
+`` CUresult cuGraphicsD3D11RegisterResource(CUgraphicsResource *pCudaResource, ID3D11Resource *pD3DResource, unsigned int Flags) ``
 
 Register a Direct3D 11 resource for access by CUDA.
-
-######  Parameters
-
-`pCudaResource`
-    \- Returned graphics resource handle
-`pD3DResource`
-    \- Direct3D resource to register
-`Flags`
-    \- Parameters for resource registration
-
-###### Returns
-
-CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_INVALID_HANDLE, CUDA_ERROR_OUT_OF_MEMORY, CUDA_ERROR_UNKNOWN
-
-###### Description
 
 Registers the Direct3D 11 resource `pD3DResource` for access by CUDA and returns a CUDA handle to `pD3Dresource` in `pCudaResource`. The handle returned in `pCudaResource` may be used to map and unmap this resource until it is unregistered. On success this call will increase the internal reference count on `pD3DResource`. This reference count will be decremented when this resource is unregistered through cuGraphicsUnregisterResource().
 
@@ -92,14 +103,13 @@ This call is potentially high-overhead and should not be called every frame in i
 
 The type of `pD3DResource` must be one of the following.
 
-  * ID3D11Buffer: may be accessed through a device pointer.
+  * ::ID3D11Buffer: may be accessed through a device pointer.
 
-  * ID3D11Texture1D: individual subresources of the texture may be accessed via arrays
+  * ::ID3D11Texture1D: individual subresources of the texture may be accessed via arrays
 
-  * ID3D11Texture2D: individual subresources of the texture may be accessed via arrays
+  * ::ID3D11Texture2D: individual subresources of the texture may be accessed via arrays
 
-  * ID3D11Texture3D: individual subresources of the texture may be accessed via arrays
-
+  * ::ID3D11Texture3D: individual subresources of the texture may be accessed via arrays
 
 The `Flags` argument may be used to specify additional parameters at register time. The valid values for this parameter are
 
@@ -109,7 +119,6 @@ The `Flags` argument may be used to specify additional parameters at register ti
 
   * CU_GRAPHICS_REGISTER_FLAGS_TEXTURE_GATHER: Specifies that CUDA will perform texture gather operations on this resource.
 
-
 Not all Direct3D resources of the above types may be used for interoperability with CUDA. The following are some limitations.
 
   * The primary rendertarget may not be registered with CUDA.
@@ -117,7 +126,6 @@ Not all Direct3D resources of the above types may be used for interoperability w
   * Textures which are not of a format which is 1, 2, or 4 channels of 8, 16, or 32-bit integer or floating-point data cannot be shared.
 
   * Surfaces of depth or stencil formats cannot be shared.
-
 
 A complete list of supported DXGI formats is as follows. For compactness the notation A_{B,C,D} represents A_B, A_C, and A_D.
 
@@ -149,8 +157,24 @@ A complete list of supported DXGI formats is as follows. For compactness the not
 
   * DXGI_FORMAT_R8_{SINT,SNORM,UINT,UNORM}
 
-
 If `pD3DResource` is of incorrect type or is already registered then CUDA_ERROR_INVALID_HANDLE is returned. If `pD3DResource` cannot be registered then CUDA_ERROR_UNKNOWN is returned. If `Flags` is not one of the above specified value then CUDA_ERROR_INVALID_VALUE is returned.
 
-### Direct3D 11 Interoperability [DEPRECATED]
+See also
 
+cuGraphicsUnregisterResource, cuGraphicsMapResources, cuGraphicsSubResourceGetMappedArray, cuGraphicsResourceGetMappedPointer, ::cudaGraphicsD3D11RegisterResource
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **pCudaResource** – - Returned graphics resource handle
+
+  * **pD3DResource** – - Direct3D resource to register
+
+  * **Flags** – - Parameters for resource registration
+
+Returns
+
+CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED, CUDA_ERROR_INVALID_CONTEXT, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_INVALID_HANDLE, CUDA_ERROR_OUT_OF_MEMORY, CUDA_ERROR_UNKNOWN

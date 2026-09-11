@@ -1,27 +1,28 @@
-# 6.3. Initialization
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/group__CUDA__INITIALIZE.html
 
-**Source:** group__CUDA__INITIALIZE.html#group__CUDA__INITIALIZE
+#  6.23. Initialization
 
+This section describes the initialization functions of the low-level CUDA driver application programming interface.
 
-### Functions
+##  6.23.1. Functions
 
-CUresult cuInit ( unsigned int  Flags )
+`` CUresult cuInit(unsigned int Flags) ``
 
+Initialize the CUDA driver API Initializes the driver API and must be called before any other function from the driver API in the current process.
 
-Initialize the CUDA driver API Initializes the driver API and must be called before any other function from the driver API in the current process. Currently, the `Flags` parameter must be 0. If cuInit() has not been called, any function from the driver API will return CUDA_ERROR_NOT_INITIALIZED.
-
-######  Parameters
-
-`Flags`
-    \- Initialization flag for CUDA.
-
-###### Returns
-
-CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_INVALID_DEVICE, CUDA_ERROR_SYSTEM_DRIVER_MISMATCH, CUDA_ERROR_COMPAT_NOT_SUPPORTED_ON_DEVICE
-
-###### Description
+Currently, the `Flags` parameter must be 0. If cuInit() has not been called, any function from the driver API will return CUDA_ERROR_NOT_INITIALIZED.
 
 Note: cuInit preloads various libraries needed for JIT compilation. To opt-out of this behavior, set the environment variable CUDA_FORCE_PRELOAD_LIBRARIES=0. CUDA will lazily load JIT libraries as needed. To disable JIT entirely, set the environment variable CUDA_DISABLE_JIT=1.
 
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Parameters
+
+**Flags** – - Initialization flag for CUDA.
+
+Returns
+
+CUDA_SUCCESS, CUDA_ERROR_INVALID_VALUE, CUDA_ERROR_INVALID_DEVICE, CUDA_ERROR_SYSTEM_DRIVER_MISMATCH, CUDA_ERROR_COMPAT_NOT_SUPPORTED_ON_DEVICE

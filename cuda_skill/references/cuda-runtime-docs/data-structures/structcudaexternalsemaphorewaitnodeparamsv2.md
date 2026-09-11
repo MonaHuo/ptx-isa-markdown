@@ -1,37 +1,26 @@
-# 7.28. cudaExternalSemaphoreWaitNodeParamsV2
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalSemaphoreWaitNodeParamsV2.html
 
-**Source:** structcudaExternalSemaphoreWaitNodeParamsV2.html#structcudaExternalSemaphoreWaitNodeParamsV2
+#  7.28. cudaExternalSemaphoreWaitNodeParamsV2
 
+`` struct cudaExternalSemaphoreWaitNodeParamsV2 ``
 
-### Public Variables
+External semaphore wait node parameters.
 
-cudaExternalSemaphore_t* * extSemArray
+Public Members
 
-unsigned int numExtSems
+`` cudaExecutionContext_t ctx ``
 
-cudaExternalSemaphoreWaitParams * paramsArray
+CUDA Execution Context.
 
-
-### Variables
-
-cudaExternalSemaphore_t* * cudaExternalSemaphoreWaitNodeParamsV2::extSemArray
-
+`` cudaExternalSemaphore_t *extSemArray ``
 
 Array of external semaphore handles.
 
-unsigned int cudaExternalSemaphoreWaitNodeParamsV2::numExtSems
-
+`` unsigned int numExtSems ``
 
 Number of handles and parameters supplied in extSemArray and paramsArray.
 
-cudaExternalSemaphoreWaitParams * cudaExternalSemaphoreWaitNodeParamsV2::paramsArray
-
+`` const struct cudaExternalSemaphoreWaitParams *paramsArray ``
 
 Array of external semaphore wait parameters.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

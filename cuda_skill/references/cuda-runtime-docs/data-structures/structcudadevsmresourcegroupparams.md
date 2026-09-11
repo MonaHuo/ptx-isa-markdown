@@ -1,51 +1,34 @@
-# 7.12. cudaDevSmResourceGroupParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaDevSmResourceGroupParams.html
 
-**Source:** structcudaDevSmResourceGroupParams.html#structcudaDevSmResourceGroupParams
+#  7.11. cudaDevSmResourceGroupParams
 
+`` struct cudaDevSmResourceGroupParams ``
 
-### Public Variables
+Input data for splitting SMs.
 
-unsigned int coscheduledSmCount
+Public Members
 
-unsigned int flags
-
-unsigned int preferredCoscheduledSmCount
-
-unsigned int reserved[12]
-
-unsigned int smCount
-
-
-### Variables
-
-unsigned int cudaDevSmResourceGroupParams::coscheduledSmCount
-
+`` unsigned int coscheduledSmCount ``
 
 The amount of co-scheduled SMs grouped together for locality purposes.
 
-unsigned int cudaDevSmResourceGroupParams::flags
-
+`` unsigned int flags ``
 
 Combination of `cudaDevSmResourceGroup_flags` values to indicate this this group is created.
 
-unsigned int cudaDevSmResourceGroupParams::preferredCoscheduledSmCount
+`` unsigned int localityDomainId ``
 
+Locality domain that the SM must be located on.
+
+Only valid if cudaDevSmResourceGroupLocalityDomainId is set in flags
+
+`` unsigned int preferredCoscheduledSmCount ``
 
 When possible, combine co-scheduled groups together into larger groups of this size.
 
-unsigned int cudaDevSmResourceGroupParams::reserved[12]
+`` unsigned int reserved[11] ``
 
-
-Reserved for future use - ensure this is is zero initialized.
-
-unsigned int cudaDevSmResourceGroupParams::smCount
-
+`` unsigned int smCount ``
 
 The amount of SMs available in this resource.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

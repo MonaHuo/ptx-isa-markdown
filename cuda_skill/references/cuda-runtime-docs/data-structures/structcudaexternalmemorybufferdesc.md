@@ -1,44 +1,28 @@
-# 7.20. cudaExternalMemoryBufferDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalMemoryBufferDesc.html
 
-**Source:** structcudaExternalMemoryBufferDesc.html#structcudaExternalMemoryBufferDesc
+#  7.20. cudaExternalMemoryBufferDesc
 
+`` struct cudaExternalMemoryBufferDesc ``
 
-### Public Variables
+External memory buffer descriptor.
 
-unsigned int flags
+Public Members
 
-unsigned long long offset
+`` unsigned int flags ``
 
-unsigned int reserved[16]
+Flags reserved for future use.
 
-unsigned long long size
+Must be zero.
 
+`` unsigned long long offset ``
 
-### Variables
+Offset into the memory object where the buffer’s base is.
 
-unsigned int cudaExternalMemoryBufferDesc::flags
+`` unsigned int reserved[16] ``
 
+Must be zero.
 
-Flags reserved for future use. Must be zero.
+`` unsigned long long size ``
 
-unsigned long long cudaExternalMemoryBufferDesc::offset
-
-
-Offset into the memory object where the buffer's base is
-
-unsigned int cudaExternalMemoryBufferDesc::reserved[16]
-
-
-Must be zero
-
-unsigned long long cudaExternalMemoryBufferDesc::size
-
-
-Size of the buffer
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Size of the buffer.

@@ -1,58 +1,34 @@
-# 7.40. cudaKernelNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaKernelNodeParams.html
 
-**Source:** structcudaKernelNodeParams.html#structcudaKernelNodeParams
+#  7.41. cudaKernelNodeParams
 
+`` struct cudaKernelNodeParams ``
 
-### Public Variables
+CUDA GPU kernel node parameters.
 
-dim3 blockDim
+Public Members
 
-* extra
+`` dim3 blockDim ``
 
-void * func
+Block dimensions.
 
-dim3 gridDim
+`` void **extra ``
 
-* kernelParams
+Pointer to kernel arguments in the “extra” format.
 
-unsigned int sharedMemBytes
+`` void *func ``
 
+Kernel to launch.
 
-### Variables
+`` dim3 gridDim ``
 
-dim3 cudaKernelNodeParams::blockDim
+Grid dimensions.
 
+`` void **kernelParams ``
 
-Block dimensions
+Array of pointers to individual kernel arguments.
 
-* cudaKernelNodeParams::extra
+`` unsigned int sharedMemBytes ``
 
-
-Pointer to kernel arguments in the "extra" format
-
-void * cudaKernelNodeParams::func
-
-
-Kernel to launch
-
-dim3 cudaKernelNodeParams::gridDim
-
-
-Grid dimensions
-
-* cudaKernelNodeParams::kernelParams
-
-
-Array of pointers to individual kernel arguments
-
-unsigned int cudaKernelNodeParams::sharedMemBytes
-
-
-Dynamic shared-memory size per thread block in bytes
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Dynamic shared-memory size per thread block in bytes.

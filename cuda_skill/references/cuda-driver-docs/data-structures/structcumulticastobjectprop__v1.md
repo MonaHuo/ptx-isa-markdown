@@ -1,38 +1,28 @@
-# 7.79. CUmulticastObjectProp_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUmulticastObjectProp__v1.html
 
-**Source:** structCUmulticastObjectProp__v1.html#structCUmulticastObjectProp__v1
+#  7.86. CUmulticastObjectProp_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUmulticastObjectProp_v1 ``
 
-unsigned long long flags
+Specifies the properties for a multicast object.
 
-unsigned long long handleTypes
+Public Members
 
-unsigned int numDevices
+`` unsigned int numDevices ``
 
-size_t size
+The number of devices in the multicast team that will bind memory to this object.
 
+`` size_t size ``
 
-### Variables
+The maximum amount of memory that can be bound to this multicast object per device.
 
-unsigned long long CUmulticastObjectProp_v1::flags
+`` unsigned long long handleTypes ``
 
+Bitmask of exportable handle types (see CUmemAllocationHandleType) for this object.
 
-Flags for future use, must be zero now
+`` unsigned long long flags ``
 
-unsigned long long CUmulticastObjectProp_v1::handleTypes
-
-
-Bitmask of exportable handle types (see CUmemAllocationHandleType) for this object
-
-unsigned int CUmulticastObjectProp_v1::numDevices
-
-
-The number of devices in the multicast team that will bind memory to this object
-
-size_t CUmulticastObjectProp_v1::size
-
-
-The maximum amount of memory that can be bound to this multicast object per device
-
+Flags for future use, must be zero now.

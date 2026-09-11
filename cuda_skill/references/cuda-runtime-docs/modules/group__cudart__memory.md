@@ -1,88 +1,79 @@
-# 6.10. Memory Management
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__MEMORY.html
 
-**Source:** group__CUDART__MEMORY.html#group__CUDART__MEMORY
+#  6.25. Memory Management
 
+This section describes the memory management functions of the CUDA runtime application programming interface.
 
-### Functions
+Some functions have overloaded C++ API template versions documented separately in the C++ API Routines module.
 
-__host__ cudaError_t cudaArrayGetInfo ( cudaChannelFormatDesc* desc, cudaExtent* extent, unsigned int* flags, cudaArray_t array )
+##  6.25.1. Functions
 
+`` __host__ cudaError_t cudaArrayGetInfo(struct cudaChannelFormatDesc *desc, struct cudaExtent *extent, unsigned int *flags, cudaArray_t array) ``
 
 Gets info about the specified cudaArray.
-
-######  Parameters
-
-`desc`
-    \- Returned array type
-`extent`
-    \- Returned array shape. 2D arrays will have depth of zero
-`flags`
-    \- Returned array flags
-`array`
-    \- The cudaArray to get info for
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Returns in `*desc`, `*extent` and `*flags` respectively, the type, shape and flags of `array`.
 
 Any of `*desc`, `*extent` and `*flags` may be specified as NULL.
 
+See also
 
-**See also:**
+::cuArrayGetDescriptor, ::cuArray3DGetDescriptor
 
-cuArrayGetDescriptor, cuArray3DGetDescriptor
+Note
 
-__host__ cudaError_t cudaArrayGetMemoryRequirements ( cudaArrayMemoryRequirements* memoryRequirements, cudaArray_t array, int  device )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **desc** – - Returned array type
+
+  * **extent** – - Returned array shape. 2D arrays will have depth of zero
+
+  * **flags** – - Returned array flags
+
+  * **array** – - The ::cudaArray to get info for
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaArrayGetMemoryRequirements(struct cudaArrayMemoryRequirements *memoryRequirements, cudaArray_t array, int device) ``
 
 Returns the memory requirements of a CUDA array.
 
-######  Parameters
-
-`memoryRequirements`
-    \- Pointer to cudaArrayMemoryRequirements
-`array`
-    \- CUDA array to get the memory requirements of
-`device`
-    \- Device to get the memory requirements for
-
-###### Returns
-
-cudaSuccesscudaErrorInvalidValue
-
-###### Description
-
-Returns the memory requirements of a CUDA array in `memoryRequirements` If the CUDA array is not allocated with flag cudaArrayDeferredMappingcudaErrorInvalidValue will be returned.
+Returns the memory requirements of a CUDA array in `memoryRequirements` If the CUDA array is not allocated with flag cudaArrayDeferredMapping cudaErrorInvalidValue will be returned.
 
 The returned value in cudaArrayMemoryRequirements::size represents the total size of the CUDA array. The returned value in cudaArrayMemoryRequirements::alignment represents the alignment necessary for mapping the CUDA array.
 
-**See also:**
+See also
 
 cudaMipmappedArrayGetMemoryRequirements
 
-__host__ cudaError_t cudaArrayGetPlane ( cudaArray_t* pPlaneArray, cudaArray_t hArray, unsigned int  planeIdx )
+Parameters
 
+  * **memoryRequirements** – **[out]** \- Pointer to cudaArrayMemoryRequirements
+
+  * **array** – **[in]** \- CUDA array to get the memory requirements of
+
+  * **device** – **[in]** \- Device to get the memory requirements for
+
+Returns
+
+cudaSuccess cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaArrayGetPlane(cudaArray_t *pPlaneArray, cudaArray_t hArray, unsigned int planeIdx) ``
 
 Gets a CUDA array plane from a CUDA array.
-
-######  Parameters
-
-`pPlaneArray`
-    \- Returned CUDA array referenced by the `planeIdx`
-`hArray`
-    \- CUDA array
-`planeIdx`
-    \- Plane index
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValuecudaErrorInvalidResourceHandle
-
-###### Description
 
 Returns in `pPlaneArray` a CUDA array that represents a single format plane of the CUDA array `hArray`.
 
@@ -90,153 +81,177 @@ If `planeIdx` is greater than the maximum number of planes in this array or if t
 
 Note that if the `hArray` has format cudaChannelFormatKindNV12, then passing in 0 for `planeIdx` returns a CUDA array of the same size as `hArray` but with one 8-bit channel and cudaChannelFormatKindUnsigned as its format kind. If 1 is passed for `planeIdx`, then the returned CUDA array has half the height and width of `hArray` with two 8-bit channels and cudaChannelFormatKindUnsigned as its format kind.
 
-**See also:**
+See also
 
-cuArrayGetPlane
+::cuArrayGetPlane
 
-__host__ cudaError_t cudaArrayGetSparseProperties ( cudaArraySparseProperties* sparseProperties, cudaArray_t array )
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **pPlaneArray** – - Returned CUDA array referenced by the `planeIdx`
+
+  * **hArray** – - CUDA array
+
+  * **planeIdx** – - Plane index
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue cudaErrorInvalidResourceHandle
+
+`` __host__ cudaError_t cudaArrayGetSparseProperties(struct cudaArraySparseProperties *sparseProperties, cudaArray_t array) ``
 
 Returns the layout properties of a sparse CUDA array.
 
-######  Parameters
+Returns the layout properties of a sparse CUDA array in `sparseProperties`. If the CUDA array is not allocated with flag cudaArraySparse cudaErrorInvalidValue will be returned.
 
-`sparseProperties`
-    \- Pointer to return the cudaArraySparseProperties
-`array`
-    \- The CUDA array to get the sparse properties of
+If the returned value in cudaArraySparseProperties::flags contains cudaArraySparsePropertiesSingleMipTail, then cudaArraySparseProperties::miptailSize represents the total size of the array. Otherwise, it will be zero. Also, the returned value in cudaArraySparseProperties::miptailFirstLevel is always zero. Note that the `array` must have been allocated using cudaMallocArray or cudaMalloc3DArray. For CUDA arrays obtained using ::cudaMipmappedArrayGetLevel, cudaErrorInvalidValue will be returned. Instead, cudaMipmappedArrayGetSparseProperties must be used to obtain the sparse properties of the entire CUDA mipmapped array to which `array` belongs to.
 
-###### Returns
+See also
 
-cudaSuccesscudaErrorInvalidValue
+cudaMipmappedArrayGetSparseProperties, ::cuMemMapArrayAsync
 
-###### Description
+Parameters
 
-Returns the layout properties of a sparse CUDA array in `sparseProperties`. If the CUDA array is not allocated with flag cudaArraySparsecudaErrorInvalidValue will be returned.
+  * **sparseProperties** – **[out]** \- Pointer to return the cudaArraySparseProperties
 
-If the returned value in cudaArraySparseProperties::flags contains cudaArraySparsePropertiesSingleMipTail, then cudaArraySparseProperties::miptailSize represents the total size of the array. Otherwise, it will be zero. Also, the returned value in cudaArraySparseProperties::miptailFirstLevel is always zero. Note that the `array` must have been allocated using cudaMallocArray or cudaMalloc3DArray. For CUDA arrays obtained using cudaMipmappedArrayGetLevel, cudaErrorInvalidValue will be returned. Instead, cudaMipmappedArrayGetSparseProperties must be used to obtain the sparse properties of the entire CUDA mipmapped array to which `array` belongs to.
+  * **array** – **[in]** \- The CUDA array to get the sparse properties of
 
-**See also:**
+Returns
 
-cudaMipmappedArrayGetSparseProperties, cuMemMapArrayAsync
+cudaSuccess cudaErrorInvalidValue
 
-__host__  __device__ cudaError_t cudaFree ( void* devPtr )
-
+`` __host__ cudaError_t cudaFree(void *devPtr) ``
 
 Frees memory on the device.
-
-######  Parameters
-
-`devPtr`
-    \- Device pointer to memory to free
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Frees the memory space pointed to by `devPtr`, which must have been returned by a previous call to one of the following memory allocation APIs - cudaMalloc(), cudaMallocPitch(), cudaMallocManaged(), cudaMallocAsync(), cudaMallocFromPoolAsync().
 
 Note - This API will not perform any implicit synchronization when the pointer was allocated with cudaMallocAsync or cudaMallocFromPoolAsync. Callers must ensure that all accesses to these pointer have completed before invoking cudaFree. For best performance and memory reuse, users should use cudaFreeAsync to free memory allocated via the stream ordered memory allocator. For all other pointers, this API may perform implicit synchronization.
 
-If cudaFree(`devPtr`) has already been called before, an error is returned. If `devPtr` is 0, no operation is performed. cudaFree() returns cudaErrorValue in case of failure.
+If cudaFree(`devPtr`) has already been called before, an error is returned. If `devPtr` is 0, no operation is performed. cudaFree() returns ::cudaErrorValue in case of failure.
 
 The device version of cudaFree cannot be used with a `*devPtr` allocated using the host API, and vice versa.
 
+See also
 
-**See also:**
+cudaMalloc, cudaMallocPitch, cudaMallocManaged, cudaMallocArray, cudaFreeArray, cudaMallocAsync, cudaMallocFromPoolAsync cudaMallocHost (C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaFreeAsync cudaHostAlloc, ::cuMemFree
 
-cudaMalloc, cudaMallocPitch, cudaMallocManaged, cudaMallocArray, cudaFreeArray, cudaMallocAsync, cudaMallocFromPoolAsynccudaMallocHost ( C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaFreeAsynccudaHostAlloc, cuMemFree
+Note
 
-__host__ cudaError_t cudaFreeArray ( cudaArray_t array )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**devPtr** – - Device pointer to memory to free
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaFreeArray(cudaArray_t array) ``
 
 Frees an array on the device.
 
-######  Parameters
+Frees the CUDA array `array`, which must have been returned by a previous call to cudaMallocArray(). If `devPtr` is 0, no operation is performed.
 
-`array`
-    \- Pointer to array to free
+See also
 
-###### Returns
+cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, ::cuArrayDestroy
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**array** – - Pointer to array to free
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
-
-Frees the CUDA array `array`, which must have been returned by a previous call to cudaMallocArray(). If `devPtr` is 0, no operation is performed.
-
-
-**See also:**
-
-cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, cuArrayDestroy
-
-__host__ cudaError_t cudaFreeHost ( void* ptr )
-
+`` __host__ cudaError_t cudaFreeHost(void *ptr) ``
 
 Frees page-locked memory.
 
-######  Parameters
+Frees the memory space pointed to by `hostPtr`, which must have been returned by a previous call to cudaMallocHost() or cudaHostAlloc().
 
-`ptr`
-    \- Pointer to memory to free
+See also
 
-###### Returns
+cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMallocHost (C API), cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, ::cuMemFreeHost
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**ptr** – - Pointer to memory to free
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
-
-Frees the memory space pointed to by `hostPtr`, which must have been returned by a previous call to cudaMallocHost() or cudaHostAlloc().
-
-
-**See also:**
-
-cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMallocHost ( C API), cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, cuMemFreeHost
-
-__host__ cudaError_t cudaFreeMipmappedArray ( cudaMipmappedArray_t mipmappedArray )
-
+`` __host__ cudaError_t cudaFreeMipmappedArray(cudaMipmappedArray_t mipmappedArray) ``
 
 Frees a mipmapped array on the device.
 
-######  Parameters
+Frees the CUDA mipmapped array `mipmappedArray`, which must have been returned by a previous call to cudaMallocMipmappedArray(). If `devPtr` is 0, no operation is performed.
 
-`mipmappedArray`
-    \- Pointer to mipmapped array to free
+See also
 
-###### Returns
+cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, ::cuMipmappedArrayDestroy
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**mipmappedArray** – - Pointer to mipmapped array to free
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
-
-Frees the CUDA mipmapped array `mipmappedArray`, which must have been returned by a previous call to cudaMallocMipmappedArray(). If `devPtr` is 0, no operation is performed.
-
-
-**See also:**
-
-cudaMalloc, cudaMallocPitch, cudaFree, cudaMallocArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, cuMipmappedArrayDestroy
-
-__host__ cudaError_t cudaGetMipmappedArrayLevel ( cudaArray_t* levelArray, cudaMipmappedArray_const_t mipmappedArray, unsigned int  level )
-
+`` __host__ cudaError_t cudaGetMipmappedArrayLevel(cudaArray_t *levelArray, cudaMipmappedArray_const_t mipmappedArray, unsigned int level) ``
 
 Gets a mipmap level of a CUDA mipmapped array.
-
-######  Parameters
-
-`levelArray`
-    \- Returned mipmap level CUDA array
-`mipmappedArray`
-    \- CUDA mipmapped array
-`level`
-    \- Mipmap level
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValuecudaErrorInvalidResourceHandle
-
-###### Description
 
 Returns in `*levelArray` a CUDA array that represents a single mipmap level of the CUDA mipmapped array `mipmappedArray`.
 
@@ -244,101 +259,121 @@ If `level` is greater than the maximum number of levels in this mipmapped array,
 
 If `mipmappedArray` is NULL, cudaErrorInvalidResourceHandle is returned.
 
+See also
 
-**See also:**
+cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, ::cuMipmappedArrayGetLevel
 
-cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, cuMipmappedArrayGetLevel
+Note
 
-__host__ cudaError_t cudaGetSymbolAddress ( void** devPtr, const void* symbol )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **levelArray** – - Returned mipmap level CUDA array
+
+  * **mipmappedArray** – - CUDA mipmapped array
+
+  * **level** – - Mipmap level
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue cudaErrorInvalidResourceHandle
+
+`` __host__ cudaError_t cudaGetSymbolAddress(void **devPtr, const void *symbol) ``
 
 Finds the address associated with a CUDA symbol.
 
-######  Parameters
+Returns in `*devPtr` the address of symbol `symbol` on the device. `symbol` is a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in the global or constant memory space, `*devPtr` is unchanged and the error cudaErrorInvalidSymbol is returned.
 
-`devPtr`
-    \- Return device pointer associated with symbol
-`symbol`
-    \- Device symbol address
+See also
 
-###### Returns
+cudaGetSymbolAddress (C++ API), cudaGetSymbolSize (C API), ::cuModuleGetGlobal
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Return device pointer associated with symbol
+
+  * **symbol** – - Device symbol address
+
+Returns
 
 cudaSuccess, cudaErrorInvalidSymbol, cudaErrorNoKernelImageForDevice
 
-###### Description
-
-Returns in `*devPtr` the address of symbol `symbol` on the device. `symbol` is a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in the global or constant memory space, `*devPtr` is unchanged and the error cudaErrorInvalidSymbol is returned.
-
-  *   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
-
-cudaGetSymbolAddress ( C++ API), cudaGetSymbolSize ( C API), cuModuleGetGlobal
-
-__host__ cudaError_t cudaGetSymbolSize ( size_t* size, const void* symbol )
-
+`` __host__ cudaError_t cudaGetSymbolSize(size_t *size, const void *symbol) ``
 
 Finds the size of the object associated with a CUDA symbol.
 
-######  Parameters
+Returns in `*size` the size of symbol `symbol`. `symbol` is a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in global or constant memory space, `*size` is unchanged and the error cudaErrorInvalidSymbol is returned.
 
-`size`
-    \- Size of object associated with symbol
-`symbol`
-    \- Device symbol address
+See also
 
-###### Returns
+cudaGetSymbolAddress (C API), cudaGetSymbolSize (C++ API), ::cuModuleGetGlobal
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **size** – - Size of object associated with symbol
+
+  * **symbol** – - Device symbol address
+
+Returns
 
 cudaSuccess, cudaErrorInvalidSymbol, cudaErrorNoKernelImageForDevice
 
-###### Description
-
-Returns in `*size` the size of symbol `symbol`. `symbol` is a variable that resides in global or constant memory space. If `symbol` cannot be found, or if `symbol` is not declared in global or constant memory space, `*size` is unchanged and the error cudaErrorInvalidSymbol is returned.
-
-  *   * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
-
-cudaGetSymbolAddress ( C API), cudaGetSymbolSize ( C++ API), cuModuleGetGlobal
-
-__host__ cudaError_t cudaHostAlloc ( void** pHost, size_t size, unsigned int  flags )
-
+`` __host__ cudaError_t cudaHostAlloc(void **pHost, size_t size, unsigned int flags) ``
 
 Allocates page-locked memory on the host.
 
-######  Parameters
-
-`pHost`
-    \- Device pointer to allocated memory
-`size`
-    \- Requested allocation size in bytes
-`flags`
-    \- Requested properties of allocated memory
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
-
-###### Description
-
-Allocates `size` bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as cudaMemcpy(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc(). Allocating excessive amounts of pinned memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
+Allocates `size` bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as cudaMemcpy(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as ::malloc(). Allocating excessive amounts of pinned memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
 
 The `flags` parameter enables different options to be specified that affect the allocation, as follows.
 
-  * cudaHostAllocDefault: This flag's value is defined to be 0 and causes cudaHostAlloc() to emulate cudaMallocHost().
+  * cudaHostAllocDefault: This flag’s value is defined to be 0 and causes cudaHostAlloc() to emulate cudaMallocHost().
 
   * cudaHostAllocPortable: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
 
   * cudaHostAllocMapped: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling cudaHostGetDevicePointer().
 
   * cudaHostAllocWriteCombined: Allocates the memory as write-combined (WC). WC memory can be transferred across the PCI Express bus more quickly on some system configurations, but cannot be read efficiently by most CPUs. WC memory is a good option for buffers that will be written by the CPU and read by the device via mapped pinned memory or host->device transfers.
-
 
 All of these flags are orthogonal to one another: a developer may allocate memory that is portable, mapped and/or write-combined with no restrictions.
 
@@ -348,30 +383,37 @@ The cudaHostAllocMapped flag may be specified on CUDA contexts for devices that 
 
 Memory allocated by this function must be freed with cudaFreeHost().
 
+See also
 
-**See also:**
+cudaSetDeviceFlags, cudaMallocHost (C API), cudaFreeHost, cudaGetDeviceFlags, ::cuMemHostAlloc
 
-cudaSetDeviceFlags, cudaMallocHost ( C API), cudaFreeHost, cudaGetDeviceFlags, cuMemHostAlloc
+Note
 
-__host__ cudaError_t cudaHostGetDevicePointer ( void** pDevice, void* pHost, unsigned int  flags )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **pHost** – - Device pointer to allocated memory
+
+  * **size** – - Requested allocation size in bytes
+
+  * **flags** – - Requested properties of allocated memory
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation, cudaErrorExternalDevice
+
+`` __host__ cudaError_t cudaHostGetDevicePointer(void **pDevice, void *pHost, unsigned int flags) ``
 
 Passes back device pointer of mapped host memory allocated by cudaHostAlloc or registered by cudaHostRegister.
-
-######  Parameters
-
-`pDevice`
-    \- Returned device pointer for mapped memory
-`pHost`
-    \- Requested host pointer mapping
-`flags`
-    \- Flags for extensions (must be 0 for now)
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
-
-###### Description
 
 Passes back the device pointer corresponding to the mapped, pinned host buffer allocated by cudaHostAlloc() or registered by cudaHostRegister().
 
@@ -381,59 +423,73 @@ For devices that have a non-zero value for the device attribute cudaDevAttrCanUs
 
 `flags` provides for future releases. For now, it must be set to 0.
 
+See also
 
-**See also:**
+cudaSetDeviceFlags, cudaHostAlloc, ::cuMemHostGetDevicePointer
 
-cudaSetDeviceFlags, cudaHostAlloc, cuMemHostGetDevicePointer
+Note
 
-__host__ cudaError_t cudaHostGetFlags ( unsigned int* pFlags, void* pHost )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **pDevice** – - Returned device pointer for mapped memory
+
+  * **pHost** – - Requested host pointer mapping
+
+  * **flags** – - Flags for extensions (must be 0 for now)
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
+
+`` __host__ cudaError_t cudaHostGetFlags(unsigned int *pFlags, void *pHost) ``
 
 Passes back flags used to allocate pinned host memory allocated by cudaHostAlloc.
 
-######  Parameters
+cudaHostGetFlags() will fail if the input pointer does not reside in an address range allocated by cudaHostAlloc().
 
-`pFlags`
-    \- Returned flags word
-`pHost`
-    \- Host pointer
+See also
 
-###### Returns
+cudaHostAlloc, ::cuMemHostGetFlags
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **pFlags** – - Returned flags word
+
+  * **pHost** – - Host pointer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
-
-cudaHostGetFlags() will fail if the input pointer does not reside in an address range allocated by cudaHostAlloc().
-
-
-**See also:**
-
-cudaHostAlloc, cuMemHostGetFlags
-
-__host__ cudaError_t cudaHostRegister ( void* ptr, size_t size, unsigned int  flags )
-
+`` __host__ cudaError_t cudaHostRegister(void *ptr, size_t size, unsigned int flags) ``
 
 Registers an existing host memory range for use by CUDA.
 
-######  Parameters
-
-`ptr`
-    \- Host pointer to memory to page-lock
-`size`
-    \- Size in bytes of the address range to page-lock in bytes
-`flags`
-    \- Flags for allocation request
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation, cudaErrorHostMemoryAlreadyRegistered, cudaErrorNotSupported
-
-###### Description
-
 Page-locks the memory range specified by `ptr` and `size` and maps it for the device(s) as specified by `flags`. This memory range also is added to the same tracking mechanism as cudaHostAlloc() to automatically accelerate calls to functions such as cudaMemcpy(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory that has not been registered. Page-locking excessive amounts of memory may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to register staging areas for data exchange between host and device.
 
-On systems where pageableMemoryAccessUsesHostPageTables is true, cudaHostRegister will not page-lock the memory range specified by `ptr` but only populate unpopulated pages.
+On systems where ::pageableMemoryAccessUsesHostPageTables is true, cudaHostRegister will not page-lock the memory range specified by `ptr` but only populate unpopulated pages.
 
 cudaHostRegister is supported only on I/O coherent devices that have a non-zero value for the device attribute cudaDevAttrHostRegisterSupported.
 
@@ -441,22 +497,17 @@ The `flags` parameter enables different options to be specified that affect the 
 
   * cudaHostRegisterDefault: On a system with unified virtual addressing, the memory will be both mapped and portable. On a system with no unified virtual addressing, the memory will be neither mapped nor portable.
 
-
   * cudaHostRegisterPortable: The memory returned by this call will be considered as pinned memory by all CUDA contexts, not just the one that performed the allocation.
-
 
   * cudaHostRegisterMapped: Maps the allocation into the CUDA address space. The device pointer to the memory may be obtained by calling cudaHostGetDevicePointer().
 
-
   * cudaHostRegisterIoMemory: The passed memory pointer is treated as pointing to some memory-mapped I/O space, e.g. belonging to a third-party PCIe device, and it will marked as non cache-coherent and contiguous.
-
 
   * cudaHostRegisterReadOnly: The passed memory pointer is treated as pointing to memory that is considered read-only by the device. On platforms without cudaDevAttrPageableMemoryAccessUsesHostPageTables, this flag is required in order to register memory mapped to the CPU as read-only. Support for the use of this flag can be queried from the device attribute cudaDevAttrHostRegisterReadOnlySupported. Using this flag with a current context associated with a device that does not have this attribute set will cause cudaHostRegister to error with cudaErrorNotSupported.
 
-
 All of these flags are orthogonal to one another: a developer may page-lock memory that is portable or mapped with no restrictions.
 
-The CUDA context must have been created with the cudaMapHost flag in order for the cudaHostRegisterMapped flag to have any effect.
+The CUDA context must have been created with the ::cudaMapHost flag in order for the cudaHostRegisterMapped flag to have any effect.
 
 The cudaHostRegisterMapped flag may be specified on CUDA contexts for devices that do not support mapped pinned memory. The failure is deferred to cudaHostGetDevicePointer() because the memory may be mapped into other CUDA contexts via the cudaHostRegisterPortable flag.
 
@@ -464,124 +515,150 @@ For devices that have a non-zero value for the device attribute cudaDevAttrCanUs
 
 The memory page-locked by this function must be unregistered with cudaHostUnregister().
 
+See also
 
-**See also:**
+cudaHostUnregister, cudaHostGetFlags, cudaHostGetDevicePointer, ::cuMemHostRegister
 
-cudaHostUnregister, cudaHostGetFlags, cudaHostGetDevicePointer, cuMemHostRegister
+Note
 
-__host__ cudaError_t cudaHostUnregister ( void* ptr )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **ptr** – - Host pointer to memory to page-lock
+
+  * **size** – - Size in bytes of the address range to page-lock in bytes
+
+  * **flags** – - Flags for allocation request
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation, cudaErrorHostMemoryAlreadyRegistered, cudaErrorNotSupported, cudaErrorExternalDevice
+
+`` __host__ cudaError_t cudaHostUnregister(void *ptr) ``
 
 Unregisters a memory range that was registered with cudaHostRegister.
-
-######  Parameters
-
-`ptr`
-    \- Host pointer to memory to unregister
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorHostMemoryNotRegistered
-
-###### Description
 
 Unmaps the memory range whose base address is specified by `ptr`, and makes it pageable again.
 
 The base address must be the same one specified to cudaHostRegister().
 
+See also
 
-**See also:**
+cudaHostUnregister, ::cuMemHostUnregister
 
-cudaHostUnregister, cuMemHostUnregister
+Note
 
-__host__  __device__ cudaError_t cudaMalloc ( void** devPtr, size_t size )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**ptr** – - Host pointer to memory to unregister
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorHostMemoryNotRegistered
+
+`` __host__ cudaError_t cudaMalloc(void **devPtr, size_t size) ``
 
 Allocate memory on the device.
-
-######  Parameters
-
-`devPtr`
-    \- Pointer to allocated device memory
-`size`
-    \- Requested allocation size in bytes
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
-
-###### Description
 
 Allocates `size` bytes of linear memory on the device and returns in `*devPtr` a pointer to the allocated memory. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. cudaMalloc() returns cudaErrorMemoryAllocation in case of failure.
 
 The device version of cudaFree cannot be used with a `*devPtr` allocated using the host API, and vice versa.
 
+See also
 
-**See also:**
+cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMalloc3D, cudaMalloc3DArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, ::cuMemAlloc
 
-cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMalloc3D, cudaMalloc3DArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, cuMemAlloc
+Note
 
-__host__ cudaError_t cudaMalloc3D ( cudaPitchedPtr* pitchedDevPtr, cudaExtent extent )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to allocated device memory
+
+  * **size** – - Requested allocation size in bytes
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation, cudaErrorExternalDevice
+
+`` __host__ cudaError_t cudaMalloc3D(struct cudaPitchedPtr *pitchedDevPtr, struct cudaExtent extent) ``
 
 Allocates logical 1D, 2D, or 3D memory objects on the device.
 
-######  Parameters
-
-`pitchedDevPtr`
-    \- Pointer to allocated pitched device memory
-`extent`
-    \- Requested allocation size (`width` field in bytes)
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
-
-###### Description
-
 Allocates at least `width` * `height` * `depth` bytes of linear memory on the device and returns a cudaPitchedPtr in which `ptr` is a pointer to the allocated memory. The function may pad the allocation to ensure hardware alignment requirements are met. The pitch returned in the `pitch` field of `pitchedDevPtr` is the width in bytes of the allocation.
 
-The returned cudaPitchedPtr contains additional fields `xsize` and `ysize`, the logical width and height of the allocation, which are equivalent to the `width` and `height``extent` parameters provided by the programmer during allocation.
+The returned cudaPitchedPtr contains additional fields `xsize` and `ysize`, the logical width and height of the allocation, which are equivalent to the `width` and `height` `extent` parameters provided by the programmer during allocation.
 
 For allocations of 2D and 3D objects, it is highly recommended that programmers perform allocations using cudaMalloc3D() or cudaMallocPitch(). Due to alignment restrictions in the hardware, this is especially true if the application will be performing memory copies involving 2D or 3D objects (whether linear memory or CUDA arrays).
 
+See also
 
-**See also:**
+cudaMallocPitch, cudaFree, cudaMemcpy3D, cudaMemset3D, cudaMalloc3DArray, cudaMallocArray, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, make_cudaPitchedPtr, make_cudaExtent, ::cuMemAllocPitch
 
-cudaMallocPitch, cudaFree, cudaMemcpy3D, cudaMemset3D, cudaMalloc3DArray, cudaMallocArray, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, make_cudaPitchedPtr, make_cudaExtent, cuMemAllocPitch
+Note
 
-__host__ cudaError_t cudaMalloc3DArray ( cudaArray_t* array, const cudaChannelFormatDesc* desc, cudaExtent extent, unsigned int  flags = 0 )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-Allocate an array on the device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`array`
-    \- Pointer to allocated array in device memory
-`desc`
-    \- Requested channel format
-`extent`
-    \- Requested allocation size (`width` field in elements)
-`flags`
-    \- Flags for extensions
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **pitchedDevPtr** – - Pointer to allocated pitched device memory
+
+  * **extent** – - Requested allocation size (`width` field in bytes)
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
 
-###### Description
+`` __host__ cudaError_t cudaMalloc3DArray(cudaArray_t *array, const struct cudaChannelFormatDesc *desc, struct cudaExtent extent, unsigned int flags = 0) ``
+
+Allocate an array on the device.
 
 Allocates a CUDA array according to the cudaChannelFormatDesc structure `desc` and returns a handle to the new CUDA array in `*array`.
 
 The cudaChannelFormatDesc is defined as:
 
-
-    ‎    struct cudaChannelFormatDesc {
-                  int x, y, z, w;
-                  enum cudaChannelFormatKind
-                      f;
-              };
+```cpp
+struct cudaChannelFormatDesc {
+    int x, y, z, w;
+    enum cudaChannelFormatKind f;
+};
+```
 
 where cudaChannelFormatKind is one of cudaChannelFormatKindSigned, cudaChannelFormatKindUnsigned, or cudaChannelFormatKindFloat.
 
@@ -601,10 +678,9 @@ cudaMalloc3DArray() can allocate the following:
 
   * A cubemap layered CUDA array is allocated if all three extents are non-zero, and both, cudaArrayCubemap and cudaArrayLayered flags are set. Width must be equal to height, and depth must be a multiple of six. A cubemap layered CUDA array is a special type of 2D layered CUDA array that consists of a collection of cubemaps. The first six layers represent the first cubemap, the next six layers form the second cubemap, and so on.
 
-
 The `flags` parameter enables different options to be specified that affect the allocation, as follows.
 
-  * cudaArrayDefault: This flag's value is defined to be 0 and provides default array allocation
+  * cudaArrayDefault: This flag’s value is defined to be 0 and provides default array allocation
 
   * cudaArrayLayered: Allocates a layered CUDA array, with the depth extent indicating the number of layers
 
@@ -614,195 +690,221 @@ The `flags` parameter enables different options to be specified that affect the 
 
   * cudaArrayTextureGather: This flag indicates that texture gather operations will be performed on the CUDA array. Texture gather can only be performed on 2D CUDA arrays.
 
-  * cudaArraySparse: Allocates a CUDA array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. This flag can only be used for creating 2D, 3D or 2D layered sparse CUDA arrays. The physical backing memory must be allocated via cuMemCreate.
+  * cudaArraySparse: Allocates a CUDA array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. This flag can only be used for creating 2D, 3D or 2D layered sparse CUDA arrays. The physical backing memory must be allocated via ::cuMemCreate.
 
-  * cudaArrayDeferredMapping: Allocates a CUDA array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. The physical backing memory must be allocated via cuMemCreate.
-
+  * cudaArrayDeferredMapping: Allocates a CUDA array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. The physical backing memory must be allocated via ::cuMemCreate.
 
 The width, height and depth extents must meet certain size requirements as listed in the following table. All values are specified in elements.
 
 Note that 2D CUDA arrays have different size requirements if the cudaArrayTextureGather flag is set. In that case, the valid range for (width, height, depth) is ((1,maxTexture2DGather[0]), (1,maxTexture2DGather[1]), 0).
 
-CUDA array type | Valid extents that must always be met {(width range in elements), (height range), (depth range)}  | Valid extents with cudaArraySurfaceLoadStore set {(width range in elements), (height range), (depth range)}
+CUDA array type | Valid extents that must always be met {(width range in elements), (height range), (depth range)} | Valid extents with cudaArraySurfaceLoadStore set {(width range in elements), (height range), (depth range)}
 ---|---|---
 1D | { (1,maxTexture1D), 0, 0 } | { (1,maxSurface1D), 0, 0 }
 2D | { (1,maxTexture2D[0]), (1,maxTexture2D[1]), 0 } | { (1,maxSurface2D[0]), (1,maxSurface2D[1]), 0 }
-3D | { (1,maxTexture3D[0]), (1,maxTexture3D[1]), (1,maxTexture3D[2]) } OR { (1,maxTexture3DAlt[0]), (1,maxTexture3DAlt[1]), (1,maxTexture3DAlt[2]) }  | { (1,maxSurface3D[0]), (1,maxSurface3D[1]), (1,maxSurface3D[2]) }
+3D | { (1,maxTexture3D[0]), (1,maxTexture3D[1]), (1,maxTexture3D[2]) } OR { (1,maxTexture3DAlt[0]), (1,maxTexture3DAlt[1]), (1,maxTexture3DAlt[2]) } | { (1,maxSurface3D[0]), (1,maxSurface3D[1]), (1,maxSurface3D[2]) }
 1D Layered | { (1,maxTexture1DLayered[0]), 0, (1,maxTexture1DLayered[1]) } | { (1,maxSurface1DLayered[0]), 0, (1,maxSurface1DLayered[1]) }
 2D Layered | { (1,maxTexture2DLayered[0]), (1,maxTexture2DLayered[1]), (1,maxTexture2DLayered[2]) }  | { (1,maxSurface2DLayered[0]), (1,maxSurface2DLayered[1]), (1,maxSurface2DLayered[2]) }
 Cubemap | { (1,maxTextureCubemap), (1,maxTextureCubemap), 6 } | { (1,maxSurfaceCubemap), (1,maxSurfaceCubemap), 6 }
 Cubemap Layered | { (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[1]) }  | { (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[1]) }
 
+See also
 
-**See also:**
+cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, ::cuArray3DCreate
 
-cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, cuArray3DCreate
+Note
 
-__host__ cudaError_t cudaMallocArray ( cudaArray_t* array, const cudaChannelFormatDesc* desc, size_t width, size_t height = 0, unsigned int  flags = 0 )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-Allocate an array on the device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`array`
-    \- Pointer to allocated array in device memory
-`desc`
-    \- Requested channel format
-`width`
-    \- Requested array allocation width
-`height`
-    \- Requested array allocation height
-`flags`
-    \- Requested properties of allocated array
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **array** – - Pointer to allocated array in device memory
+
+  * **desc** – - Requested channel format
+
+  * **extent** – - Requested allocation size (`width` field in elements)
+
+  * **flags** – - Flags for extensions
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
 
-###### Description
+`` __host__ cudaError_t cudaMallocArray(cudaArray_t *array, const struct cudaChannelFormatDesc *desc, size_t width, size_t height = 0, unsigned int flags = 0) ``
+
+Allocate an array on the device.
 
 Allocates a CUDA array according to the cudaChannelFormatDesc structure `desc` and returns a handle to the new CUDA array in `*array`.
 
 The cudaChannelFormatDesc is defined as:
 
-
-    ‎    struct cudaChannelFormatDesc {
-                  int x, y, z, w;
-              enum cudaChannelFormatKind
-                      f;
-              };
+```cpp
+struct cudaChannelFormatDesc {
+    int x, y, z, w;
+enum cudaChannelFormatKind f;
+};
+```
 
 where cudaChannelFormatKind is one of cudaChannelFormatKindSigned, cudaChannelFormatKindUnsigned, or cudaChannelFormatKindFloat.
 
 The `flags` parameter enables different options to be specified that affect the allocation, as follows.
 
-  * cudaArrayDefault: This flag's value is defined to be 0 and provides default array allocation
+  * cudaArrayDefault: This flag’s value is defined to be 0 and provides default array allocation
 
   * cudaArraySurfaceLoadStore: Allocates an array that can be read from or written to using a surface reference
 
   * cudaArrayTextureGather: This flag indicates that texture gather operations will be performed on the array.
 
-  * cudaArraySparse: Allocates a CUDA array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. The physical backing memory must be allocated via cuMemCreate.
+  * cudaArraySparse: Allocates a CUDA array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. The physical backing memory must be allocated via ::cuMemCreate.
 
-  * cudaArrayDeferredMapping: Allocates a CUDA array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. The physical backing memory must be allocated via cuMemCreate.
-
+  * cudaArrayDeferredMapping: Allocates a CUDA array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. The physical backing memory must be allocated via ::cuMemCreate.
 
 `width` and `height` must meet certain size requirements. See cudaMalloc3DArray() for more details.
 
+See also
 
-**See also:**
+cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, ::cuArrayCreate
 
-cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, cuArrayCreate
+Note
 
-__host__ cudaError_t cudaMallocHost ( void** ptr, size_t size )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-Allocates page-locked memory on the host.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`ptr`
-    \- Pointer to allocated host memory
-`size`
-    \- Requested allocation size in bytes
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **array** – - Pointer to allocated array in device memory
+
+  * **desc** – - Requested channel format
+
+  * **width** – - Requested array allocation width
+
+  * **height** – - Requested array allocation height
+
+  * **flags** – - Requested properties of allocated array
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
 
-###### Description
+`` __host__ cudaError_t cudaMallocHost(void **ptr, size_t size) ``
 
-Allocates `size` bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as cudaMemcpy*(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as malloc().
+Allocates page-locked memory on the host.
 
-On systems where pageableMemoryAccessUsesHostPageTables is true, cudaMallocHost may not page-lock the allocated memory.
+Allocates `size` bytes of host memory that is page-locked and accessible to the device. The driver tracks the virtual memory ranges allocated with this function and automatically accelerates calls to functions such as cudaMemcpy*(). Since the memory can be accessed directly by the device, it can be read or written with much higher bandwidth than pageable memory obtained with functions such as ::malloc().
+
+On systems where ::pageableMemoryAccessUsesHostPageTables is true, cudaMallocHost may not page-lock the allocated memory.
 
 Page-locking excessive amounts of memory with cudaMallocHost() may degrade system performance, since it reduces the amount of memory available to the system for paging. As a result, this function is best used sparingly to allocate staging areas for data exchange between host and device.
 
+See also
 
-**See also:**
+cudaMalloc, cudaMallocPitch, cudaMallocArray, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, cudaFree, cudaFreeArray, cudaMallocHost (C++ API), cudaFreeHost, cudaHostAlloc, ::cuMemAllocHost
 
-cudaMalloc, cudaMallocPitch, cudaMallocArray, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, cudaFree, cudaFreeArray, cudaMallocHost ( C++ API), cudaFreeHost, cudaHostAlloc, cuMemAllocHost
+Note
 
-__host__ cudaError_t cudaMallocManaged ( void** devPtr, size_t size, unsigned int  flags = cudaMemAttachGlobal )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **ptr** – - Pointer to allocated host memory
+
+  * **size** – - Requested allocation size in bytes
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation, cudaErrorExternalDevice
+
+`` __host__ cudaError_t cudaMallocManaged(void **devPtr, size_t size, unsigned int flags = 0x01) ``
 
 Allocates memory that will be automatically managed by the Unified Memory system.
 
-######  Parameters
-
-`devPtr`
-    \- Pointer to allocated device memory
-`size`
-    \- Requested allocation size in bytes
-`flags`
-    \- Must be either cudaMemAttachGlobal or cudaMemAttachHost (defaults to cudaMemAttachGlobal)
-
-###### Returns
-
-cudaSuccess, cudaErrorMemoryAllocation, cudaErrorNotSupported, cudaErrorInvalidValue
-
-###### Description
-
-Allocates `size` bytes of managed memory on the device and returns in `*devPtr` a pointer to the allocated memory. If the device doesn't support allocating managed memory, cudaErrorNotSupported is returned. Support for managed memory can be queried using the device attribute cudaDevAttrManagedMemory. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If `size` is 0, cudaMallocManaged returns cudaErrorInvalidValue. The pointer is valid on the CPU and on all GPUs in the system that support managed memory. All accesses to this pointer must obey the Unified Memory programming model.
+Allocates `size` bytes of managed memory on the device and returns in `*devPtr` a pointer to the allocated memory. If the device doesn’t support allocating managed memory, cudaErrorNotSupported is returned. Support for managed memory can be queried using the device attribute cudaDevAttrManagedMemory. The allocated memory is suitably aligned for any kind of variable. The memory is not cleared. If `size` is 0, cudaMallocManaged returns cudaErrorInvalidValue. The pointer is valid on the CPU and on all GPUs in the system that support managed memory. All accesses to this pointer must obey the Unified Memory programming model.
 
 `flags` specifies the default stream association for this allocation. `flags` must be one of cudaMemAttachGlobal or cudaMemAttachHost. The default value for `flags` is cudaMemAttachGlobal. If cudaMemAttachGlobal is specified, then this memory is accessible from any stream on any device. If cudaMemAttachHost is specified, then the allocation should not be accessed from devices that have a zero value for the device attribute cudaDevAttrConcurrentManagedAccess; an explicit call to cudaStreamAttachMemAsync will be required to enable access on such devices.
 
-If the association is later changed via cudaStreamAttachMemAsync to a single stream, the default association, as specifed during cudaMallocManaged, is restored when that stream is destroyed. For __managed__ variables, the default association is always cudaMemAttachGlobal. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won't happen until all work in the stream has completed.
+If the association is later changed via cudaStreamAttachMemAsync to a single stream, the default association, as specifed during cudaMallocManaged, is restored when that stream is destroyed. For **managed** variables, the default association is always cudaMemAttachGlobal. Note that destroying a stream is an asynchronous operation, and as a result, the change to default association won’t happen until all work in the stream has completed.
 
 Memory allocated with cudaMallocManaged should be released with cudaFree.
 
 Device memory oversubscription is possible for GPUs that have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. Managed memory on such GPUs may be evicted from device memory to host memory at any time by the Unified Memory driver in order to make room for other allocations.
 
-In a system where all GPUs have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess, managed memory may not be populated when this API returns and instead may be populated on access. In such systems, managed memory can migrate to any processor's memory at any time. The Unified Memory driver will employ heuristics to maintain data locality and prevent excessive page faults to the extent possible. The application can also guide the driver about memory usage patterns via cudaMemAdvise. The application can also explicitly migrate memory to a desired processor's memory via cudaMemPrefetchAsync.
+In a system where all GPUs have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess, managed memory may not be populated when this API returns and instead may be populated on access. In such systems, managed memory can migrate to any processor’s memory at any time. The Unified Memory driver will employ heuristics to maintain data locality and prevent excessive page faults to the extent possible. The application can also guide the driver about memory usage patterns via cudaMemAdvise. The application can also explicitly migrate memory to a desired processor’s memory via cudaMemPrefetchAsync.
 
 In a multi-GPU system where all of the GPUs have a zero value for the device attribute cudaDevAttrConcurrentManagedAccess and all the GPUs have peer-to-peer support with each other, the physical storage for managed memory is created on the GPU which is active at the time cudaMallocManaged is called. All other GPUs will reference the data at reduced bandwidth via peer mappings over the PCIe bus. The Unified Memory driver does not migrate memory among such GPUs.
 
 In a multi-GPU system where not all GPUs have peer-to-peer support with each other and where the value of the device attribute cudaDevAttrConcurrentManagedAccess is zero for at least one of those GPUs, the location chosen for physical storage of managed memory is system-dependent.
 
-  * On Linux, the location chosen will be device memory as long as the current set of active contexts are on devices that either have peer-to-peer support with each other or have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. If there is an active context on a GPU that does not have a non-zero value for that device attribute and it does not have peer-to-peer support with the other devices that have active contexts on them, then the location for physical storage will be 'zero-copy' or host memory. Note that this means that managed memory that is located in device memory is migrated to host memory if a new context is created on a GPU that doesn't have a non-zero value for the device attribute and does not support peer-to-peer with at least one of the other devices that has an active context. This in turn implies that context creation may fail if there is insufficient host memory to migrate all managed allocations.
+  * On Linux, the location chosen will be device memory as long as the current set of active contexts are on devices that either have peer-to-peer support with each other or have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. If there is an active context on a GPU that does not have a non-zero value for that device attribute and it does not have peer-to-peer support with the other devices that have active contexts on them, then the location for physical storage will be ‘zero-copy’ or host memory. Note that this means that managed memory that is located in device memory is migrated to host memory if a new context is created on a GPU that doesn’t have a non-zero value for the device attribute and does not support peer-to-peer with at least one of the other devices that has an active context. This in turn implies that context creation may fail if there is insufficient host memory to migrate all managed allocations.
 
-  * On Windows, the physical storage is always created in 'zero-copy' or host memory. All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to restrict CUDA to only use those GPUs that have peer-to-peer support. Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero value to force the driver to always use device memory for physical storage. When this environment variable is set to a non-zero value, all devices used in that process that support managed memory have to be peer-to-peer compatible with each other. The error cudaErrorInvalidDevice will be returned if a device that supports managed memory is used and it is not peer-to-peer compatible with any of the other managed memory supporting devices that were previously used in that process, even if cudaDeviceReset has been called on those devices. These environment variables are described in the CUDA programming guide under the "CUDA environment variables" section.
+  * On Windows, the physical storage is always created in ‘zero-copy’ or host memory. All GPUs will reference the data at reduced bandwidth over the PCIe bus. In these circumstances, use of the environment variable CUDA_VISIBLE_DEVICES is recommended to restrict CUDA to only use those GPUs that have peer-to-peer support. Alternatively, users can also set CUDA_MANAGED_FORCE_DEVICE_ALLOC to a non-zero value to force the driver to always use device memory for physical storage. When this environment variable is set to a non-zero value, all devices used in that process that support managed memory have to be peer-to-peer compatible with each other. The error cudaErrorInvalidDevice will be returned if a device that supports managed memory is used and it is not peer-to-peer compatible with any of the other managed memory supporting devices that were previously used in that process, even if cudaDeviceReset has been called on those devices. These environment variables are described in the CUDA programming guide under the “CUDA environment variables” section.
 
+See also
 
-**See also:**
+cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMalloc3D, cudaMalloc3DArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, cudaDeviceGetAttribute, cudaStreamAttachMemAsync, ::cuMemAllocManaged
 
-cudaMallocPitch, cudaFree, cudaMallocArray, cudaFreeArray, cudaMalloc3D, cudaMalloc3DArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, cudaDeviceGetAttribute, cudaStreamAttachMemAsync, cuMemAllocManaged
+Note
 
-__host__ cudaError_t cudaMallocMipmappedArray ( cudaMipmappedArray_t* mipmappedArray, const cudaChannelFormatDesc* desc, cudaExtent extent, unsigned int  numLevels, unsigned int  flags = 0 )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **flags** – Memory can be accessed by any stream on any device
+
+  * **devPtr** – - Pointer to allocated device memory
+
+  * **size** – - Requested allocation size in bytes
+
+  * **flags** – - Must be either cudaMemAttachGlobal or cudaMemAttachHost (defaults to cudaMemAttachGlobal)
+
+Returns
+
+cudaSuccess, cudaErrorMemoryAllocation, cudaErrorNotSupported, cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMallocMipmappedArray(cudaMipmappedArray_t *mipmappedArray, const struct cudaChannelFormatDesc *desc, struct cudaExtent extent, unsigned int numLevels, unsigned int flags = 0) ``
 
 Allocate a mipmapped array on the device.
-
-######  Parameters
-
-`mipmappedArray`
-    \- Pointer to allocated mipmapped array in device memory
-`desc`
-    \- Requested channel format
-`extent`
-    \- Requested allocation size (`width` field in elements)
-`numLevels`
-    \- Number of mipmap levels to allocate
-`flags`
-    \- Flags for extensions
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
-
-###### Description
 
 Allocates a CUDA mipmapped array according to the cudaChannelFormatDesc structure `desc` and returns a handle to the new CUDA mipmapped array in `*mipmappedArray`. `numLevels` specifies the number of mipmap levels to be allocated. This value is clamped to the range [1, 1 + floor(log2(max(width, height, depth)))].
 
 The cudaChannelFormatDesc is defined as:
 
-
-    ‎    struct cudaChannelFormatDesc {
-                  int x, y, z, w;
-                  enum cudaChannelFormatKind
-                      f;
-              };
+```cpp
+struct cudaChannelFormatDesc {
+    int x, y, z, w;
+    enum cudaChannelFormatKind f;
+};
+```
 
 where cudaChannelFormatKind is one of cudaChannelFormatKindSigned, cudaChannelFormatKindUnsigned, or cudaChannelFormatKindFloat.
 
@@ -822,10 +924,9 @@ cudaMallocMipmappedArray() can allocate the following:
 
   * A cubemap layered CUDA mipmapped array is allocated if all three extents are non-zero, and both, cudaArrayCubemap and cudaArrayLayered flags are set. Width must be equal to height, and depth must be a multiple of six. A cubemap layered CUDA mipmapped array is a special type of 2D layered CUDA mipmapped array that consists of a collection of cubemap mipmapped arrays. The first six layers represent the first cubemap mipmapped array, the next six layers form the second cubemap mipmapped array, and so on.
 
-
 The `flags` parameter enables different options to be specified that affect the allocation, as follows.
 
-  * cudaArrayDefault: This flag's value is defined to be 0 and provides default mipmapped array allocation
+  * cudaArrayDefault: This flag’s value is defined to be 0 and provides default mipmapped array allocation
 
   * cudaArrayLayered: Allocates a layered CUDA mipmapped array, with the depth extent indicating the number of layers
 
@@ -835,235 +936,297 @@ The `flags` parameter enables different options to be specified that affect the 
 
   * cudaArrayTextureGather: This flag indicates that texture gather operations will be performed on the CUDA array. Texture gather can only be performed on 2D CUDA mipmapped arrays, and the gather operations are performed only on the most detailed mipmap level.
 
-  * cudaArraySparse: Allocates a CUDA mipmapped array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. This flag can only be used for creating 2D, 3D or 2D layered sparse CUDA mipmapped arrays. The physical backing memory must be allocated via cuMemCreate.
+  * cudaArraySparse: Allocates a CUDA mipmapped array without physical backing memory. The subregions within this sparse array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. This flag can only be used for creating 2D, 3D or 2D layered sparse CUDA mipmapped arrays. The physical backing memory must be allocated via ::cuMemCreate.
 
-  * cudaArrayDeferredMapping: Allocates a CUDA mipmapped array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling cuMemMapArrayAsync. The physical backing memory must be allocated via cuMemCreate.
-
+  * cudaArrayDeferredMapping: Allocates a CUDA mipmapped array without physical backing memory. The entire array can later be mapped onto a physical memory allocation by calling ::cuMemMapArrayAsync. The physical backing memory must be allocated via ::cuMemCreate.
 
 The width, height and depth extents must meet certain size requirements as listed in the following table. All values are specified in elements.
 
-CUDA array type | Valid extents that must always be met {(width range in elements), (height range), (depth range)}  | Valid extents with cudaArraySurfaceLoadStore set {(width range in elements), (height range), (depth range)}
+CUDA array type | Valid extents that must always be met {(width range in elements), (height range), (depth range)} | Valid extents with cudaArraySurfaceLoadStore set {(width range in elements), (height range), (depth range)}
 ---|---|---
 1D | { (1,maxTexture1DMipmap), 0, 0 } | { (1,maxSurface1D), 0, 0 }
 2D | { (1,maxTexture2DMipmap[0]), (1,maxTexture2DMipmap[1]), 0 } | { (1,maxSurface2D[0]), (1,maxSurface2D[1]), 0 }
-3D | { (1,maxTexture3D[0]), (1,maxTexture3D[1]), (1,maxTexture3D[2]) } OR { (1,maxTexture3DAlt[0]), (1,maxTexture3DAlt[1]), (1,maxTexture3DAlt[2]) }  | { (1,maxSurface3D[0]), (1,maxSurface3D[1]), (1,maxSurface3D[2]) }
+3D | { (1,maxTexture3D[0]), (1,maxTexture3D[1]), (1,maxTexture3D[2]) } OR { (1,maxTexture3DAlt[0]), (1,maxTexture3DAlt[1]), (1,maxTexture3DAlt[2]) } | { (1,maxSurface3D[0]), (1,maxSurface3D[1]), (1,maxSurface3D[2]) }
 1D Layered | { (1,maxTexture1DLayered[0]), 0, (1,maxTexture1DLayered[1]) } | { (1,maxSurface1DLayered[0]), 0, (1,maxSurface1DLayered[1]) }
-2D Layered | { (1,maxTexture2DLayered[0]), (1,maxTexture2DLayered[1]), (1,maxTexture2DLayered[2]) }  | { (1,maxSurface2DLayered[0]), (1,maxSurface2DLayered[1]), (1,maxSurface2DLayered[2]) }
+2D Layered | { (1,maxTexture2DLayered[0]), (1,maxTexture2DLayered[1]), (1,maxTexture2DLayered[2]) } | { (1,maxSurface2DLayered[0]), (1,maxSurface2DLayered[1]), (1,maxSurface2DLayered[2]) }
 Cubemap | { (1,maxTextureCubemap), (1,maxTextureCubemap), 6 } | { (1,maxSurfaceCubemap), (1,maxSurfaceCubemap), 6 }
-Cubemap Layered | { (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[1]) }  | { (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[1]) }
+Cubemap Layered | { (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[0]), (1,maxTextureCubemapLayered[1]) } | { (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[0]), (1,maxSurfaceCubemapLayered[1]) }
 
+See also
 
-**See also:**
+cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, ::cuMipmappedArrayCreate
 
-cudaMalloc3D, cudaMalloc, cudaMallocPitch, cudaFree, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaHostAlloc, make_cudaExtent, cuMipmappedArrayCreate
+Note
 
-__host__ cudaError_t cudaMallocPitch ( void** devPtr, size_t* pitch, size_t width, size_t height )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-Allocates pitched memory on the device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`devPtr`
-    \- Pointer to allocated pitched device memory
-`pitch`
-    \- Pitch for allocation
-`width`
-    \- Requested pitched allocation width (in bytes)
-`height`
-    \- Requested pitched allocation height
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **mipmappedArray** – - Pointer to allocated mipmapped array in device memory
+
+  * **desc** – - Requested channel format
+
+  * **extent** – - Requested allocation size (`width` field in elements)
+
+  * **numLevels** – - Number of mipmap levels to allocate
+
+  * **flags** – - Flags for extensions
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
 
-###### Description
+`` __host__ cudaError_t cudaMallocPitch(void **devPtr, size_t *pitch, size_t width, size_t height) ``
+
+Allocates pitched memory on the device.
 
 Allocates at least `width` (in bytes) * `height` bytes of linear memory on the device and returns in `*devPtr` a pointer to the allocated memory. The function may pad the allocation to ensure that corresponding pointers in any given row will continue to meet the alignment requirements for coalescing as the address is updated from row to row. The pitch returned in `*pitch` by cudaMallocPitch() is the width in bytes of the allocation. The intended usage of `pitch` is as a separate parameter of the allocation, used to compute addresses within the 2D array. Given the row and column of an array element of type `T`, the address is computed as:
 
-
-    ‎    T* pElement = (T*)((char*)BaseAddress + Row * pitch) + Column;
+```cpp
+T* pElement = (T*)((char*)BaseAddress + Row * pitch) + Column;
+```
 
 For allocations of 2D arrays, it is recommended that programmers consider performing pitch allocations using cudaMallocPitch(). Due to pitch alignment restrictions in the hardware, this is especially true if the application will be performing 2D memory copies between different regions of device memory (whether linear memory or CUDA arrays).
 
+See also
 
-**See also:**
+cudaMalloc, cudaFree, cudaMallocArray, cudaFreeArray, cudaMallocHost (C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, ::cuMemAllocPitch
 
-cudaMalloc, cudaFree, cudaMallocArray, cudaFreeArray, cudaMallocHost ( C API), cudaFreeHost, cudaMalloc3D, cudaMalloc3DArray, cudaHostAlloc, cuMemAllocPitch
+Note
 
-__host__ cudaError_t cudaMemAdvise ( const void* devPtr, size_t count, cudaMemoryAdvise advice, cudaMemLocation location )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to allocated pitched device memory
+
+  * **pitch** – - Pitch for allocation
+
+  * **width** – - Requested pitched allocation width (in bytes)
+
+  * **height** – - Requested pitched allocation height
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorMemoryAllocation
+
+`` __host__ cudaError_t cudaMemAdvise(const void *devPtr, size_t count, enum cudaMemoryAdvise advice, struct cudaMemLocation location) ``
 
 Advise about the usage of a given memory range.
 
-######  Parameters
-
-`devPtr`
-    \- Pointer to memory to set the advice for
-`count`
-    \- Size in bytes of the memory range
-`advice`
-    \- Advice to be applied for the specified memory range
-`location`
-    \- location to apply the advice for
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
-
-###### Description
-
-Advise the Unified Memory subsystem about the usage pattern for the memory range starting at `devPtr` with a size of `count` bytes. The start address and end address of the memory range will be rounded down and rounded up respectively to be aligned to CPU page size before the advice is applied. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables. The memory range could also refer to system-allocated pageable memory provided it represents a valid, host-accessible region of memory and all additional constraints imposed by `advice` as outlined below are also satisfied. Specifying an invalid system-allocated pageable memory range results in an error being returned.
+Advise the Unified Memory subsystem about the usage pattern for the memory range starting at `devPtr` with a size of `count` bytes. The start address and end address of the memory range will be rounded down and rounded up respectively to be aligned to CPU page size before the advice is applied. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables. The memory range could also refer to system-allocated pageable memory provided it represents a valid, host-accessible region of memory and all additional constraints imposed by `advice` as outlined below are also satisfied. Specifying an invalid system-allocated pageable memory range results in an error being returned.
 
 The `advice` parameter can take the following values:
 
-  * cudaMemAdviseSetReadMostly: This implies that the data is mostly going to be read from and only occasionally written to. Any read accesses from any processor to this region will create a read-only copy of at least the accessed pages in that processor's memory. Additionally, if cudaMemPrefetchAsync or cudaMemPrefetchAsync is called on this region, it will create a read-only copy of the data on the destination processor. If the target location for cudaMemPrefetchAsync is a host NUMA node and a read-only copy already exists on another host NUMA node, that copy will be migrated to the targeted host NUMA node. If any processor writes to this region, all copies of the corresponding page will be invalidated except for the one where the write occurred. If the writing processor is the CPU and the preferred location of the page is a host NUMA node, then the page will also be migrated to that host NUMA node. The `location` argument is ignored for this advice. Note that for a page to be read-duplicated, the accessing processor must either be the CPU or a GPU that has a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. Also, if a context is created on a device that does not have the device attribute cudaDevAttrConcurrentManagedAccess set, then read-duplication will not occur until all such contexts are destroyed. If the memory region refers to valid system-allocated pageable memory, then the accessing device must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess for a read-only copy to be created on that device. Note however that if the accessing device also has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then setting this advice will not create a read-only copy when that device accesses this memory region.
+  * cudaMemAdviseSetReadMostly: This implies that the data is mostly going to be read from and only occasionally written to. Any read accesses from any processor to this region will create a read-only copy of at least the accessed pages in that processor’s memory. Additionally, if cudaMemPrefetchAsync or cudaMemPrefetchAsync is called on this region, it will create a read-only copy of the data on the destination processor. If the target location for cudaMemPrefetchAsync is a host NUMA node and a read-only copy already exists on another host NUMA node, that copy will be migrated to the targeted host NUMA node. If any processor writes to this region, all copies of the corresponding page will be invalidated except for the one where the write occurred. If the writing processor is the CPU and the preferred location of the page is a host NUMA node, then the page will also be migrated to that host NUMA node. The `location` argument is ignored for this advice. Note that for a page to be read-duplicated, the accessing processor must either be the CPU or a GPU that has a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. Also, if a context is created on a device that does not have the device attribute cudaDevAttrConcurrentManagedAccess set, then read-duplication will not occur until all such contexts are destroyed. If the memory region refers to valid system-allocated pageable memory, then the accessing device must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess for a read-only copy to be created on that device. Note however that if the accessing device also has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then setting this advice will not create a read-only copy when that device accesses this memory region.
 
+  * ::cudaMemAdviceUnsetReadMostly: Undoes the effect of cudaMemAdviseSetReadMostly and also prevents the Unified Memory driver from attempting heuristic read-duplication on the memory range. Any read-duplicated copies of the data will be collapsed into a single copy. The location for the collapsed copy will be the preferred location if the page has a preferred location and one of the read-duplicated copies was resident at that location. Otherwise, the location chosen is arbitrary. Note: The `location` argument is ignored for this advice.
 
-  * cudaMemAdviceUnsetReadMostly: Undoes the effect of cudaMemAdviseSetReadMostly and also prevents the Unified Memory driver from attempting heuristic read-duplication on the memory range. Any read-duplicated copies of the data will be collapsed into a single copy. The location for the collapsed copy will be the preferred location if the page has a preferred location and one of the read-duplicated copies was resident at that location. Otherwise, the location chosen is arbitrary. Note: The `location` argument is ignored for this advice.
-
-
-  * cudaMemAdviseSetPreferredLocation: This advice sets the preferred location for the data to be the memory belonging to `location`. When cudaMemLocation::type is cudaMemLocationTypeHost, cudaMemLocation::id is ignored and the preferred location is set to be host memory. To set the preferred location to a specific host NUMA node, applications must set cudaMemLocation::type to cudaMemLocationTypeHostNuma and cudaMemLocation::id must specify the NUMA ID of the host NUMA node. If cudaMemLocation::type is set to cudaMemLocationTypeHostNumaCurrent, cudaMemLocation::id will be ignored and the host NUMA node closest to the calling thread's CPU will be used as the preferred location. If cudaMemLocation::type is a cudaMemLocationTypeDevice, then cudaMemLocation::id must be a valid device ordinal and the device must have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. Setting the preferred location does not cause data to migrate to that location immediately. Instead, it guides the migration policy when a fault occurs on that memory region. If the data is already in its preferred location and the faulting processor can establish a mapping without requiring the data to be migrated, then data migration will be avoided. On the other hand, if the data is not in its preferred location or if a direct mapping cannot be established, then it will be migrated to the processor accessing it. It is important to note that setting the preferred location does not prevent data prefetching done using cudaMemPrefetchAsync. Having a preferred location can override the page thrash detection and resolution logic in the Unified Memory driver. Normally, if a page is detected to be constantly thrashing between for example host and device memory, the page may eventually be pinned to host memory by the Unified Memory driver. But if the preferred location is set as device memory, then the page will continue to thrash indefinitely. If cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice, unless read accesses from `location` will not result in a read-only copy being created on that procesor as outlined in description for the advice cudaMemAdviseSetReadMostly. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then cudaMemLocation::id must be a valid device that has a non-zero alue for the device attribute cudaDevAttrPageableMemoryAccess.
-
+  * cudaMemAdviseSetPreferredLocation: This advice sets the preferred location for the data to be the memory belonging to `location`. When cudaMemLocation::type is cudaMemLocationTypeHost, cudaMemLocation::id is ignored and the preferred location is set to be host memory. To set the preferred location to a specific host NUMA node, applications must set cudaMemLocation::type to cudaMemLocationTypeHostNuma and cudaMemLocation::id must specify the NUMA ID of the host NUMA node. If cudaMemLocation::type is set to cudaMemLocationTypeHostNumaCurrent, cudaMemLocation::id will be ignored and the host NUMA node closest to the calling thread’s CPU will be used as the preferred location. If cudaMemLocation::type is a cudaMemLocationTypeDevice, then cudaMemLocation::id must be a valid device ordinal and the device must have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. Setting the preferred location does not cause data to migrate to that location immediately. Instead, it guides the migration policy when a fault occurs on that memory region. If the data is already in its preferred location and the faulting processor can establish a mapping without requiring the data to be migrated, then data migration will be avoided. On the other hand, if the data is not in its preferred location or if a direct mapping cannot be established, then it will be migrated to the processor accessing it. It is important to note that setting the preferred location does not prevent data prefetching done using cudaMemPrefetchAsync. Having a preferred location can override the page thrash detection and resolution logic in the Unified Memory driver. Normally, if a page is detected to be constantly thrashing between for example host and device memory, the page may eventually be pinned to host memory by the Unified Memory driver. But if the preferred location is set as device memory, then the page will continue to thrash indefinitely. If cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice, unless read accesses from `location` will not result in a read-only copy being created on that procesor as outlined in description for the advice cudaMemAdviseSetReadMostly. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then cudaMemLocation::id must be a valid device that has a non-zero alue for the device attribute cudaDevAttrPageableMemoryAccess.
 
   * cudaMemAdviseUnsetPreferredLocation: Undoes the effect of cudaMemAdviseSetPreferredLocation and changes the preferred location to none. The `location` argument is ignored for this advice.
 
+  * cudaMemAdviseSetAccessedBy: This advice implies that the data will be accessed by processor `location`. The cudaMemLocation::type must be either cudaMemLocationTypeDevice with cudaMemLocation::id representing a valid device ordinal or cudaMemLocationTypeHost and cudaMemLocation::id will be ignored. All other location types are invalid. If cudaMemLocation::id is a GPU, then the device attribute cudaDevAttrConcurrentManagedAccess must be non-zero. This advice does not cause data migration and has no impact on the location of the data per se. Instead, it causes the data to always be mapped in the specified processor’s page tables, as long as the location of the data permits a mapping to be established. If the data gets migrated for any reason, the mappings are updated accordingly. This advice is recommended in scenarios where data locality is not important, but avoiding faults is. Consider for example a system containing multiple GPUs with peer-to-peer access enabled, where the data located on one GPU is occasionally accessed by peer GPUs. In such scenarios, migrating data over to the other GPUs is not as important because the accesses are infrequent and the overhead of migration may be too high. But preventing faults can still help improve performance, and so having a mapping set up in advance is useful. Note that on CPU access of this data, the data may be migrated to host memory because the CPU typically cannot access device memory directly. Any GPU that had the cudaMemAdviseSetAccessedBy flag set for this data will now have its mapping updated to point to the page in host memory. If cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice. Additionally, if the preferred location of this memory region or any subset of it is also `location`, then the policies associated with ::CU_MEM_ADVISE_SET_PREFERRED_LOCATION will override the policies of this advice. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then device in cudaMemLocation::id must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess. Additionally, if cudaMemLocation::id has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then this call has no effect.
 
-  * cudaMemAdviseSetAccessedBy: This advice implies that the data will be accessed by processor `location`. The cudaMemLocation::type must be either cudaMemLocationTypeDevice with cudaMemLocation::id representing a valid device ordinal or cudaMemLocationTypeHost and cudaMemLocation::id will be ignored. All other location types are invalid. If cudaMemLocation::id is a GPU, then the device attribute cudaDevAttrConcurrentManagedAccess must be non-zero. This advice does not cause data migration and has no impact on the location of the data per se. Instead, it causes the data to always be mapped in the specified processor's page tables, as long as the location of the data permits a mapping to be established. If the data gets migrated for any reason, the mappings are updated accordingly. This advice is recommended in scenarios where data locality is not important, but avoiding faults is. Consider for example a system containing multiple GPUs with peer-to-peer access enabled, where the data located on one GPU is occasionally accessed by peer GPUs. In such scenarios, migrating data over to the other GPUs is not as important because the accesses are infrequent and the overhead of migration may be too high. But preventing faults can still help improve performance, and so having a mapping set up in advance is useful. Note that on CPU access of this data, the data may be migrated to host memory because the CPU typically cannot access device memory directly. Any GPU that had the cudaMemAdviseSetAccessedBy flag set for this data will now have its mapping updated to point to the page in host memory. If cudaMemAdviseSetReadMostly is also set on this memory region or any subset of it, then the policies associated with that advice will override the policies of this advice. Additionally, if the preferred location of this memory region or any subset of it is also `location`, then the policies associated with CU_MEM_ADVISE_SET_PREFERRED_LOCATION will override the policies of this advice. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then device in cudaMemLocation::id must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess. Additionally, if cudaMemLocation::id has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then this call has no effect.
+  * ::CU_MEM_ADVISE_UNSET_ACCESSED_BY: Undoes the effect of cudaMemAdviseSetAccessedBy. Any mappings to the data from `location` may be removed at any time causing accesses to result in non-fatal page faults. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then device in cudaMemLocation::id must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess. Additionally, if cudaMemLocation::id has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then this call has no effect.
 
+See also
 
-  * CU_MEM_ADVISE_UNSET_ACCESSED_BY: Undoes the effect of cudaMemAdviseSetAccessedBy. Any mappings to the data from `location` may be removed at any time causing accesses to result in non-fatal page faults. If the memory region refers to valid system-allocated pageable memory, and cudaMemLocation::type is cudaMemLocationTypeDevice then device in cudaMemLocation::id must have a non-zero value for the device attribute cudaDevAttrPageableMemoryAccess. Additionally, if cudaMemLocation::id has a non-zero value for the device attribute cudaDevAttrPageableMemoryAccessUsesHostPageTables, then this call has no effect.
+cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, cudaMemPrefetchAsync, ::cuMemAdvise
 
+Note
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+Note that this function may also return error codes from previous, asynchronous launches.
 
-  * This function uses standard default stream semantics.
+Note
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+This function exhibits asynchronous behavior for most use cases.
 
+Note
 
-**See also:**
+This function uses standard default stream semantics.
 
-cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, cudaMemPrefetchAsync, cuMemAdvise
+Note
 
-__host__ cudaError_t cudaMemDiscardAndPrefetchBatchAsync ( void** dptrs, size_t* sizes, size_t count, cudaMemLocation* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream )
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to memory to set the advice for
+
+  * **count** – - Size in bytes of the memory range
+
+  * **advice** – - Advice to be applied for the specified memory range
+
+  * **location** – - location to apply the advice for
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice, cudaErrorNotSupported
+
+`` __host__ cudaError_t cudaMemDiscardAndPrefetchBatchAsync(void **dptrs, size_t *sizes, size_t count, struct cudaMemLocation *prefetchLocs, size_t *prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream) ``
 
 Performs a batch of memory discards and prefetches asynchronously.
-
-######  Parameters
-
-`dptrs`
-    \- Array of pointers to be discarded
-`sizes`
-    \- Array of sizes for memory discard operations.
-`count`
-    \- Size of `dptrs` and `sizes` arrays.
-`prefetchLocs`
-    \- Array of locations to prefetch to.
-`prefetchLocIdxs`
-    \- Array of indices to specify which operands each entry in the `prefetchLocs` array applies to. The locations specified in prefetchLocs[k] will be applied to operations starting from prefetchLocIdxs[k] through prefetchLocIdxs[k+1] - 1. Also prefetchLocs[numPrefetchLocs - 1] will apply to copies starting from prefetchLocIdxs[numPrefetchLocs \- 1] through count - 1.
-`numPrefetchLocs`
-    \- Size of `prefetchLocs` and `prefetchLocIdxs` arrays.
-`flags`
-    \- Flags reserved for future use. Must be zero.
-`stream`
-
-
-###### Description
 
 Performs a batch of memory discards followed by prefetches. The batch as a whole executes in stream order but operations within a batch are not guaranteed to execute in any specific order. All devices in the system must have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess otherwise the API will return an error.
 
 Calling cudaMemDiscardAndPrefetchBatchAsync is semantically equivalent to calling cudaMemDiscardBatchAsync followed by cudaMemPrefetchBatchAsync, but is more optimal. For more details on what discarding and prefetching imply, please refer to cudaMemDiscardBatchAsync and cudaMemPrefetchBatchAsync respectively. Note that any reads, writes or prefetches to any part of the memory range that occur simultaneously with this combined discard+prefetch operation result in undefined behavior.
 
-Performs memory discard and prefetch on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess. Every operation in the batch has to be associated with a valid location to prefetch the address range to and specified in the `prefetchLocs` array. Each entry in this array can apply to more than one operation. This can be done by specifying in the `prefetchLocIdxs` array, the index of the first operation that the corresponding entry in the `prefetchLocs` array applies to. Both `prefetchLocs` and `prefetchLocIdxs` must be of the same length as specified by `numPrefetchLocs`. For example, if a batch has 10 operations listed in dptrs/sizes, the first 6 of which are to be prefetched to one location and the remaining 4 are to be prefetched to another, then `numPrefetchLocs` will be 2, `prefetchLocIdxs` will be {0, 6} and `prefetchLocs` will contain the two set of locations. Note the first entry in `prefetchLocIdxs` must always be 0. Also, each entry must be greater than the previous entry and the last entry should be less than `count`. Furthermore, `numPrefetchLocs` must be lesser than or equal to `count`.
+Performs memory discard and prefetch on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess. Every operation in the batch has to be associated with a valid location to prefetch the address range to and specified in the `prefetchLocs` array. Each entry in this array can apply to more than one operation. This can be done by specifying in the `prefetchLocIdxs` array, the index of the first operation that the corresponding entry in the `prefetchLocs` array applies to. Both `prefetchLocs` and `prefetchLocIdxs` must be of the same length as specified by `numPrefetchLocs`. For example, if a batch has 10 operations listed in dptrs/sizes, the first 6 of which are to be prefetched to one location and the remaining 4 are to be prefetched to another, then `numPrefetchLocs` will be 2, `prefetchLocIdxs` will be {0, 6} and `prefetchLocs` will contain the two set of locations. Note the first entry in `prefetchLocIdxs` must always be 0. Also, each entry must be greater than the previous entry and the last entry should be less than `count`. Furthermore, `numPrefetchLocs` must be lesser than or equal to `count`.
 
-__host__ cudaError_t cudaMemDiscardBatchAsync ( void** dptrs, size_t* sizes, size_t count, unsigned long long flags, cudaStream_t stream )
+Parameters
 
+  * **dptrs** – - Array of pointers to be discarded
+
+  * **sizes** – - Array of sizes for memory discard operations.
+
+  * **count** – - Size of `dptrs` and `sizes` arrays.
+
+  * **prefetchLocs** – - Array of locations to prefetch to.
+
+  * **prefetchLocIdxs** – - Array of indices to specify which operands each entry in the `prefetchLocs` array applies to. The locations specified in prefetchLocs[k] will be applied to operations starting from prefetchLocIdxs[k] through prefetchLocIdxs[k+1] - 1. Also prefetchLocs[numPrefetchLocs - 1] will apply to copies starting from prefetchLocIdxs[numPrefetchLocs - 1] through count - 1.
+
+  * **numPrefetchLocs** – - Size of `prefetchLocs` and `prefetchLocIdxs` arrays.
+
+  * **flags** – - Flags reserved for future use. Must be zero.
+
+  * **stream** – - The stream to enqueue the operations in. Must not be legacy NULL stream.
+
+`` __host__ cudaError_t cudaMemDiscardBatchAsync(void **dptrs, size_t *sizes, size_t count, unsigned long long flags, cudaStream_t stream) ``
 
 Performs a batch of memory discards asynchronously.
-
-######  Parameters
-
-`dptrs`
-    \- Array of pointers to be discarded
-`sizes`
-    \- Array of sizes for memory discard operations.
-`count`
-    \- Size of `dptrs` and `sizes` arrays.
-`flags`
-    \- Flags reserved for future use. Must be zero.
-`stream`
-
-
-###### Description
 
 Performs a batch of memory discards. The batch as a whole executes in stream order but operations within a batch are not guaranteed to execute in any specific order. All devices in the system must have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess otherwise the API will return an error.
 
 Discarding a memory range informs the driver that the contents of that range are no longer useful. Discarding memory ranges allows the driver to optimize certain data migrations and can also help reduce memory pressure. This operation can be undone on any part of the range by either writing to it or prefetching it via cudaMemPrefetchAsync or cudaMemPrefetchBatchAsync. Reading from a discarded range, without a subsequent write or prefetch to that part of the range, will return an indeterminate value. Note that any reads, writes or prefetches to any part of the memory range that occur simultaneously with the discard operation result in undefined behavior.
 
-Performs memory discard on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess.
+Performs memory discard on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess.
 
-__host__ cudaError_t cudaMemGetInfo ( size_t* free, size_t* total )
+Parameters
 
+  * **dptrs** – - Array of pointers to be discarded
+
+  * **sizes** – - Array of sizes for memory discard operations.
+
+  * **count** – - Size of `dptrs` and `sizes` arrays.
+
+  * **flags** – - Flags reserved for future use. Must be zero.
+
+  * **stream** – - The stream to enqueue the operations in. Must not be legacy NULL stream.
+
+`` __host__ cudaError_t cudaMemGetInfo(size_t *free, size_t *total) ``
 
 Gets free and total device memory.
-
-######  Parameters
-
-`free`
-    \- Returned free memory in bytes
-`total`
-    \- Returned total memory in bytes
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorLaunchFailure
-
-###### Description
 
 Returns in `*total` the total amount of memory available to the the current context. Returns in `*free` the amount of memory on the device that is free according to the OS. CUDA is not guaranteed to be able to allocate all of the memory that the OS reports as free. In a multi-tenet situation, free estimate returned is prone to race condition where a new allocation/free done by a different process or a different thread in the same process between the time when free memory was estimated and reported, will result in deviation in free value reported and actual free memory.
 
 The integrated GPU on Tegra shares memory with CPU and other component of the SoC. The free and total values returned by the API excludes the SWAP memory space maintained by the OS on some platforms. The OS may move some of the memory pages into swap area as the GPU or CPU allocate or access memory. See Tegra app note on how to calculate total and free memory on Tegra.
 
+See also
 
-**See also:**
+::cuMemGetInfo
 
-cuMemGetInfo
+Note
 
-__host__ cudaError_t cudaMemPrefetchAsync ( const void* devPtr, size_t count, cudaMemLocation location, unsigned int  flags, cudaStream_t stream = 0 )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **free** – - Returned free memory in bytes
+
+  * **total** – - Returned total memory in bytes
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorLaunchFailure
+
+`` __host__ cudaError_t cudaMemGetLocationInfo(void *devPtr, size_t size, size_t summaryGranularity, size_t samplingGranularity, struct cudaMemLocation *location_out) ``
+
+Gets location information for a memory address range.
+
+Retrieves memory location information for the specified address range starting at `ptr` with size `size`. The API determines the most common location by sampling memory at intervals defined by `samplingGranularity` within the whole interval.
+
+The location information is returned in the `location_out` array, with one entry per summary region. The total number of locations returned will be ceil(size/summaryGranularity). The user is expected to allocate the `location_out` array with sufficient memory.
+
+For example, with an address range of 1GB, a `summaryGranularity` of 128MB, and a `samplingGranularity` of 2MB, the function will:
+
+  * Divide the 1GB range into 8 summary regions of 128MB each
+
+  * Within each 128MB region, sample every 2MB to determine the most common location. If there is a tie a random winner is chosen.
+
+  * Populate the `location_out` array with 8 entries, one for each 128MB region `summaryGranularity` should be less than or equal to `size` and greater than 0. `samplingGranularity` should be less than or equal to `summaryGranularity`. If the `samplingGranularity` is set to 0 it is set to a system dependent default value. In all other cases, the call returns cudaErrorInvalidValue.
+
+When the memory is not resident on any processor, the call returns cudaSuccess and the returned location type for that interval is cudaMemLocationTypeNone.
+
+The memory range must refer to one of the following:
+
+  * Managed memory allocated via cudaMallocManaged, via cudaMallocFromPoolAsync from a managed memory pool or declared via **managed** variables.
+
+  * System-allocated pageable memory that is not registered via cudaHostRegister. If the memory range does not refer to one of the above, the call returns cudaErrorInvalidValue.
+
+All devices on the system must have non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess. If not, this call returns cudaErrorNotSupported.
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **ptr** – - Starting address of the memory range to query
+
+  * **size** – - Size in bytes of the memory range to query
+
+  * **summaryGranularity** – - Granularity in bytes at which to summarize location information
+
+  * **samplingGranularity** – - Granularity in bytes at which to sample memory within each summary region
+
+  * **location_out** – - Array to store location information, one entry per summary region
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorNotSupported
+
+`` __host__ cudaError_t cudaMemPrefetchAsync(const void *devPtr, size_t count, struct cudaMemLocation location, unsigned int flags, cudaStream_t stream = 0) ``
 
 Prefetches memory to the specified destination location.
 
-######  Parameters
+Prefetches memory to the specified destination location. `devPtr` is the base device pointer of the memory to be prefetched and `location` specifies the destination location. `count` specifies the number of bytes to copy. `stream` is the stream in which the operation is enqueued. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables, or it may also refer to memory allocated from a managed memory pool, or it may also refer to system-allocated memory on systems with non-zero cudaDevAttrPageableMemoryAccess.
 
-`devPtr`
-    \- Pointer to be prefetched
-`count`
-    \- Size in bytes
-`location`
-    \- location to prefetch to
-`flags`
-    \- flags for future use, must be zero now.
-`stream`
-    \- Stream to enqueue prefetch operation
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
-
-###### Description
-
-Prefetches memory to the specified destination location. `devPtr` is the base device pointer of the memory to be prefetched and `location` specifies the destination location. `count` specifies the number of bytes to copy. `stream` is the stream in which the operation is enqueued. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables, or it may also refer to memory allocated from a managed memory pool, or it may also refer to system-allocated memory on systems with non-zero cudaDevAttrPageableMemoryAccess.
-
-Specifying cudaMemLocationTypeDevice for cudaMemLocation::type will prefetch memory to GPU specified by device ordinal cudaMemLocation::id which must have non-zero value for the device attribute concurrentManagedAccess. Additionally, `stream` must be associated with a device that has a non-zero value for the device attribute concurrentManagedAccess. Specifying cudaMemLocationTypeHost as cudaMemLocation::type will prefetch data to host memory. Applications can request prefetching memory to a specific host NUMA node by specifying cudaMemLocationTypeHostNuma for cudaMemLocation::type and a valid host NUMA node id in cudaMemLocation::id Users can also request prefetching memory to the host NUMA node closest to the current thread's CPU by specifying cudaMemLocationTypeHostNumaCurrent for cudaMemLocation::type. Note when cudaMemLocation::type is etiher cudaMemLocationTypeHost OR cudaMemLocationTypeHostNumaCurrent, cudaMemLocation::id will be ignored.
+Specifying cudaMemLocationTypeDevice for cudaMemLocation::type will prefetch memory to GPU specified by device ordinal cudaMemLocation::id which must have non-zero value for the device attribute ::concurrentManagedAccess. Additionally, `stream` must be associated with a device that has a non-zero value for the device attribute ::concurrentManagedAccess. Specifying cudaMemLocationTypeHost as cudaMemLocation::type will prefetch data to host memory. Applications can request prefetching memory to a specific host NUMA node by specifying cudaMemLocationTypeHostNuma for cudaMemLocation::type and a valid host NUMA node id in cudaMemLocation::id Users can also request prefetching memory to the host NUMA node closest to the current thread’s CPU by specifying cudaMemLocationTypeHostNumaCurrent for cudaMemLocation::type. Note when cudaMemLocation::type is etiher cudaMemLocationTypeHost OR cudaMemLocationTypeHostNumaCurrent, cudaMemLocation::id will be ignored. Prefetching to cudaMemLocationTypeDeviceLocalityDomain locations is not supported.
 
 The start address and end address of the memory range will be rounded down and rounded up respectively to be aligned to CPU page size before the prefetch operation is enqueued in the stream.
 
-If no physical memory has been allocated for this region, then this memory region will be populated and mapped on the destination device. If there's insufficient memory to prefetch the desired region, the Unified Memory driver may evict pages from other cudaMallocManaged allocations to host memory in order to make room. Device memory allocated using cudaMalloc or cudaMallocArray will not be evicted.
+If no physical memory has been allocated for this region, then this memory region will be populated and mapped on the destination device. If there’s insufficient memory to prefetch the desired region, the Unified Memory driver may evict pages from other cudaMallocManaged allocations to host memory in order to make room. Device memory allocated using cudaMalloc or cudaMallocArray will not be evicted.
 
-By default, any mappings to the previous location of the migrated pages are removed and mappings for the new location are only setup on the destination location. The exact behavior however also depends on the settings applied to this memory range via cuMemAdvise as described below:
+By default, any mappings to the previous location of the migrated pages are removed and mappings for the new location are only setup on the destination location. The exact behavior however also depends on the settings applied to this memory range via ::cuMemAdvise as described below:
 
 If cudaMemAdviseSetReadMostly was set on any subset of this memory range, then that subset will create a read-only copy of the pages on destination location. If however the destination location is a host NUMA node, then any pages of that subset that are already in another host NUMA node will be transferred to the destination.
 
@@ -1075,130 +1238,143 @@ Note that this API is not required for functionality and only serves to improve 
 
 Note that this function is asynchronous with respect to the host and all work on other devices.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, cudaMemAdvise, ::cuMemPrefetchAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, cudaMemAdvise, cuMemPrefetchAsync
+This function exhibits asynchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemPrefetchBatchAsync ( void** dptrs, size_t* sizes, size_t count, cudaMemLocation* prefetchLocs, size_t* prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream )
+Note
 
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to be prefetched
+
+  * **count** – - Size in bytes
+
+  * **location** – - location to prefetch to
+
+  * **flags** – - flags for future use, must be zero now.
+
+  * **stream** – - Stream to enqueue prefetch operation
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice, cudaErrorNotSupported
+
+`` __host__ cudaError_t cudaMemPrefetchBatchAsync(void **dptrs, size_t *sizes, size_t count, struct cudaMemLocation *prefetchLocs, size_t *prefetchLocIdxs, size_t numPrefetchLocs, unsigned long long flags, cudaStream_t stream) ``
 
 Performs a batch of memory prefetches asynchronously.
-
-######  Parameters
-
-`dptrs`
-    \- Array of pointers to be prefetched
-`sizes`
-    \- Array of sizes for memory prefetch operations.
-`count`
-    \- Size of `dptrs` and `sizes` arrays.
-`prefetchLocs`
-    \- Array of locations to prefetch to.
-`prefetchLocIdxs`
-    \- Array of indices to specify which operands each entry in the `prefetchLocs` array applies to. The locations specified in prefetchLocs[k] will be applied to copies starting from prefetchLocIdxs[k] through prefetchLocIdxs[k+1] - 1. Also prefetchLocs[numPrefetchLocs - 1] will apply to prefetches starting from prefetchLocIdxs[numPrefetchLocs \- 1] through count - 1.
-`numPrefetchLocs`
-    \- Size of `prefetchLocs` and `prefetchLocIdxs` arrays.
-`flags`
-    \- Flags reserved for future use. Must be zero.
-`stream`
-
-
-###### Description
 
 Performs a batch of memory prefetches. The batch as a whole executes in stream order but operations within a batch are not guaranteed to execute in any specific order. All devices in the system must have a non-zero value for the device attribute cudaDevAttrConcurrentManagedAccess otherwise the API will return an error.
 
 The semantics of the individual prefetch operations are as described in cudaMemPrefetchAsync.
 
-Performs memory prefetch on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess. The prefetch location for every operation in the batch is specified in the `prefetchLocs` array. Each entry in this array can apply to more than one operation. This can be done by specifying in the `prefetchLocIdxs` array, the index of the first prefetch operation that the corresponding entry in the `prefetchLocs` array applies to. Both `prefetchLocs` and `prefetchLocIdxs` must be of the same length as specified by `numPrefetchLocs`. For example, if a batch has 10 prefetches listed in dptrs/sizes, the first 4 of which are to be prefetched to one location and the remaining 6 are to be prefetched to another, then `numPrefetchLocs` will be 2, `prefetchLocIdxs` will be {0, 4} and `prefetchLocs` will contain the two locations. Note the first entry in `prefetchLocIdxs` must always be 0. Also, each entry must be greater than the previous entry and the last entry should be less than `count`. Furthermore, `numPrefetchLocs` must be lesser than or equal to `count`.
+Performs memory prefetch on address ranges specified in `dptrs` and `sizes`. Both arrays must be of the same length as specified by `count`. Each memory range specified must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables or it may also refer to system-allocated memory when all devices have a non-zero value for cudaDevAttrPageableMemoryAccess. The prefetch location for every operation in the batch is specified in the `prefetchLocs` array. Each entry in this array can apply to more than one operation. This can be done by specifying in the `prefetchLocIdxs` array, the index of the first prefetch operation that the corresponding entry in the `prefetchLocs` array applies to. Both `prefetchLocs` and `prefetchLocIdxs` must be of the same length as specified by `numPrefetchLocs`. For example, if a batch has 10 prefetches listed in dptrs/sizes, the first 4 of which are to be prefetched to one location and the remaining 6 are to be prefetched to another, then `numPrefetchLocs` will be 2, `prefetchLocIdxs` will be {0, 4} and `prefetchLocs` will contain the two locations. Note the first entry in `prefetchLocIdxs` must always be 0. Also, each entry must be greater than the previous entry and the last entry should be less than `count`. Furthermore, `numPrefetchLocs` must be lesser than or equal to `count`.
 
-__host__ cudaError_t cudaMemRangeGetAttribute ( void* data, size_t dataSize, cudaMemRangeAttribute attribute, const void* devPtr, size_t count )
+Parameters
 
+  * **dptrs** – - Array of pointers to be prefetched
+
+  * **sizes** – - Array of sizes for memory prefetch operations.
+
+  * **count** – - Size of `dptrs` and `sizes` arrays.
+
+  * **prefetchLocs** – - Array of locations to prefetch to.
+
+  * **prefetchLocIdxs** – - Array of indices to specify which operands each entry in the `prefetchLocs` array applies to. The locations specified in prefetchLocs[k] will be applied to copies starting from prefetchLocIdxs[k] through prefetchLocIdxs[k+1] - 1. Also prefetchLocs[numPrefetchLocs - 1] will apply to prefetches starting from prefetchLocIdxs[numPrefetchLocs - 1] through count - 1.
+
+  * **numPrefetchLocs** – - Size of `prefetchLocs` and `prefetchLocIdxs` arrays.
+
+  * **flags** – - Flags reserved for future use. Must be zero.
+
+  * **stream** – - The stream to enqueue the operations in. Must not be legacy NULL stream.
+
+`` __host__ cudaError_t cudaMemRangeGetAttribute(void *data, size_t dataSize, enum cudaMemRangeAttribute attribute, const void *devPtr, size_t count) ``
 
 Query an attribute of a given memory range.
 
-######  Parameters
-
-`data`
-    \- A pointers to a memory location where the result of each attribute query will be written to.
-`dataSize`
-    \- Array containing the size of data
-`attribute`
-    \- The attribute to query
-`devPtr`
-    \- Start of the range to query
-`count`
-    \- Size of the range to query
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
-
-Query an attribute about the memory range starting at `devPtr` with a size of `count` bytes. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables.
+Query an attribute about the memory range starting at `devPtr` with a size of `count` bytes. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables.
 
 The `attribute` parameter can take the following values:
 
   * cudaMemRangeAttributeReadMostly: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. The result returned will be 1 if all pages in the given memory range have read-duplication enabled, or 0 otherwise.
 
-  * cudaMemRangeAttributePreferredLocation: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. The result returned will be a GPU device id if all pages in the memory range have that GPU as their preferred location, or it will be cudaCpuDeviceId if all pages in the memory range have the CPU as their preferred location, or it will be cudaInvalidDeviceId if either all the pages don't have the same preferred location or some of the pages don't have a preferred location at all. Note that the actual location of the pages in the memory range at the time of the query may be different from the preferred location.
+  * cudaMemRangeAttributePreferredLocation: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. The result returned will be a GPU device id if all pages in the memory range have that GPU as their preferred location, or it will be cudaCpuDeviceId if all pages in the memory range have the CPU as their preferred location, or it will be cudaInvalidDeviceId if either all the pages don’t have the same preferred location or some of the pages don’t have a preferred location at all. Note that the actual location of the pages in the memory range at the time of the query may be different from the preferred location.
 
-  * cudaMemRangeAttributeAccessedBy: If this attribute is specified, `data` will be interpreted as an array of 32-bit integers, and `dataSize` must be a non-zero multiple of 4. The result returned will be a list of device ids that had cudaMemAdviceSetAccessedBy set for that entire memory range. If any device does not have that advice set for the entire memory range, that device will not be included. If `data` is larger than the number of devices that have that advice set for that memory range, cudaInvalidDeviceId will be returned in all the extra space provided. For ex., if `dataSize` is 12 (i.e. `data` has 3 elements) and only device 0 has the advice set, then the result returned will be { 0, cudaInvalidDeviceId, cudaInvalidDeviceId }. If `data` is smaller than the number of devices that have that advice set, then only as many devices will be returned as can fit in the array. There is no guarantee on which specific devices will be returned, however.
+  * cudaMemRangeAttributeAccessedBy: If this attribute is specified, `data` will be interpreted as an array of 32-bit integers, and `dataSize` must be a non-zero multiple of 4. The result returned will be a list of device ids that had ::cudaMemAdviceSetAccessedBy set for that entire memory range. If any device does not have that advice set for the entire memory range, that device will not be included. If `data` is larger than the number of devices that have that advice set for that memory range, cudaInvalidDeviceId will be returned in all the extra space provided. For ex., if `dataSize` is 12 (i.e. `data` has 3 elements) and only device 0 has the advice set, then the result returned will be { 0, cudaInvalidDeviceId, cudaInvalidDeviceId }. If `data` is smaller than the number of devices that have that advice set, then only as many devices will be returned as can fit in the array. There is no guarantee on which specific devices will be returned, however.
 
   * cudaMemRangeAttributeLastPrefetchLocation: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. The result returned will be the last location to which all pages in the memory range were prefetched explicitly via cudaMemPrefetchAsync. This will either be a GPU id or cudaCpuDeviceId depending on whether the last location for prefetch was a GPU or the CPU respectively. If any page in the memory range was never explicitly prefetched or if all pages were not prefetched to the same location, cudaInvalidDeviceId will be returned. Note that this simply returns the last location that the applicaton requested to prefetch the memory range to. It gives no indication as to whether the prefetch operation to that location has completed or even begun.
 
-  * cudaMemRangeAttributePreferredLocationType: If this attribute is specified, `data` will be interpreted as a cudaMemLocationType, and `dataSize` must be sizeof(cudaMemLocationType). The cudaMemLocationType returned will be cudaMemLocationTypeDevice if all pages in the memory range have the same GPU as their preferred location, or cudaMemLocationType will be cudaMemLocationTypeHost if all pages in the memory range have the CPU as their preferred location, or or it will be cudaMemLocationTypeHostNuma if all the pages in the memory range have the same host NUMA node ID as their preferred location or it will be cudaMemLocationTypeInvalid if either all the pages don't have the same preferred location or some of the pages don't have a preferred location at all. Note that the actual location type of the pages in the memory range at the time of the query may be different from the preferred location type.
+  * cudaMemRangeAttributePreferredLocationType: If this attribute is specified, `data` will be interpreted as a cudaMemLocationType, and `dataSize` must be sizeof(cudaMemLocationType). The cudaMemLocationType returned will be cudaMemLocationTypeDevice if all pages in the memory range have the same GPU as their preferred location, or cudaMemLocationType will be cudaMemLocationTypeHost if all pages in the memory range have the CPU as their preferred location, or or it will be cudaMemLocationTypeHostNuma if all the pages in the memory range have the same host NUMA node ID as their preferred location or it will be cudaMemLocationTypeInvalid if either all the pages don’t have the same preferred location or some of the pages don’t have a preferred location at all. Note that the actual location type of the pages in the memory range at the time of the query may be different from the preferred location type.
+
     * cudaMemRangeAttributePreferredLocationId: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. If the cudaMemRangeAttributePreferredLocationType query for the same address range returns cudaMemLocationTypeDevice, it will be a valid device ordinal or if it returns cudaMemLocationTypeHostNuma, it will be a valid host NUMA node ID or if it returns any other location type, the id should be ignored.
 
-  * cudaMemRangeAttributeLastPrefetchLocationType: If this attribute is specified, `data` will be interpreted as a cudaMemLocationType, and `dataSize` must be sizeof(cudaMemLocationType). The result returned will be the last location type to which all pages in the memory range were prefetched explicitly via cuMemPrefetchAsync. The cudaMemLocationType returned will be cudaMemLocationTypeDevice if the last prefetch location was the GPU or cudaMemLocationTypeHost if it was the CPU or cudaMemLocationTypeHostNuma if the last prefetch location was a specific host NUMA node. If any page in the memory range was never explicitly prefetched or if all pages were not prefetched to the same location, CUmemLocationType will be cudaMemLocationTypeInvalid. Note that this simply returns the last location type that the application requested to prefetch the memory range to. It gives no indication as to whether the prefetch operation to that location has completed or even begun.
+  * cudaMemRangeAttributeLastPrefetchLocationType: If this attribute is specified, `data` will be interpreted as a cudaMemLocationType, and `dataSize` must be sizeof(cudaMemLocationType). The result returned will be the last location type to which all pages in the memory range were prefetched explicitly via ::cuMemPrefetchAsync. The cudaMemLocationType returned will be cudaMemLocationTypeDevice if the last prefetch location was the GPU or cudaMemLocationTypeHost if it was the CPU or cudaMemLocationTypeHostNuma if the last prefetch location was a specific host NUMA node. If any page in the memory range was never explicitly prefetched or if all pages were not prefetched to the same location, ::CUmemLocationType will be cudaMemLocationTypeInvalid. Note that this simply returns the last location type that the application requested to prefetch the memory range to. It gives no indication as to whether the prefetch operation to that location has completed or even begun.
+
     * cudaMemRangeAttributeLastPrefetchLocationId: If this attribute is specified, `data` will be interpreted as a 32-bit integer, and `dataSize` must be 4. If the cudaMemRangeAttributeLastPrefetchLocationType query for the same address range returns cudaMemLocationTypeDevice, it will be a valid device ordinal or if it returns cudaMemLocationTypeHostNuma, it will be a valid host NUMA node ID or if it returns any other location type, the id should be ignored.
 
+See also
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+cudaMemRangeGetAttributes, cudaMemPrefetchAsync, cudaMemAdvise, ::cuMemRangeGetAttribute
 
-  * This function uses standard default stream semantics.
+Note
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-**See also:**
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemRangeGetAttributes, cudaMemPrefetchAsync, cudaMemAdvise, cuMemRangeGetAttribute
+Note
 
-__host__ cudaError_t cudaMemRangeGetAttributes ( void** data, size_t* dataSizes, cudaMemRangeAttribute ** attributes, size_t numAttributes, const void* devPtr, size_t count )
+This function uses standard default stream semantics.
 
+Note
 
-Query attributes of a given memory range.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`data`
-    \- A two-dimensional array containing pointers to memory locations where the result of each attribute query will be written to.
-`dataSizes`
-    \- Array containing the sizes of each result
-`attributes`
-    \- An array of attributes to query (numAttributes and the number of attributes in this array should match)
-`numAttributes`
-    \- Number of attributes to query
-`devPtr`
-    \- Start of the range to query
-`count`
-    \- Size of the range to query
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **data** – - A pointers to a memory location where the result of each attribute query will be written to.
+
+  * **dataSize** – - Array containing the size of data
+
+  * **attribute** – - The attribute to query
+
+  * **devPtr** – - Start of the range to query
+
+  * **count** – - Size of the range to query
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
+`` __host__ cudaError_t cudaMemRangeGetAttributes(void **data, size_t *dataSizes, enum cudaMemRangeAttribute *attributes, size_t numAttributes, const void *devPtr, size_t count) ``
 
-Query attributes of the memory range starting at `devPtr` with a size of `count` bytes. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via __managed__ variables. The `attributes` array will be interpreted to have `numAttributes` entries. The `dataSizes` array will also be interpreted to have `numAttributes` entries. The results of the query will be stored in `data`.
+Query attributes of a given memory range.
+
+Query attributes of the memory range starting at `devPtr` with a size of `count` bytes. The memory range must refer to managed memory allocated via cudaMallocManaged or declared via **managed** variables. The `attributes` array will be interpreted to have `numAttributes` entries. The `dataSizes` array will also be interpreted to have `numAttributes` entries. The results of the query will be stored in `data`.
 
 The list of supported attributes are given below. Please refer to cudaMemRangeGetAttribute for attribute descriptions and restrictions.
 
@@ -1218,153 +1394,183 @@ The list of supported attributes are given below. Please refer to cudaMemRangeGe
 
   * :: cudaMemRangeAttributeLastPrefetchLocationId
 
+See also
 
-**See also:**
+cudaMemRangeGetAttribute, cudaMemAdvise, cudaMemPrefetchAsync, ::cuMemRangeGetAttributes
 
-cudaMemRangeGetAttribute, cudaMemAdvise, cudaMemPrefetchAsync, cuMemRangeGetAttributes
+Note
 
-__host__ cudaError_t cudaMemcpy ( void* dst, const void* src, size_t count, cudaMemcpyKind kind )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **data** – - A two-dimensional array containing pointers to memory locations where the result of each attribute query will be written to.
+
+  * **dataSizes** – - Array containing the sizes of each result
+
+  * **attributes** – - An array of attributes to query (numAttributes and the number of attributes in this array should match)
+
+  * **numAttributes** – - Number of attributes to query
+
+  * **devPtr** – - Start of the range to query
+
+  * **count** – - Size of the range to query
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMemcpy(void *dst, const void *src, size_t count, enum cudaMemcpyKind kind) ``
 
 Copies data between host and device.
-
-######  Parameters
-
-`dst`
-    \- Destination memory address
-`src`
-    \- Source memory address
-`count`
-    \- Size in bytes to copy
-`kind`
-    \- Type of transfer
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidMemcpyDirection
-
-###### Description
 
 Copies `count` bytes from the memory area pointed to by `src` to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. Calling cudaMemcpy() with dst and src pointers that do not match the direction of the copy results in an undefined behavior.
 
-  * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpyDtoH, ::cuMemcpyHtoD, ::cuMemcpyDtoD, ::cuMemcpy
 
+Note
 
-**See also:**
+Note that this function may also return error codes from previous, asynchronous launches.
 
-cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpyDtoH, cuMemcpyHtoD, cuMemcpyDtoD, cuMemcpy
+Note
 
-__host__ cudaError_t cudaMemcpy2D ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind )
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
+Note
 
-Copies data between host and device.
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-######  Parameters
+Note
 
-`dst`
-    \- Destination memory address
-`dpitch`
-    \- Pitch of destination memory
-`src`
-    \- Source memory address
-`spitch`
-    \- Pitch of source memory
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
+This function exhibits synchronous behavior for most use cases.
 
-###### Returns
+Note
 
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
 
-###### Description
+Parameters
 
-Copies a matrix (`height` rows of `width` bytes each) from the memory area pointed to by `src` to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `dpitch` and `spitch` are the widths in memory in bytes of the 2D arrays pointed to by `dst` and `src`, including any padding added to the end of each row. The memory areas may not overlap. `width` must not exceed either `dpitch` or `spitch`. Calling cudaMemcpy2D() with `dst` and `src` pointers that do not match the direction of the copy results in an undefined behavior. cudaMemcpy2D() returns an error if `dpitch` or `spitch` exceeds the maximum allowed.
+  * **dst** – - Destination memory address
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+  * **src** – - Source memory address
 
+  * **count** – - Size in bytes to copy
 
-**See also:**
+  * **kind** – - Type of transfer
 
-cudaMemcpy, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2D, cuMemcpy2DUnaligned
-
-__host__ cudaError_t cudaMemcpy2DArrayToArray ( cudaArray_t dst, size_t wOffsetDst, size_t hOffsetDst, cudaArray_const_t src, size_t wOffsetSrc, size_t hOffsetSrc, size_t width, size_t height, cudaMemcpyKind kind = cudaMemcpyDeviceToDevice )
-
-
-Copies data between host and device.
-
-######  Parameters
-
-`dst`
-    \- Destination memory address
-`wOffsetDst`
-    \- Destination starting X offset (columns in bytes)
-`hOffsetDst`
-    \- Destination starting Y offset (rows)
-`src`
-    \- Source memory address
-`wOffsetSrc`
-    \- Source starting X offset (columns in bytes)
-`hOffsetSrc`
-    \- Source starting Y offset (rows)
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
-
-###### Returns
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
-
-Copies a matrix (`height` rows of `width` bytes each) from the CUDA array `src` starting at `hOffsetSrc` rows and `wOffsetSrc` bytes from the upper left corner to the CUDA array `dst` starting at `hOffsetDst` rows and `wOffsetDst` bytes from the upper left corner, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `wOffsetDst` \+ `width` must not exceed the width of the CUDA array `dst`. `wOffsetSrc` \+ `width` must not exceed the width of the CUDA array `src`.
-
-  *   * This function exhibits synchronous behavior for most use cases.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
-
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2D, cuMemcpy2DUnaligned
-
-__host__  __device__ cudaError_t cudaMemcpy2DAsync ( void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind, cudaStream_t stream = 0 )
-
+`` __host__ cudaError_t cudaMemcpy2D(void *dst, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind) ``
 
 Copies data between host and device.
 
-######  Parameters
+Copies a matrix (`height` rows of `width` bytes each) from the memory area pointed to by `src` to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `dpitch` and `spitch` are the widths in memory in bytes of the 2D arrays pointed to by `dst` and `src`, including any padding added to the end of each row. The memory areas may not overlap. `width` must not exceed either `dpitch` or `spitch`. Calling cudaMemcpy2D() with `dst` and `src` pointers that do not match the direction of the copy results in an undefined behavior. cudaMemcpy2D() returns an error if `dpitch` or `spitch` exceeds the maximum allowed.
 
-`dst`
-    \- Destination memory address
-`dpitch`
-    \- Pitch of destination memory
-`src`
-    \- Source memory address
-`spitch`
-    \- Pitch of source memory
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
+See also
 
-###### Returns
+cudaMemcpy, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2D, ::cuMemcpy2DUnaligned
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **dpitch** – - Pitch of destination memory
+
+  * **src** – - Source memory address
+
+  * **spitch** – - Pitch of source memory
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy2DArrayToArray(cudaArray_t dst, size_t wOffsetDst, size_t hOffsetDst, cudaArray_const_t src, size_t wOffsetSrc, size_t hOffsetSrc, size_t width, size_t height, enum cudaMemcpyKind kind = cudaMemcpyDeviceToDevice) ``
+
+Copies data between host and device.
+
+Copies a matrix (`height` rows of `width` bytes each) from the CUDA array `src` starting at `hOffsetSrc` rows and `wOffsetSrc` bytes from the upper left corner to the CUDA array `dst` starting at `hOffsetDst` rows and `wOffsetDst` bytes from the upper left corner, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `wOffsetDst` \+ `width` must not exceed the width of the CUDA array `dst`. `wOffsetSrc` \+ `width` must not exceed the width of the CUDA array `src`.
+
+See also
+
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2D, ::cuMemcpy2DUnaligned
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+This function exhibits synchronous behavior for most use cases.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **wOffsetDst** – - Destination starting X offset (columns in bytes)
+
+  * **hOffsetDst** – - Destination starting Y offset (rows)
+
+  * **src** – - Source memory address
+
+  * **wOffsetSrc** – - Source starting X offset (columns in bytes)
+
+  * **hOffsetSrc** – - Source starting Y offset (rows)
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidMemcpyDirection
+
+`` __host__ cudaError_t cudaMemcpy2DAsync(void *dst, size_t dpitch, const void *src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
+
+Copies data between host and device.
 
 Copies a matrix (`height` rows of `width` bytes each) from the memory area pointed to by `src` to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `dpitch` and `spitch` are the widths in memory in bytes of the 2D arrays pointed to by `dst` and `src`, including any padding added to the end of each row. The memory areas may not overlap. `width` must not exceed either `dpitch` or `spitch`.
 
@@ -1374,269 +1580,326 @@ cudaMemcpy2DAsync() is asynchronous with respect to the host, so the call may re
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2DAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-**See also:**
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2DAsync
+Note
 
-__host__ cudaError_t cudaMemcpy2DFromArray ( void* dst, size_t dpitch, cudaArray_const_t src, size_t wOffset, size_t hOffset, size_t width, size_t height, cudaMemcpyKind kind )
+This function uses standard default stream semantics.
 
+Note
 
-Copies data between host and device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`dst`
-    \- Destination memory address
-`dpitch`
-    \- Pitch of destination memory
-`src`
-    \- Source memory address
-`wOffset`
-    \- Source starting X offset (columns in bytes)
-`hOffset`
-    \- Source starting Y offset (rows)
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **dpitch** – - Pitch of destination memory
+
+  * **src** – - Source memory address
+
+  * **spitch** – - Pitch of source memory
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy2DFromArray(void *dst, size_t dpitch, cudaArray_const_t src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum cudaMemcpyKind kind) ``
+
+Copies data between host and device.
 
 Copies a matrix (`height` rows of `width` bytes each) from the CUDA array `src` starting at `hOffset` rows and `wOffset` bytes from the upper left corner to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `dpitch` is the width in memory in bytes of the 2D array pointed to by `dst`, including any padding added to the end of each row. `wOffset` \+ `width` must not exceed the width of the CUDA array `src`. `width` must not exceed `dpitch`. cudaMemcpy2DFromArray() returns an error if `dpitch` exceeds the maximum allowed.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2D, ::cuMemcpy2DUnaligned
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2D, cuMemcpy2DUnaligned
+This function exhibits synchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpy2DFromArrayAsync ( void* dst, size_t dpitch, cudaArray_const_t src, size_t wOffset, size_t hOffset, size_t width, size_t height, cudaMemcpyKind kind, cudaStream_t stream = 0 )
+Note
 
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-Copies data between host and device.
+Note
 
-######  Parameters
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-`dst`
-    \- Destination memory address
-`dpitch`
-    \- Pitch of destination memory
-`src`
-    \- Source memory address
-`wOffset`
-    \- Source starting X offset (columns in bytes)
-`hOffset`
-    \- Source starting Y offset (rows)
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
+Note
 
-###### Returns
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **dpitch** – - Pitch of destination memory
+
+  * **src** – - Source memory address
+
+  * **wOffset** – - Source starting X offset (columns in bytes)
+
+  * **hOffset** – - Source starting Y offset (rows)
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy2DFromArrayAsync(void *dst, size_t dpitch, cudaArray_const_t src, size_t wOffset, size_t hOffset, size_t width, size_t height, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
+
+Copies data between host and device.
 
 Copies a matrix (`height` rows of `width` bytes each) from the CUDA array `src` starting at `hOffset` rows and `wOffset` bytes from the upper left corner to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `dpitch` is the width in memory in bytes of the 2D array pointed to by `dst`, including any padding added to the end of each row. `wOffset` \+ `width` must not exceed the width of the CUDA array `src`. `width` must not exceed `dpitch`. cudaMemcpy2DFromArrayAsync() returns an error if `dpitch` exceeds the maximum allowed.
 
 cudaMemcpy2DFromArrayAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2DAsync
 
-  * This function uses standard default stream semantics.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync,
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2DAsync
+Note
 
-__host__ cudaError_t cudaMemcpy2DToArray ( cudaArray_t dst, size_t wOffset, size_t hOffset, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind )
+This function uses standard default stream semantics.
 
+Note
 
-Copies data between host and device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`dst`
-    \- Destination memory address
-`wOffset`
-    \- Destination starting X offset (columns in bytes)
-`hOffset`
-    \- Destination starting Y offset (rows)
-`src`
-    \- Source memory address
-`spitch`
-    \- Pitch of source memory
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **dpitch** – - Pitch of destination memory
+
+  * **src** – - Source memory address
+
+  * **wOffset** – - Source starting X offset (columns in bytes)
+
+  * **hOffset** – - Source starting Y offset (rows)
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy2DToArray(cudaArray_t dst, size_t wOffset, size_t hOffset, const void *src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind) ``
+
+Copies data between host and device.
 
 Copies a matrix (`height` rows of `width` bytes each) from the memory area pointed to by `src` to the CUDA array `dst` starting at `hOffset` rows and `wOffset` bytes from the upper left corner, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `spitch` is the width in memory in bytes of the 2D array pointed to by `src`, including any padding added to the end of each row. `wOffset` \+ `width` must not exceed the width of the CUDA array `dst`. `width` must not exceed `spitch`. cudaMemcpy2DToArray() returns an error if `spitch` exceeds the maximum allowed.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2D, ::cuMemcpy2DUnaligned
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2D, cuMemcpy2DUnaligned
+This function exhibits synchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpy2DToArrayAsync ( cudaArray_t dst, size_t wOffset, size_t hOffset, const void* src, size_t spitch, size_t width, size_t height, cudaMemcpyKind kind, cudaStream_t stream = 0 )
+Note
 
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-Copies data between host and device.
+Note
 
-######  Parameters
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-`dst`
-    \- Destination memory address
-`wOffset`
-    \- Destination starting X offset (columns in bytes)
-`hOffset`
-    \- Destination starting Y offset (rows)
-`src`
-    \- Source memory address
-`spitch`
-    \- Pitch of source memory
-`width`
-    \- Width of matrix transfer (columns in bytes)
-`height`
-    \- Height of matrix transfer (rows)
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
+Note
 
-###### Returns
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **wOffset** – - Destination starting X offset (columns in bytes)
+
+  * **hOffset** – - Destination starting Y offset (rows)
+
+  * **src** – - Source memory address
+
+  * **spitch** – - Pitch of source memory
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy2DToArrayAsync(cudaArray_t dst, size_t wOffset, size_t hOffset, const void *src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
+
+Copies data between host and device.
 
 Copies a matrix (`height` rows of `width` bytes each) from the memory area pointed to by `src` to the CUDA array `dst` starting at `hOffset` rows and `wOffset` bytes from the upper left corner, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. `spitch` is the width in memory in bytes of the 2D array pointed to by `src`, including any padding added to the end of each row. `wOffset` \+ `width` must not exceed the width of the CUDA array `dst`. `width` must not exceed `spitch`. cudaMemcpy2DToArrayAsync() returns an error if `spitch` exceeds the maximum allowed.
 
 cudaMemcpy2DToArrayAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy2DAsync
 
-  * This function uses standard default stream semantics.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync,
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy2DAsync
+Note
 
-__host__ cudaError_t cudaMemcpy3D ( const cudaMemcpy3DParms* p )
+This function uses standard default stream semantics.
 
+Note
 
-Copies data between 3D objects.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`p`
-    \- 3D memory copy parameters
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **wOffset** – - Destination starting X offset (columns in bytes)
+
+  * **hOffset** – - Destination starting Y offset (rows)
+
+  * **src** – - Source memory address
+
+  * **spitch** – - Pitch of source memory
+
+  * **width** – - Width of matrix transfer (columns in bytes)
+
+  * **height** – - Height of matrix transfer (rows)
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy3D(const struct cudaMemcpy3DParms *p) ``
 
+Copies data between 3D objects.
 
-    ‎struct cudaExtent {
-            size_t width;
-            size_t height;
-            size_t depth;
-          };
-          struct cudaExtent
-                      make_cudaExtent(size_t w, size_t h, size_t d);
+```cpp
+struct cudaExtent {
+  size_t width;
+  size_t height;
+  size_t depth;
+};
+struct cudaExtent make_cudaExtent(size_t w, size_t h, size_t d);
 
-          struct cudaPos {
-            size_t x;
-            size_t y;
-            size_t z;
-          };
-          struct cudaPos
-                      make_cudaPos(size_t x, size_t y, size_t z);
+struct cudaPos {
+  size_t x;
+  size_t y;
+  size_t z;
+};
+struct cudaPos make_cudaPos(size_t x, size_t y, size_t z);
 
-          struct cudaMemcpy3DParms {
-            cudaArray_t
-                      srcArray;
-            struct cudaPos
-                      srcPos;
-            struct cudaPitchedPtr
-                      srcPtr;
-            cudaArray_t
-                      dstArray;
-            struct cudaPos
-                      dstPos;
-            struct cudaPitchedPtr
-                      dstPtr;
-            struct cudaExtent
-                      extent;
-            enum cudaMemcpyKind
-                      kind;
-          };
+struct cudaMemcpy3DParms {
+  cudaArray_t           srcArray;
+  struct cudaPos        srcPos;
+  struct cudaPitchedPtr srcPtr;
+  cudaArray_t           dstArray;
+  struct cudaPos        dstPos;
+  struct cudaPitchedPtr dstPtr;
+  struct cudaExtent     extent;
+  enum cudaMemcpyKind   kind;
+};
+```
 
 cudaMemcpy3D() copies data betwen two 3D objects. The source and destination objects may be in either host memory, device memory, or a CUDA array. The source, destination, extent, and kind of copy performed is specified by the cudaMemcpy3DParms struct which should be initialized to zero before use:
 
-
-    ‎cudaMemcpy3DParms myParms = {0};
+```cpp
+cudaMemcpy3DParms myParms = {0};
+```
 
 The struct passed to cudaMemcpy3D() must specify one of `srcArray` or `srcPtr` and one of `dstArray` or `dstPtr`. Passing more than one non-zero source or destination will cause cudaMemcpy3D() to return an error.
 
-The `srcPos` and `dstPos` fields are optional offsets into the source and destination objects and are defined in units of each object's elements. The element for a host or device pointer is assumed to be **unsigned char**.
+The `srcPos` and `dstPos` fields are optional offsets into the source and destination objects and are defined in units of each object’s elements. The element for a host or device pointer is assumed to be **unsigned char**.
 
-The `extent` field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array's elements. If no CUDA array is participating in the copy then the extents are defined in elements of **unsigned char**.
+The `extent` field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array’s elements. If no CUDA array is participating in the copy then the extents are defined in elements of **unsigned char**.
 
 The `kind` field defines the direction of the copy. It must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. For cudaMemcpyHostToHost or cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost passed as kind and cudaArray type passed as source or destination, if the kind implies cudaArray type to be present on the host, cudaMemcpy3D() will disregard that implication and silently correct the kind based on the fact that cudaArray type can only be present on the device.
 
@@ -1648,81 +1911,78 @@ The source object must entirely contain the region defined by `srcPos` and `exte
 
 cudaMemcpy3D() returns an error if the pitch of `srcPtr` or `dstPtr` exceeds the maximum allowed. The pitch of a cudaPitchedPtr allocated with cudaMalloc3D() will always be valid.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMalloc3D, cudaMalloc3DArray, cudaMemset3D, cudaMemcpy3DAsync, cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, make_cudaExtent, make_cudaPos, ::cuMemcpy3D
 
+Note
 
-**See also:**
+Note that this function may also return error codes from previous, asynchronous launches.
 
-cudaMalloc3D, cudaMalloc3DArray, cudaMemset3D, cudaMemcpy3DAsync, cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, make_cudaExtent, make_cudaPos, cuMemcpy3D
+Note
 
-__host__  __device__ cudaError_t cudaMemcpy3DAsync ( const cudaMemcpy3DParms* p, cudaStream_t stream = 0 )
+This function exhibits synchronous behavior for most use cases.
 
+Note
 
-Copies data between 3D objects.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`p`
-    \- 3D memory copy parameters
-`stream`
-    \- Stream identifier
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+**p** – - 3D memory copy parameters
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy3DAsync(const struct cudaMemcpy3DParms *p, cudaStream_t stream = 0) ``
 
+Copies data between 3D objects.
 
-    ‎struct cudaExtent {
-            size_t width;
-            size_t height;
-            size_t depth;
-          };
-          struct cudaExtent
-                      make_cudaExtent(size_t w, size_t h, size_t d);
+```cpp
+struct cudaExtent {
+  size_t width;
+  size_t height;
+  size_t depth;
+};
+struct cudaExtent make_cudaExtent(size_t w, size_t h, size_t d);
 
-          struct cudaPos {
-            size_t x;
-            size_t y;
-            size_t z;
-          };
-          struct cudaPos
-                      make_cudaPos(size_t x, size_t y, size_t z);
+struct cudaPos {
+  size_t x;
+  size_t y;
+  size_t z;
+};
+struct cudaPos make_cudaPos(size_t x, size_t y, size_t z);
 
-          struct cudaMemcpy3DParms {
-            cudaArray_t
-                      srcArray;
-            struct cudaPos
-                      srcPos;
-            struct cudaPitchedPtr
-                      srcPtr;
-            cudaArray_t
-                      dstArray;
-            struct cudaPos
-                      dstPos;
-            struct cudaPitchedPtr
-                      dstPtr;
-            struct cudaExtent
-                      extent;
-            enum cudaMemcpyKind
-                      kind;
-          };
+struct cudaMemcpy3DParms {
+  cudaArray_t           srcArray;
+  struct cudaPos        srcPos;
+  struct cudaPitchedPtr srcPtr;
+  cudaArray_t           dstArray;
+  struct cudaPos        dstPos;
+  struct cudaPitchedPtr dstPtr;
+  struct cudaExtent     extent;
+  enum cudaMemcpyKind   kind;
+};
+```
 
 cudaMemcpy3DAsync() copies data betwen two 3D objects. The source and destination objects may be in either host memory, device memory, or a CUDA array. The source, destination, extent, and kind of copy performed is specified by the cudaMemcpy3DParms struct which should be initialized to zero before use:
 
-
-    ‎cudaMemcpy3DParms myParms = {0};
+```cpp
+cudaMemcpy3DParms myParms = {0};
+```
 
 The struct passed to cudaMemcpy3DAsync() must specify one of `srcArray` or `srcPtr` and one of `dstArray` or `dstPtr`. Passing more than one non-zero source or destination will cause cudaMemcpy3DAsync() to return an error.
 
-The `srcPos` and `dstPos` fields are optional offsets into the source and destination objects and are defined in units of each object's elements. The element for a host or device pointer is assumed to be **unsigned char**. For CUDA arrays, positions must be in the range 0, 2048) for any dimension.
+The `srcPos` and `dstPos` fields are optional offsets into the source and destination objects and are defined in units of each object’s elements. The element for a host or device pointer is assumed to be **unsigned char**. For CUDA arrays, positions must be in the range [0, 2048) for any dimension.
 
-The `extent` field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array's elements. If no CUDA array is participating in the copy then the extents are defined in elements of **unsigned char**.
+The `extent` field defines the dimensions of the transferred area in elements. If a CUDA array is participating in the copy, the extent is defined in terms of that array’s elements. If no CUDA array is participating in the copy then the extents are defined in elements of **unsigned char**.
 
-The `kind` field defines the direction of the copy. It must be one of [cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. For cudaMemcpyHostToHost or cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost passed as kind and cudaArray type passed as source or destination, if the kind implies cudaArray type to be present on the host, cudaMemcpy3DAsync() will disregard that implication and silently correct the kind based on the fact that cudaArray type can only be present on the device.
+The `kind` field defines the direction of the copy. It must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing. For cudaMemcpyHostToHost or cudaMemcpyHostToDevice or cudaMemcpyDeviceToHost passed as kind and cudaArray type passed as source or destination, if the kind implies cudaArray type to be present on the host, cudaMemcpy3DAsync() will disregard that implication and silently correct the kind based on the fact that cudaArray type can only be present on the device.
 
 If the source and destination are both arrays, cudaMemcpy3DAsync() will return an error if they do not have the same element size.
 
@@ -1736,139 +1996,197 @@ cudaMemcpy3DAsync() is asynchronous with respect to the host, so the call may re
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMalloc3D, cudaMalloc3DArray, cudaMemset3D, cudaMemcpy3D, cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, :::cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, make_cudaExtent, make_cudaPos, ::cuMemcpy3DAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMalloc3D, cudaMalloc3DArray, cudaMemset3D, cudaMemcpy3D, cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, :cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, make_cudaExtent, make_cudaPos, cuMemcpy3DAsync
+This function exhibits asynchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpy3DBatchAsync ( size_t numOps, cudaMemcpy3DBatchOp* opList, unsigned long long flags, cudaStream_t stream )
+Note
 
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **p** – - 3D memory copy parameters
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidPitchValue, cudaErrorInvalidMemcpyDirection
+
+`` __host__ cudaError_t cudaMemcpy3DBatchAsync(size_t numOps, struct cudaMemcpy3DBatchOp *opList, unsigned long long flags, cudaStream_t stream) ``
 
 Performs a batch of 3D memory copies asynchronously.
-
-######  Parameters
-
-`numOps`
-    \- Total number of memcpy operations.
-`opList`
-    \- Array of size `numOps` containing the actual memcpy operations.
-`flags`
-    \- Flags for future use, must be zero now.
-`stream`
-
-
-###### Returns
-
-cudaSuccesscudaErrorInvalidValue
-
-###### Description
 
 Performs a batch of memory copies. The batch as a whole executes in stream order but copies within a batch are not guaranteed to execute in any specific order. Note that this means specifying any dependent copies within a batch will result in undefined behavior.
 
 Performs memory copies as specified in the `opList` array. The length of this array is specified in `numOps`. Each entry in this array describes a copy operation. This includes among other things, the source and destination operands for the copy as specified in cudaMemcpy3DBatchOp::src and cudaMemcpy3DBatchOp::dst respectively. The source and destination operands of a copy can either be a pointer or a CUDA array. The width, height and depth of a copy is specified in cudaMemcpy3DBatchOp::extent. The width, height and depth of a copy are specified in elements and must not be zero. For pointer-to-pointer copies, the element size is considered to be 1. For pointer to CUDA array or vice versa copies, the element size is determined by the CUDA array. For CUDA array to CUDA array copies, the element size of the two CUDA arrays must match.
 
-For a given operand, if cudaMemcpy3DOperand::type is specified as cudaMemcpyOperandTypePointer, then cudaMemcpy3DOperand::op::ptr will be used. The cudaMemcpy3DOperand::op::ptr::ptr field must contain the pointer where the copy should begin. The cudaMemcpy3DOperand::op::ptr::rowLength field specifies the length of each row in elements and must either be zero or be greater than or equal to the width of the copy specified in cudaMemcpy3DBatchOp::extent::width. The cudaMemcpy3DOperand::op::ptr::layerHeight field specifies the height of each layer and must either be zero or be greater than or equal to the height of the copy specified in cudaMemcpy3DBatchOp::extent::height. When either of these values is zero, that aspect of the operand is considered to be tightly packed according to the copy extent. For managed memory pointers on devices where cudaDevAttrConcurrentManagedAccess is true or system-allocated pageable memory on devices where cudaDevAttrPageableMemoryAccess is true, the cudaMemcpy3DOperand::op::ptr::locHint field can be used to hint the location of the operand.
+For a given operand, if cudaMemcpy3DOperand::type is specified as cudaMemcpyOperandTypePointer, then ::cudaMemcpy3DOperand::op::ptr will be used. The ::cudaMemcpy3DOperand::op::ptr::ptr field must contain the pointer where the copy should begin. The ::cudaMemcpy3DOperand::op::ptr::rowLength field specifies the length of each row in elements and must either be zero or be greater than or equal to the width of the copy specified in ::cudaMemcpy3DBatchOp::extent::width. The ::cudaMemcpy3DOperand::op::ptr::layerHeight field specifies the height of each layer and must either be zero or be greater than or equal to the height of the copy specified in ::cudaMemcpy3DBatchOp::extent::height. When either of these values is zero, that aspect of the operand is considered to be tightly packed according to the copy extent. For managed memory pointers on devices where cudaDevAttrConcurrentManagedAccess is true or system-allocated pageable memory on devices where cudaDevAttrPageableMemoryAccess is true, the ::cudaMemcpy3DOperand::op::ptr::locHint field can be used to hint the location of the operand.
 
-If an operand's type is specified as cudaMemcpyOperandTypeArray, then cudaMemcpy3DOperand::op::array will be used. The cudaMemcpy3DOperand::op::array::array field specifies the CUDA array and cudaMemcpy3DOperand::op::array::offset specifies the 3D offset into that array where the copy begins.
+If an operand’s type is specified as cudaMemcpyOperandTypeArray, then ::cudaMemcpy3DOperand::op::array will be used. The ::cudaMemcpy3DOperand::op::array::array field specifies the CUDA array and ::cudaMemcpy3DOperand::op::array::offset specifies the 3D offset into that array where the copy begins.
 
-The cudaMemcpyAttributes::srcAccessOrder indicates the source access ordering to be observed for copies associated with the attribute. If the source access order is set to cudaMemcpySrcAccessOrderStream, then the source will be accessed in stream order. If the source access order is set to cudaMemcpySrcAccessOrderDuringApiCall then it indicates that access to the source pointer can be out of stream order and all accesses must be complete before the API call returns. This flag is suited for ephemeral sources (ex., stack variables) when it's known that no prior operations in the stream can be accessing the memory and also that the lifetime of the memory is limited to the scope that the source variable was declared in. Specifying this flag allows the driver to optimize the copy and removes the need for the user to synchronize the stream after the API call. If the source access order is set to cudaMemcpySrcAccessOrderAny then it indicates that access to the source pointer can be out of stream order and the accesses can happen even after the API call returns. This flag is suited for host pointers allocated outside CUDA (ex., via malloc) when it's known that no prior operations in the stream can be accessing the memory. Specifying this flag allows the driver to optimize the copy on certain platforms. Each memcopy operation in `opList` must have a valid srcAccessOrder setting, otherwise this API will return cudaErrorInvalidValue.
+The cudaMemcpyAttributes::srcAccessOrder indicates the source access ordering to be observed for copies associated with the attribute. If the source access order is set to cudaMemcpySrcAccessOrderStream, then the source will be accessed in stream order. If the source access order is set to cudaMemcpySrcAccessOrderDuringApiCall then it indicates that access to the source pointer can be out of stream order and all accesses must be complete before the API call returns. This flag is suited for ephemeral sources (ex., stack variables) when it’s known that no prior operations in the stream can be accessing the memory and also that the lifetime of the memory is limited to the scope that the source variable was declared in. Specifying this flag allows the driver to optimize the copy and removes the need for the user to synchronize the stream after the API call. If the source access order is set to cudaMemcpySrcAccessOrderAny then it indicates that access to the source pointer can be out of stream order and the accesses can happen even after the API call returns. This flag is suited for host pointers allocated outside CUDA (ex., via malloc) when it’s known that no prior operations in the stream can be accessing the memory. Specifying this flag allows the driver to optimize the copy on certain platforms. Each memcopy operation in `opList` must have a valid srcAccessOrder setting, otherwise this API will return cudaErrorInvalidValue.
 
 The cudaMemcpyAttributes::flags field can be used to specify certain flags for copies. Setting the cudaMemcpyFlagPreferOverlapWithCompute flag indicates that the associated copies should preferably overlap with any compute work. Note that this flag is a hint and can be ignored depending on the platform and other parameters of the copy.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+Note
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-__host__ cudaError_t cudaMemcpy3DPeer ( const cudaMemcpy3DPeerParms* p )
+This function exhibits asynchronous behavior for most use cases.
 
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **numOps** – - Total number of memcpy operations.
+
+  * **opList** – - Array of size `numOps` containing the actual memcpy operations.
+
+  * **flags** – - Flags for future use, must be zero now.
+
+  * **stream** – - The stream to enqueue the operations in. Must not be default NULL stream.
+
+Returns
+
+cudaSuccess cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMemcpy3DPeer(const struct cudaMemcpy3DPeerParms *p) ``
 
 Copies memory between devices.
 
-######  Parameters
+Perform a 3D memory copy according to the parameters specified in `p`. See the definition of the cudaMemcpy3DPeerParms structure for documentation of its parameters.
 
-`p`
-    \- Parameters for the memory copy
+Note that this function is synchronous with respect to the host only if the source or destination of the transfer is host memory. Note also that this copy is serialized with respect to all pending and future asynchronous work in to the current device, the copy’s source device, and the copy’s destination device (use cudaMemcpy3DPeerAsync to avoid this synchronization).
 
-###### Returns
+See also
+
+cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, ::cuMemcpy3DPeer
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+This function exhibits synchronous behavior for most use cases.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**p** – - Parameters for the memory copy
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice, cudaErrorInvalidPitchValue
 
-###### Description
-
-Perform a 3D memory copy according to the parameters specified in `p`. See the definition of the cudaMemcpy3DPeerParms structure for documentation of its parameters.
-
-Note that this function is synchronous with respect to the host only if the source or destination of the transfer is host memory. Note also that this copy is serialized with respect to all pending and future asynchronous work in to the current device, the copy's source device, and the copy's destination device (use cudaMemcpy3DPeerAsync to avoid this synchronization).
-
-  *   * This function exhibits synchronous behavior for most use cases.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
-
-cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, cuMemcpy3DPeer
-
-__host__ cudaError_t cudaMemcpy3DPeerAsync ( const cudaMemcpy3DPeerParms* p, cudaStream_t stream = 0 )
-
+`` __host__ cudaError_t cudaMemcpy3DPeerAsync(const struct cudaMemcpy3DPeerParms *p, cudaStream_t stream = 0) ``
 
 Copies memory between devices asynchronously.
 
-######  Parameters
+Perform a 3D memory copy according to the parameters specified in `p`. See the definition of the cudaMemcpy3DPeerParms structure for documentation of its parameters.
 
-`p`
-    \- Parameters for the memory copy
-`stream`
-    \- Stream identifier
+See also
 
-###### Returns
+cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, ::cuMemcpy3DPeerAsync
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+This function exhibits asynchronous behavior for most use cases.
+
+Note
+
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **p** – - Parameters for the memory copy
+
+  * **stream** – - Stream identifier
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice, cudaErrorInvalidPitchValue
 
-###### Description
+`` __host__ cudaError_t cudaMemcpy3DWithAttributesAsync(struct cudaMemcpy3DBatchOp *op, unsigned long long flags, cudaStream_t stream) ``
 
-Perform a 3D memory copy according to the parameters specified in `p`. See the definition of the cudaMemcpy3DPeerParms structure for documentation of its parameters.
+Performs 3D asynchronous memory copy with the specified attributes.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+Performs the copy operation specified in `op`. `flags` specifies the flags for the copy and `stream` specifies the stream to enqueue the operation in.
 
-  * This function uses standard default stream semantics.
+For more information regarding the operation, please refer to cudaMemcpy3DBatchOp and it’s usage desciption in::cudaMemcpy3DBatchAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+See also
 
+cudaMemcpy3DBatchAsync
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, cuMemcpy3DPeerAsync
+Note that this function may also return error codes from previous, asynchronous launches.
 
-__host__  __device__ cudaError_t cudaMemcpyAsync ( void* dst, const void* src, size_t count, cudaMemcpyKind kind, cudaStream_t stream = 0 )
+Note
 
+This function exhibits asynchronous behavior for most use cases.
+
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **op** – - Operation to perform
+
+  * **flags** – - Flags for the copy, must be zero now.
+
+  * **stream** – - Stream to enqueue the operation in
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMemcpyAsync(void *dst, const void *src, size_t count, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
 
 Copies data between host and device.
-
-######  Parameters
-
-`dst`
-    \- Destination memory address
-`src`
-    \- Source memory address
-`count`
-    \- Size in bytes to copy
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidMemcpyDirection
-
-###### Description
 
 Copies `count` bytes from the memory area pointed to by `src` to the memory area pointed to by `dst`, where `kind` specifies the direction of the copy, and must be one of cudaMemcpyHostToHost, cudaMemcpyHostToDevice, cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing.
 
@@ -1878,48 +2196,53 @@ cudaMemcpyAsync() is asynchronous with respect to the host, so the call may retu
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpyAsync, ::cuMemcpyDtoHAsync, ::cuMemcpyHtoDAsync, ::cuMemcpyDtoDAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-**See also:**
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpyAsync, cuMemcpyDtoHAsync, cuMemcpyHtoDAsync, cuMemcpyDtoDAsync
+Note
 
-__host__ cudaError_t cudaMemcpyBatchAsync ( const void** dsts, const void** srcs, const size_t* sizes, size_t count, cudaMemcpyAttributes* attrs, size_t* attrsIdxs, size_t numAttrs, cudaStream_t stream )
+This function uses standard default stream semantics.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **src** – - Source memory address
+
+  * **count** – - Size in bytes to copy
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidMemcpyDirection
+
+`` __host__ cudaError_t cudaMemcpyBatchAsync(void *const *dsts, const void *const *srcs, const size_t *sizes, size_t count, struct cudaMemcpyAttributes *attrs, size_t *attrsIdxs, size_t numAttrs, cudaStream_t stream) ``
 
 Performs a batch of memory copies asynchronously.
-
-######  Parameters
-
-`dsts`
-    \- Array of destination pointers.
-`srcs`
-    \- Array of memcpy source pointers.
-`sizes`
-    \- Array of sizes for memcpy operations.
-`count`
-    \- Size of `dsts`, `srcs` and `sizes` arrays
-`attrs`
-    \- Array of memcpy attributes.
-`attrsIdxs`
-    \- Array of indices to specify which copies each entry in the `attrs` array applies to. The attributes specified in attrs[k] will be applied to copies starting from attrsIdxs[k] through attrsIdxs[k+1] \- 1. Also attrs[numAttrs-1] will apply to copies starting from attrsIdxs[numAttrs-1] through count - 1.
-`numAttrs`
-    \- Size of `attrs` and `attrsIdxs` arrays.
-`stream`
-
-
-###### Returns
-
-cudaSuccesscudaErrorInvalidValue
-
-###### Description
 
 Performs a batch of memory copies. The batch as a whole executes in stream order but copies within a batch are not guaranteed to execute in any specific order. This API only supports pointer-to-pointer copies. For copies involving CUDA arrays, please see cudaMemcpy3DBatchAsync.
 
@@ -1927,350 +2250,467 @@ Performs memory copies from source buffers specified in `srcs` to destination bu
 
 Every copy in the batch has to be associated with a set of attributes specified in the `attrs` array. Each entry in this array can apply to more than one copy. This can be done by specifying in the `attrsIdxs` array, the index of the first copy that the corresponding entry in the `attrs` array applies to. Both `attrs` and `attrsIdxs` must be of the same length as specified by `numAttrs`. For example, if a batch has 10 copies listed in dst/src/sizes, the first 6 of which have one set of attributes and the remaining 4 another, then `numAttrs` will be 2, `attrsIdxs` will be {0, 6} and `attrs` will contains the two sets of attributes. Note that the first entry in `attrsIdxs` must always be 0. Also, each entry must be greater than the previous entry and the last entry should be less than `count`. Furthermore, `numAttrs` must be lesser than or equal to `count`.
 
-The cudaMemcpyAttributes::srcAccessOrder indicates the source access ordering to be observed for copies associated with the attribute. If the source access order is set to cudaMemcpySrcAccessOrderStream, then the source will be accessed in stream order. If the source access order is set to cudaMemcpySrcAccessOrderDuringApiCall then it indicates that access to the source pointer can be out of stream order and all accesses must be complete before the API call returns. This flag is suited for ephemeral sources (ex., stack variables) when it's known that no prior operations in the stream can be accessing the memory and also that the lifetime of the memory is limited to the scope that the source variable was declared in. Specifying this flag allows the driver to optimize the copy and removes the need for the user to synchronize the stream after the API call. If the source access order is set to cudaMemcpySrcAccessOrderAny then it indicates that access to the source pointer can be out of stream order and the accesses can happen even after the API call returns. This flag is suited for host pointers allocated outside CUDA (ex., via malloc) when it's known that no prior operations in the stream can be accessing the memory. Specifying this flag allows the driver to optimize the copy on certain platforms. Each memcpy operation in the batch must have a valid cudaMemcpyAttributes corresponding to it including the appropriate srcAccessOrder setting, otherwise the API will return cudaErrorInvalidValue.
+The cudaMemcpyAttributes::srcAccessOrder indicates the source access ordering to be observed for copies associated with the attribute. If the source access order is set to cudaMemcpySrcAccessOrderStream, then the source will be accessed in stream order. If the source access order is set to cudaMemcpySrcAccessOrderDuringApiCall then it indicates that access to the source pointer can be out of stream order and all accesses must be complete before the API call returns. This flag is suited for ephemeral sources (ex., stack variables) when it’s known that no prior operations in the stream can be accessing the memory and also that the lifetime of the memory is limited to the scope that the source variable was declared in. Specifying this flag allows the driver to optimize the copy and removes the need for the user to synchronize the stream after the API call. If the source access order is set to cudaMemcpySrcAccessOrderAny then it indicates that access to the source pointer can be out of stream order and the accesses can happen even after the API call returns. This flag is suited for host pointers allocated outside CUDA (ex., via malloc) when it’s known that no prior operations in the stream can be accessing the memory. Specifying this flag allows the driver to optimize the copy on certain platforms. Each memcpy operation in the batch must have a valid cudaMemcpyAttributes corresponding to it including the appropriate srcAccessOrder setting, otherwise the API will return cudaErrorInvalidValue.
 
-The cudaMemcpyAttributes::srcLocHint and cudaMemcpyAttributes::dstLocHint allows applications to specify hint locations for operands of a copy when the operand doesn't have a fixed location. That is, these hints are only applicable for managed memory pointers on devices where cudaDevAttrConcurrentManagedAccess is true or system-allocated pageable memory on devices where cudaDevAttrPageableMemoryAccess is true. For other cases, these hints are ignored.
+The cudaMemcpyAttributes::srcLocHint and cudaMemcpyAttributes::dstLocHint allows applications to specify hint locations for operands of a copy when the operand doesn’t have a fixed location. That is, these hints are only applicable for managed memory pointers on devices where cudaDevAttrConcurrentManagedAccess is true or system-allocated pageable memory on devices where cudaDevAttrPageableMemoryAccess is true. For other cases, these hints are ignored.
 
 The cudaMemcpyAttributes::flags field can be used to specify certain flags for copies. Setting the cudaMemcpyFlagPreferOverlapWithCompute flag indicates that the associated copies should preferably overlap with any compute work. Note that this flag is a hint and can be ignored depending on the platform and other parameters of the copy.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+Note
 
-  * Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-__host__ cudaError_t cudaMemcpyFromSymbol ( void* dst, const void* symbol, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyDeviceToHost )
+This function exhibits asynchronous behavior for most use cases.
 
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dsts** – - Array of destination pointers.
+
+  * **srcs** – - Array of memcpy source pointers.
+
+  * **sizes** – - Array of sizes for memcpy operations.
+
+  * **count** – - Size of `dsts`, `srcs` and `sizes` arrays
+
+  * **attrs** – - Array of memcpy attributes.
+
+  * **attrsIdxs** – - Array of indices to specify which copies each entry in the `attrs` array applies to. The attributes specified in attrs[k] will be applied to copies starting from attrsIdxs[k] through attrsIdxs[k+1] - 1. Also attrs[numAttrs-1] will apply to copies starting from attrsIdxs[numAttrs-1] through count - 1.
+
+  * **numAttrs** – - Size of `attrs` and `attrsIdxs` arrays.
+
+  * **stream** – - The stream to enqueue the operations in. Must not be legacy NULL stream.
+
+Returns
+
+cudaSuccess cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMemcpyFromSymbol(void *dst, const void *symbol, size_t count, size_t offset = 0, enum cudaMemcpyKind kind = cudaMemcpyDeviceToHost) ``
 
 Copies data from the given symbol on the device.
-
-######  Parameters
-
-`dst`
-    \- Destination memory address
-`symbol`
-    \- Device symbol address
-`count`
-    \- Size in bytes to copy
-`offset`
-    \- Offset from start of symbol in bytes
-`kind`
-    \- Type of transfer
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
-
-###### Description
 
 Copies `count` bytes from the memory area pointed to by `offset` bytes from the start of symbol `symbol` to the memory area pointed to by `dst`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy, ::cuMemcpyDtoH, ::cuMemcpyDtoD
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy, cuMemcpyDtoH, cuMemcpyDtoD
+This function exhibits synchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpyFromSymbolAsync ( void* dst, const void* symbol, size_t count, size_t offset, cudaMemcpyKind kind, cudaStream_t stream = 0 )
+Note
 
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
-Copies data from the given symbol on the device.
+Note
 
-######  Parameters
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-`dst`
-    \- Destination memory address
-`symbol`
-    \- Device symbol address
-`count`
-    \- Size in bytes to copy
-`offset`
-    \- Offset from start of symbol in bytes
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
+Note
 
-###### Returns
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **symbol** – - Device symbol address
+
+  * **count** – - Size in bytes to copy
+
+  * **offset** – - Offset from start of symbol in bytes
+
+  * **kind** – - Type of transfer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
 
-###### Description
+`` __host__ cudaError_t cudaMemcpyFromSymbolAsync(void *dst, const void *symbol, size_t count, size_t offset, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
+
+Copies data from the given symbol on the device.
 
 Copies `count` bytes from the memory area pointed to by `offset` bytes from the start of symbol `symbol` to the memory area pointed to by `dst`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyDeviceToHost, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing.
 
 cudaMemcpyFromSymbolAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyDeviceToHost and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, ::cuMemcpyAsync, ::cuMemcpyDtoHAsync, ::cuMemcpyDtoDAsync
 
-  * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+Note
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-**See also:**
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cuMemcpyAsync, cuMemcpyDtoHAsync, cuMemcpyDtoDAsync
+Note
 
-__host__ cudaError_t cudaMemcpyPeer ( void* dst, int  dstDevice, const void* src, int  srcDevice, size_t count )
+This function uses standard default stream semantics.
 
+Note
+
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **dst** – - Destination memory address
+
+  * **symbol** – - Device symbol address
+
+  * **count** – - Size in bytes to copy
+
+  * **offset** – - Offset from start of symbol in bytes
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
+
+`` __host__ cudaError_t cudaMemcpyPeer(void *dst, int dstDevice, const void *src, int srcDevice, size_t count) ``
 
 Copies memory between two devices.
-
-######  Parameters
-
-`dst`
-    \- Destination device pointer
-`dstDevice`
-    \- Destination device
-`src`
-    \- Source device pointer
-`srcDevice`
-    \- Source device
-`count`
-    \- Size of memory copy in bytes
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
-
-###### Description
 
 Copies memory from one device to memory on another device. `dst` is the base device pointer of the destination memory and `dstDevice` is the destination device. `src` is the base device pointer of the source memory and `srcDevice` is the source device. `count` specifies the number of bytes to copy.
 
 Note that this function is asynchronous with respect to the host, but serialized with respect all pending and future asynchronous work in to the current device, `srcDevice`, and `dstDevice` (use cudaMemcpyPeerAsync to avoid this synchronization).
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemcpy, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, ::cuMemcpyPeer
 
+Note
 
-**See also:**
+Note that this function may also return error codes from previous, asynchronous launches.
 
-cudaMemcpy, cudaMemcpyAsync, cudaMemcpyPeerAsync, cudaMemcpy3DPeerAsync, cuMemcpyPeer
+Note
 
-__host__ cudaError_t cudaMemcpyPeerAsync ( void* dst, int  dstDevice, const void* src, int  srcDevice, size_t count, cudaStream_t stream = 0 )
+This function exhibits synchronous behavior for most use cases.
 
+Note
 
-Copies memory between two devices asynchronously.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`dst`
-    \- Destination device pointer
-`dstDevice`
-    \- Destination device
-`src`
-    \- Source device pointer
-`srcDevice`
-    \- Source device
-`count`
-    \- Size of memory copy in bytes
-`stream`
-    \- Stream identifier
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+  * **dst** – - Destination device pointer
+
+  * **dstDevice** – - Destination device
+
+  * **src** – - Source device pointer
+
+  * **srcDevice** – - Source device
+
+  * **count** – - Size of memory copy in bytes
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
 
-###### Description
+`` __host__ cudaError_t cudaMemcpyPeerAsync(void *dst, int dstDevice, const void *src, int srcDevice, size_t count, cudaStream_t stream = 0) ``
+
+Copies memory between two devices asynchronously.
 
 Copies memory from one device to memory on another device. `dst` is the base device pointer of the destination memory and `dstDevice` is the destination device. `src` is the base device pointer of the source memory and `srcDevice` is the source device. `count` specifies the number of bytes to copy.
 
 Note that this function is asynchronous with respect to the host and all work on other devices.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, ::cuMemcpyPeerAsync
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpyPeer, cudaMemcpyAsync, cudaMemcpy3DPeerAsync, cuMemcpyPeerAsync
+This function exhibits asynchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpyToSymbol ( const void* symbol, const void* src, size_t count, size_t offset = 0, cudaMemcpyKind kind = cudaMemcpyHostToDevice )
+Note
 
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **dst** – - Destination device pointer
+
+  * **dstDevice** – - Destination device
+
+  * **src** – - Source device pointer
+
+  * **srcDevice** – - Source device
+
+  * **count** – - Size of memory copy in bytes
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidDevice
+
+`` __host__ cudaError_t cudaMemcpyToSymbol(const void *symbol, const void *src, size_t count, size_t offset = 0, enum cudaMemcpyKind kind = cudaMemcpyHostToDevice) ``
 
 Copies data to the given symbol on the device.
-
-######  Parameters
-
-`symbol`
-    \- Device symbol address
-`src`
-    \- Source memory address
-`count`
-    \- Size in bytes to copy
-`offset`
-    \- Offset from start of symbol in bytes
-`kind`
-    \- Type of transfer
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
-
-###### Description
 
 Copies `count` bytes from the memory area pointed to by `src` to the memory area pointed to by `offset` bytes from the start of symbol `symbol`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyHostToDevice, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing.
 
-  *   * This function exhibits synchronous behavior for most use cases.
+See also
 
-  * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpy, ::cuMemcpyHtoD, ::cuMemcpyDtoD
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyToSymbolAsync, cudaMemcpyFromSymbolAsync, cuMemcpy, cuMemcpyHtoD, cuMemcpyDtoD
+This function exhibits synchronous behavior for most use cases.
 
-__host__ cudaError_t cudaMemcpyToSymbolAsync ( const void* symbol, const void* src, size_t count, size_t offset, cudaMemcpyKind kind, cudaStream_t stream = 0 )
+Note
 
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
-Copies data to the given symbol on the device.
+Note
 
-######  Parameters
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-`symbol`
-    \- Device symbol address
-`src`
-    \- Source memory address
-`count`
-    \- Size in bytes to copy
-`offset`
-    \- Offset from start of symbol in bytes
-`kind`
-    \- Type of transfer
-`stream`
-    \- Stream identifier
+Note
 
-###### Returns
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **symbol** – - Device symbol address
+
+  * **src** – - Source memory address
+
+  * **count** – - Size in bytes to copy
+
+  * **offset** – - Offset from start of symbol in bytes
+
+  * **kind** – - Type of transfer
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
 
-###### Description
+`` __host__ cudaError_t cudaMemcpyToSymbolAsync(const void *symbol, const void *src, size_t count, size_t offset, enum cudaMemcpyKind kind, cudaStream_t stream = 0) ``
+
+Copies data to the given symbol on the device.
 
 Copies `count` bytes from the memory area pointed to by `src` to the memory area pointed to by `offset` bytes from the start of symbol `symbol`. The memory areas may not overlap. `symbol` is a variable that resides in global or constant memory space. `kind` can be either cudaMemcpyHostToDevice, cudaMemcpyDeviceToDevice, or cudaMemcpyDefault. Passing cudaMemcpyDefault is recommended, in which case the type of transfer is inferred from the pointer values. However, cudaMemcpyDefault is only allowed on systems that support unified virtual addressing.
 
 cudaMemcpyToSymbolAsync() is asynchronous with respect to the host, so the call may return before the copy is complete. The copy can optionally be associated to a stream by passing a non-zero `stream` argument. If `kind` is cudaMemcpyHostToDevice and `stream` is non-zero, the copy may overlap with operations in other streams.
 
-  *   * This function exhibits asynchronous behavior for most use cases.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyFromSymbolAsync, ::cuMemcpyAsync, ::cuMemcpyHtoDAsync, ::cuMemcpyDtoDAsync
 
-  * Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
+Note
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-**See also:**
+This function exhibits asynchronous behavior for most use cases.
 
-cudaMemcpy, cudaMemcpy2D, cudaMemcpy2DToArray, cudaMemcpy2DFromArray, cudaMemcpy2DArrayToArray, cudaMemcpyToSymbol, cudaMemcpyFromSymbol, cudaMemcpyAsync, cudaMemcpy2DAsync, cudaMemcpy2DToArrayAsync, cudaMemcpy2DFromArrayAsync, cudaMemcpyFromSymbolAsync, cuMemcpyAsync, cuMemcpyHtoDAsync, cuMemcpyDtoDAsync
+Note
 
-__host__ cudaError_t cudaMemset ( void* devPtr, int  value, size_t count )
+This function uses standard default stream semantics.
 
+Note
 
-Initializes or sets device memory to a value.
+Use of a string naming a variable as the `symbol` parameter was deprecated in CUDA 4.1 and removed in CUDA 5.0.
 
-######  Parameters
+Note
 
-`devPtr`
-    \- Pointer to device memory
-`value`
-    \- Value to set for each byte of specified memory
-`count`
-    \- Size in bytes to set
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-###### Returns
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **symbol** – - Device symbol address
+
+  * **src** – - Source memory address
+
+  * **count** – - Size in bytes to copy
+
+  * **offset** – - Offset from start of symbol in bytes
+
+  * **kind** – - Type of transfer
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue, cudaErrorInvalidSymbol, cudaErrorInvalidMemcpyDirection, cudaErrorNoKernelImageForDevice
+
+`` __host__ cudaError_t cudaMemcpyWithAttributesAsync(void *dst, const void *src, size_t size, struct cudaMemcpyAttributes *attr, cudaStream_t stream) ``
+
+Performs asynchronous memory copy operation with the specified attributes.
+
+Performs asynchronous memory copy operation where `dst` and `src` are the destination and source pointers respectively. `size` specifies the number of bytes to copy. `attr` specifies the attributes for the copy and `stream` specifies the stream to enqueue the operation in.
+
+For more information regarding the attributes, please refer to cudaMemcpyAttributes and it’s usage desciption in::cudaMemcpyBatchAsync
+
+See also
+
+cudaMemcpyBatchAsync
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+This function exhibits asynchronous behavior for most use cases.
+
+Note
+
+Memory regions requested must be either entirely registered with CUDA, or in the case of host pageable transfers, not registered at all. Memory regions spanning over allocations that are both registered and not registered with CUDA are not supported and will return CUDA_ERROR_INVALID_VALUE.
+
+Parameters
+
+  * **dst** – - Destination device pointer
+
+  * **src** – - Source device pointer
+
+  * **size** – - Number of bytes to copy
+
+  * **attr** – - Attributes for the copy
+
+  * **stream** – - Stream to enqueue the operation in
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Description
+`` __host__ cudaError_t cudaMemset(void *devPtr, int value, size_t count) ``
+
+Initializes or sets device memory to a value.
 
 Fills the first `count` bytes of the memory area pointed to by `devPtr` with the constant byte value `value`.
 
 Note that this function is asynchronous with respect to the host unless `devPtr` refers to pinned host memory.
 
-  *   * See also memset synchronization details.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+::cuMemsetD8, ::cuMemsetD16, ::cuMemsetD32
 
+Note
 
-**See also:**
+Note that this function may also return error codes from previous, asynchronous launches.
 
-cuMemsetD8, cuMemsetD16, cuMemsetD32
+Note
 
-__host__ cudaError_t cudaMemset2D ( void* devPtr, size_t pitch, int  value, size_t width, size_t height )
+See also memset synchronization details.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to device memory
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **count** – - Size in bytes to set
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMemset2D(void *devPtr, size_t pitch, int value, size_t width, size_t height) ``
 
 Initializes or sets device memory to a value.
-
-######  Parameters
-
-`devPtr`
-    \- Pointer to 2D device memory
-`pitch`
-    \- Pitch in bytes of 2D device memory(Unused if `height` is 1)
-`value`
-    \- Value to set for each byte of specified memory
-`width`
-    \- Width of matrix set (columns in bytes)
-`height`
-    \- Height of matrix set (rows)
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Sets to the specified value `value` a matrix (`height` rows of `width` bytes each) pointed to by `dstPtr`. `pitch` is the width in bytes of the 2D array pointed to by `dstPtr`, including any padding added to the end of each row. This function performs fastest when the pitch is one that has been passed back by cudaMallocPitch().
 
 Note that this function is asynchronous with respect to the host unless `devPtr` refers to pinned host memory.
 
-  *   * See also memset synchronization details.
+See also
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+cudaMemset, cudaMemset3D, cudaMemsetAsync, cudaMemset2DAsync, cudaMemset3DAsync, ::cuMemsetD2D8, ::cuMemsetD2D16, ::cuMemsetD2D32
 
+Note
 
-**See also:**
+Note that this function may also return error codes from previous, asynchronous launches.
 
-cudaMemset, cudaMemset3D, cudaMemsetAsync, cudaMemset2DAsync, cudaMemset3DAsync, cuMemsetD2D8, cuMemsetD2D16, cuMemsetD2D32
+Note
 
-__host__  __device__ cudaError_t cudaMemset2DAsync ( void* devPtr, size_t pitch, int  value, size_t width, size_t height, cudaStream_t stream = 0 )
+See also memset synchronization details.
 
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to 2D device memory
+
+  * **pitch** – - Pitch in bytes of 2D device memory(Unused if `height` is 1)
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **width** – - Width of matrix set (columns in bytes)
+
+  * **height** – - Height of matrix set (rows)
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMemset2DAsync(void *devPtr, size_t pitch, int value, size_t width, size_t height, cudaStream_t stream = 0) ``
 
 Initializes or sets device memory to a value.
-
-######  Parameters
-
-`devPtr`
-    \- Pointer to 2D device memory
-`pitch`
-    \- Pitch in bytes of 2D device memory(Unused if `height` is 1)
-`value`
-    \- Value to set for each byte of specified memory
-`width`
-    \- Width of matrix set (columns in bytes)
-`height`
-    \- Height of matrix set (rows)
-`stream`
-    \- Stream identifier
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Sets to the specified value `value` a matrix (`height` rows of `width` bytes each) pointed to by `dstPtr`. `pitch` is the width in bytes of the 2D array pointed to by `dstPtr`, including any padding added to the end of each row. This function performs fastest when the pitch is one that has been passed back by cudaMallocPitch().
 
@@ -2278,36 +2718,51 @@ cudaMemset2DAsync() is asynchronous with respect to the host, so the call may re
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * See also memset synchronization details.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemset, cudaMemset2D, cudaMemset3D, cudaMemsetAsync, cudaMemset3DAsync, ::cuMemsetD2D8Async, ::cuMemsetD2D16Async, ::cuMemsetD2D32Async
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemset, cudaMemset2D, cudaMemset3D, cudaMemsetAsync, cudaMemset3DAsync, cuMemsetD2D8Async, cuMemsetD2D16Async, cuMemsetD2D32Async
+See also memset synchronization details.
 
-__host__ cudaError_t cudaMemset3D ( cudaPitchedPtr pitchedDevPtr, int  value, cudaExtent extent )
+Note
 
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to 2D device memory
+
+  * **pitch** – - Pitch in bytes of 2D device memory(Unused if `height` is 1)
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **width** – - Width of matrix set (columns in bytes)
+
+  * **height** – - Height of matrix set (rows)
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMemset3D(struct cudaPitchedPtr pitchedDevPtr, int value, struct cudaExtent extent) ``
 
 Initializes or sets device memory to a value.
-
-######  Parameters
-
-`pitchedDevPtr`
-    \- Pointer to pitched device memory
-`value`
-    \- Value to set for each byte of specified memory
-`extent`
-    \- Size parameters for where to set device memory (`width` field in bytes)
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Initializes each element of a 3D array to the specified value `value`. The object to initialize is defined by `pitchedDevPtr`. The `pitch` field of `pitchedDevPtr` is the width in memory in bytes of the 3D array pointed to by `pitchedDevPtr`, including any padding added to the end of each row. The `xsize` field specifies the logical width of each row in bytes, while the `ysize` field specifies the height of each 2D slice in rows. The `pitch` field of `pitchedDevPtr` is ignored when `height` and `depth` are both equal to 1.
 
@@ -2319,36 +2774,41 @@ This function performs fastest when the `pitchedDevPtr` has been allocated by cu
 
 Note that this function is asynchronous with respect to the host unless `pitchedDevPtr` refers to pinned host memory.
 
-  *   * See also memset synchronization details.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
+See also
 
 cudaMemset, cudaMemset2D, cudaMemsetAsync, cudaMemset2DAsync, cudaMemset3DAsync, cudaMalloc3D, make_cudaPitchedPtr, make_cudaExtent
 
-__host__  __device__ cudaError_t cudaMemset3DAsync ( cudaPitchedPtr pitchedDevPtr, int  value, cudaExtent extent, cudaStream_t stream = 0 )
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+See also memset synchronization details.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **pitchedDevPtr** – - Pointer to pitched device memory
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **extent** – - Size parameters for where to set device memory (`width` field in bytes)
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMemset3DAsync(struct cudaPitchedPtr pitchedDevPtr, int value, struct cudaExtent extent, cudaStream_t stream = 0) ``
 
 Initializes or sets device memory to a value.
-
-######  Parameters
-
-`pitchedDevPtr`
-    \- Pointer to pitched device memory
-`value`
-    \- Value to set for each byte of specified memory
-`extent`
-    \- Size parameters for where to set device memory (`width` field in bytes)
-`stream`
-    \- Stream identifier
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Initializes each element of a 3D array to the specified value `value`. The object to initialize is defined by `pitchedDevPtr`. The `pitch` field of `pitchedDevPtr` is the width in memory in bytes of the 3D array pointed to by `pitchedDevPtr`, including any padding added to the end of each row. The `xsize` field specifies the logical width of each row in bytes, while the `ysize` field specifies the height of each 2D slice in rows. The `pitch` field of `pitchedDevPtr` is ignored when `height` and `depth` are both equal to 1.
 
@@ -2362,38 +2822,47 @@ cudaMemset3DAsync() is asynchronous with respect to the host, so the call may re
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * See also memset synchronization details.
-
-  * This function uses standard default stream semantics.
-
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
-
-
-**See also:**
+See also
 
 cudaMemset, cudaMemset2D, cudaMemset3D, cudaMemsetAsync, cudaMemset2DAsync, cudaMalloc3D, make_cudaPitchedPtr, make_cudaExtent
 
-__host__  __device__ cudaError_t cudaMemsetAsync ( void* devPtr, int  value, size_t count, cudaStream_t stream = 0 )
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Note
+
+See also memset synchronization details.
+
+Note
+
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **pitchedDevPtr** – - Pointer to pitched device memory
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **extent** – - Size parameters for where to set device memory (`width` field in bytes)
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMemsetAsync(void *devPtr, int value, size_t count, cudaStream_t stream = 0) ``
 
 Initializes or sets device memory to a value.
-
-######  Parameters
-
-`devPtr`
-    \- Pointer to device memory
-`value`
-    \- Value to set for each byte of specified memory
-`count`
-    \- Size in bytes to set
-`stream`
-    \- Stream identifier
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Description
 
 Fills the first `count` bytes of the memory area pointed to by `devPtr` with the constant byte value `value`.
 
@@ -2401,154 +2870,154 @@ cudaMemsetAsync() is asynchronous with respect to the host, so the call may retu
 
 The device version of this function only handles device to device copies and cannot be given local or shared pointers.
 
-  *   * See also memset synchronization details.
+See also
 
-  * This function uses standard default stream semantics.
+cudaMemset, cudaMemset2D, cudaMemset3D, cudaMemset2DAsync, cudaMemset3DAsync, ::cuMemsetD8Async, ::cuMemsetD16Async, ::cuMemsetD32Async
 
-  * Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
 
-**See also:**
+Note
 
-cudaMemset, cudaMemset2D, cudaMemset3D, cudaMemset2DAsync, cudaMemset3DAsync, cuMemsetD8Async, cuMemsetD16Async, cuMemsetD32Async
+See also memset synchronization details.
 
-__host__ cudaError_t cudaMipmappedArrayGetMemoryRequirements ( cudaArrayMemoryRequirements* memoryRequirements, cudaMipmappedArray_t mipmap, int  device )
+Note
 
+This function uses standard default stream semantics.
+
+Note
+
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
+
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+  * **devPtr** – - Pointer to device memory
+
+  * **value** – - Value to set for each byte of specified memory
+
+  * **count** – - Size in bytes to set
+
+  * **stream** – - Stream identifier
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue,
+
+`` __host__ cudaError_t cudaMipmappedArrayGetMemoryRequirements(struct cudaArrayMemoryRequirements *memoryRequirements, cudaMipmappedArray_t mipmap, int device) ``
 
 Returns the memory requirements of a CUDA mipmapped array.
 
-######  Parameters
-
-`memoryRequirements`
-    \- Pointer to cudaArrayMemoryRequirements
-`mipmap`
-    \- CUDA mipmapped array to get the memory requirements of
-`device`
-    \- Device to get the memory requirements for
-
-###### Returns
-
-cudaSuccesscudaErrorInvalidValue
-
-###### Description
-
-Returns the memory requirements of a CUDA mipmapped array in `memoryRequirements` If the CUDA mipmapped array is not allocated with flag cudaArrayDeferredMappingcudaErrorInvalidValue will be returned.
+Returns the memory requirements of a CUDA mipmapped array in `memoryRequirements` If the CUDA mipmapped array is not allocated with flag cudaArrayDeferredMapping cudaErrorInvalidValue will be returned.
 
 The returned value in cudaArrayMemoryRequirements::size represents the total size of the CUDA mipmapped array. The returned value in cudaArrayMemoryRequirements::alignment represents the alignment necessary for mapping the CUDA mipmapped array.
 
-**See also:**
+See also
 
 cudaArrayGetMemoryRequirements
 
-__host__ cudaError_t cudaMipmappedArrayGetSparseProperties ( cudaArraySparseProperties* sparseProperties, cudaMipmappedArray_t mipmap )
+Parameters
 
+  * **memoryRequirements** – **[out]** \- Pointer to cudaArrayMemoryRequirements
+
+  * **mipmap** – **[in]** \- CUDA mipmapped array to get the memory requirements of
+
+  * **device** – **[in]** \- Device to get the memory requirements for
+
+Returns
+
+cudaSuccess cudaErrorInvalidValue
+
+`` __host__ cudaError_t cudaMipmappedArrayGetSparseProperties(struct cudaArraySparseProperties *sparseProperties, cudaMipmappedArray_t mipmap) ``
 
 Returns the layout properties of a sparse CUDA mipmapped array.
 
-######  Parameters
-
-`sparseProperties`
-    \- Pointer to return cudaArraySparseProperties
-`mipmap`
-    \- The CUDA mipmapped array to get the sparse properties of
-
-###### Returns
-
-cudaSuccesscudaErrorInvalidValue
-
-###### Description
-
-Returns the sparse array layout properties in `sparseProperties`. If the CUDA mipmapped array is not allocated with flag cudaArraySparsecudaErrorInvalidValue will be returned.
+Returns the sparse array layout properties in `sparseProperties`. If the CUDA mipmapped array is not allocated with flag cudaArraySparse cudaErrorInvalidValue will be returned.
 
 For non-layered CUDA mipmapped arrays, cudaArraySparseProperties::miptailSize returns the size of the mip tail region. The mip tail region includes all mip levels whose width, height or depth is less than that of the tile. For layered CUDA mipmapped arrays, if cudaArraySparseProperties::flags contains cudaArraySparsePropertiesSingleMipTail, then cudaArraySparseProperties::miptailSize specifies the size of the mip tail of all layers combined. Otherwise, cudaArraySparseProperties::miptailSize specifies mip tail size per layer. The returned value of cudaArraySparseProperties::miptailFirstLevel is valid only if cudaArraySparseProperties::miptailSize is non-zero.
 
-**See also:**
+See also
 
-cudaArrayGetSparseProperties, cuMemMapArrayAsync
+cudaArrayGetSparseProperties, ::cuMemMapArrayAsync
 
-__host__ cudaExtent make_cudaExtent ( size_t w, size_t h, size_t d )
+Parameters
 
+  * **sparseProperties** – **[out]** \- Pointer to return cudaArraySparseProperties
+
+  * **mipmap** – **[in]** \- The CUDA mipmapped array to get the sparse properties of
+
+Returns
+
+cudaSuccess cudaErrorInvalidValue
+
+`` __host__ struct cudaExtent make_cudaExtent(size_t w, size_t h, size_t d) ``
 
 Returns a cudaExtent based on input parameters.
 
-######  Parameters
-
-`w`
-    \- Width in elements when referring to array memory, in bytes when referring to linear memory
-`h`
-    \- Height in elements
-`d`
-    \- Depth in elements
-
-###### Returns
-
-cudaExtent specified by `w`, `h`, and `d`
-
-###### Description
-
 Returns a cudaExtent based on the specified input parameters `w`, `h`, and `d`.
 
-**See also:**
+See also
 
 make_cudaPitchedPtr, make_cudaPos
 
-__host__ cudaPitchedPtr make_cudaPitchedPtr ( void* d, size_t p, size_t xsz, size_t ysz )
+Parameters
 
+  * **w** – - Width in elements when referring to array memory, in bytes when referring to linear memory
+
+  * **h** – - Height in elements
+
+  * **d** – - Depth in elements
+
+Returns
+
+cudaExtent specified by `w`, `h`, and `d`
+
+`` __host__ struct cudaPitchedPtr make_cudaPitchedPtr(void *d, size_t p, size_t xsz, size_t ysz) ``
 
 Returns a cudaPitchedPtr based on input parameters.
 
-######  Parameters
-
-`d`
-    \- Pointer to allocated memory
-`p`
-    \- Pitch of allocated memory in bytes
-`xsz`
-    \- Logical width of allocation in elements
-`ysz`
-    \- Logical height of allocation in elements
-
-###### Returns
-
-cudaPitchedPtr specified by `d`, `p`, `xsz`, and `ysz`
-
-###### Description
-
 Returns a cudaPitchedPtr based on the specified input parameters `d`, `p`, `xsz`, and `ysz`.
 
-**See also:**
+See also
 
 make_cudaExtent, make_cudaPos
 
-__host__ cudaPos make_cudaPos ( size_t x, size_t y, size_t z )
+Parameters
 
+  * **d** – - Pointer to allocated memory
+
+  * **p** – - Pitch of allocated memory in bytes
+
+  * **xsz** – - Logical width of allocation in elements
+
+  * **ysz** – - Logical height of allocation in elements
+
+Returns
+
+cudaPitchedPtr specified by `d`, `p`, `xsz`, and `ysz`
+
+`` __host__ struct cudaPos make_cudaPos(size_t x, size_t y, size_t z) ``
 
 Returns a cudaPos based on input parameters.
 
-######  Parameters
-
-`x`
-    \- X position
-`y`
-    \- Y position
-`z`
-    \- Z position
-
-###### Returns
-
-cudaPos specified by `x`, `y`, and `z`
-
-###### Description
-
 Returns a cudaPos based on the specified input parameters `x`, `y`, and `z`.
 
-**See also:**
+See also
 
 make_cudaExtent, make_cudaPitchedPtr
 
-* * *
+Parameters
 
-!
+  * **x** – - X position
 
+  * **y** – - Y position
 
-Copyright © 2025 NVIDIA Corporation
+  * **z** – - Z position
+
+Returns
+
+cudaPos specified by `x`, `y`, and `z`

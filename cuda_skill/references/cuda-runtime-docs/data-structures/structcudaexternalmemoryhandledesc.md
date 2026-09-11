@@ -1,75 +1,61 @@
-# 7.21. cudaExternalMemoryHandleDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalMemoryHandleDesc.html
 
-**Source:** structcudaExternalMemoryHandleDesc.html#structcudaExternalMemoryHandleDesc
+#  7.21. cudaExternalMemoryHandleDesc
 
+`` struct cudaExternalMemoryHandleDesc ``
 
-### Public Variables
+External memory handle descriptor.
 
-int fd
+Public Members
 
-unsigned int flags
+`` int fd ``
 
-void * handle
+File descriptor referencing the memory object.
 
-const void * name
+Valid when type is cudaExternalMemoryHandleTypeOpaqueFd
 
-const void * nvSciBufObject
+`` unsigned int flags ``
 
-unsigned int reserved[16]
+Flags must either be zero or cudaExternalMemoryDedicated.
 
-unsigned long long size
+`` void *handle ``
 
-enumcudaExternalMemoryHandleType type
+Valid NT handle.
 
-cudaExternalMemoryHandleDesc::@11::@12 win32
+Must be NULL if ‘name’ is non-NULL
 
+`` union cudaExternalMemoryHandleDesc::[anonymous] handle ``
 
-### Variables
+`` const void *name ``
 
-int cudaExternalMemoryHandleDesc::fd
+Name of a valid memory object.
 
+Must be NULL if ‘handle’ is non-NULL.
 
-File descriptor referencing the memory object. Valid when type is cudaExternalMemoryHandleTypeOpaqueFd
+`` const void *nvSciBufObject ``
 
-unsigned int cudaExternalMemoryHandleDesc::flags
+A handle representing NvSciBuf Object.
 
+Valid when type is cudaExternalMemoryHandleTypeNvSciBuf
 
-Flags must either be zero or cudaExternalMemoryDedicated
+`` unsigned int reserved[16] ``
 
-void * cudaExternalMemoryHandleDesc::handle
+Must be zero.
 
+`` unsigned long long size ``
 
-Valid NT handle. Must be NULL if 'name' is non-NULL
+Size of the memory allocation.
 
-const void * cudaExternalMemoryHandleDesc::name
+`` enum cudaExternalMemoryHandleType type ``
 
+Type of the handle.
 
-Name of a valid memory object. Must be NULL if 'handle' is non-NULL.
+`` struct cudaExternalMemoryHandleDesc::[anonymous]::[anonymous] win32 ``
 
-const void * cudaExternalMemoryHandleDesc::nvSciBufObject
+Win32 handle referencing the semaphore object.
 
-
-A handle representing NvSciBuf Object. Valid when type is cudaExternalMemoryHandleTypeNvSciBuf
-
-unsigned int cudaExternalMemoryHandleDesc::reserved[16]
-
-
-Must be zero
-
-unsigned long long cudaExternalMemoryHandleDesc::size
-
-
-Size of the memory allocation
-
-enumcudaExternalMemoryHandleTypecudaExternalMemoryHandleDesc::type
-
-
-Type of the handle
-
-cudaExternalMemoryHandleDesc::@11::@12 cudaExternalMemoryHandleDesc::win32
-
-
-Win32 handle referencing the semaphore object. Valid when type is one of the following:
+Valid when type is one of the following:
 
   * cudaExternalMemoryHandleTypeOpaqueWin32
 
@@ -81,12 +67,4 @@ Win32 handle referencing the semaphore object. Valid when type is one of the fol
 
   * cudaExternalMemoryHandleTypeD3D11Resource
 
-  * cudaExternalMemoryHandleTypeD3D11ResourceKmt Exactly one of 'handle' and 'name' must be non-NULL. If type is one of the following: cudaExternalMemoryHandleTypeOpaqueWin32KmtcudaExternalMemoryHandleTypeD3D11ResourceKmt then 'name' must be NULL.
-
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+  * cudaExternalMemoryHandleTypeD3D11ResourceKmt Exactly one of ‘handle’ and ‘name’ must be non-NULL. If type is one of the following: cudaExternalMemoryHandleTypeOpaqueWin32Kmt cudaExternalMemoryHandleTypeD3D11ResourceKmt then ‘name’ must be NULL.

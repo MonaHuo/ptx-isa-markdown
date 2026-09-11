@@ -1,23 +1,14 @@
-# 7.14. cudaDevWorkqueueResource
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaDevWorkqueueResource.html
 
-**Source:** structcudaDevWorkqueueResource.html#structcudaDevWorkqueueResource
+#  7.13. cudaDevWorkqueueResource
 
+`` struct cudaDevWorkqueueResource ``
 
-### Public Variables
+Handle to a pre-existing workqueue related resource.
 
-unsigned char reserved[RESOURCE_ABI_BYTES]
+Public Members
 
+`` unsigned char reserved[40] ``
 
-### Variables
-
-unsigned char cudaDevWorkqueueResource::reserved[RESOURCE_ABI_BYTES]
-
-
-Reserved for future use
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Reserved for future use.

@@ -1,65 +1,44 @@
-# 7.56. cudaMemPoolProps
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemPoolProps.html
 
-**Source:** structcudaMemPoolProps.html#structcudaMemPoolProps
+#  7.52. cudaMemPoolProps
 
+`` struct cudaMemPoolProps ``
 
-### Public Variables
+Specifies the properties of allocations made from the pool.
 
-enumcudaMemAllocationType allocType
+Public Members
 
-enumcudaMemAllocationHandleType handleTypes
+`` enum cudaMemAllocationType allocType ``
 
-struct cudaMemLocation location
+Allocation type.
 
-size_t maxSize
+Currently must be specified as cudaMemAllocationTypePinned
 
-unsigned char reserved[54]
-
-unsigned short usage
-
-void * win32SecurityAttributes
-
-
-### Variables
-
-enumcudaMemAllocationTypecudaMemPoolProps::allocType
-
-
-Allocation type. Currently must be specified as cudaMemAllocationTypePinned
-
-enumcudaMemAllocationHandleTypecudaMemPoolProps::handleTypes
-
+`` enum cudaMemAllocationHandleType handleTypes ``
 
 Handle types that will be supported by allocations from the pool.
 
-struct cudaMemLocationcudaMemPoolProps::location
-
+`` struct cudaMemLocation location ``
 
 Location allocations should reside.
 
-size_t cudaMemPoolProps::maxSize
+`` size_t maxSize ``
 
+Maximum pool size.
 
-Maximum pool size. When set to 0, defaults to a system dependent value.
+When set to 0, defaults to a system dependent value.
 
-unsigned char cudaMemPoolProps::reserved[54]
-
+`` unsigned char reserved[54] ``
 
 reserved for future use, must be 0
 
-unsigned short cudaMemPoolProps::usage
-
+`` unsigned short usage ``
 
 Bitmask indicating intended usage for the pool.
 
-void * cudaMemPoolProps::win32SecurityAttributes
+`` void *win32SecurityAttributes ``
 
+Windows-specific LPSECURITYATTRIBUTES required when cudaMemHandleTypeWin32 is specified.
 
-Windows-specific LPSECURITYATTRIBUTES required when cudaMemHandleTypeWin32 is specified. This security attribute defines the scope of which exported allocations may be tranferred to other processes. In all other cases, this field is required to be zero.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+This security attribute defines the scope of which exported allocations may be tranferred to other processes. In all other cases, this field is required to be zero.

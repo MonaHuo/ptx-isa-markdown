@@ -1,37 +1,26 @@
-# 7.32. cudaGraphExecUpdateResultInfo
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaGraphExecUpdateResultInfo.html
 
-**Source:** structcudaGraphExecUpdateResultInfo.html#structcudaGraphExecUpdateResultInfo
+#  7.32. cudaGraphExecUpdateResultInfo
 
+`` struct cudaGraphExecUpdateResultInfo ``
 
-### Public Variables
+Result information returned by cudaGraphExecUpdate.
 
-cudaGraphNode_t errorFromNode
+Public Members
 
-cudaGraphNode_t errorNode
+`` cudaGraphNode_t errorFromNode ``
 
-enumcudaGraphExecUpdateResult result
+The from node of error edge when the topologies do not match.
 
+Otherwise NULL.
 
-### Variables
+`` cudaGraphNode_t errorNode ``
 
-cudaGraphNode_tcudaGraphExecUpdateResultInfo::errorFromNode
+The “to node” of the error edge when the topologies do not match.
 
+The error node when the error is associated with a specific node. NULL when the error is generic.
 
-The from node of error edge when the topologies do not match. Otherwise NULL.
-
-cudaGraphNode_tcudaGraphExecUpdateResultInfo::errorNode
-
-
-The "to node" of the error edge when the topologies do not match. The error node when the error is associated with a specific node. NULL when the error is generic.
-
-enumcudaGraphExecUpdateResultcudaGraphExecUpdateResultInfo::result
-
+`` enum cudaGraphExecUpdateResult result ``
 
 Gives more specific detail when a cuda graph update fails.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

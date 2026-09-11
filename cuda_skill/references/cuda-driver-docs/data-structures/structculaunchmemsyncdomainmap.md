@@ -1,24 +1,26 @@
-# 7.69. CUlaunchMemSyncDomainMap
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUlaunchMemSyncDomainMap.html
 
-**Source:** structCUlaunchMemSyncDomainMap.html#structCUlaunchMemSyncDomainMap
+#  7.73. CUlaunchMemSyncDomainMap
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUlaunchMemSyncDomainMap ``
 
-unsigned char default_
+Memory Synchronization Domain map.
 
-unsigned char remote
+See ::cudaLaunchMemSyncDomain.
 
+By default, kernels are launched in domain 0. Kernel launched with CU_LAUNCH_MEM_SYNC_DOMAIN_REMOTE will have a different domain ID. User may also alter the domain ID with CUlaunchMemSyncDomainMap for a specific stream / graph node / kernel launch. See CU_LAUNCH_ATTRIBUTE_MEM_SYNC_DOMAIN_MAP.
 
-### Variables
+Domain ID range is available through CU_DEVICE_ATTRIBUTE_MEM_SYNC_DOMAIN_COUNT.
 
-unsigned char CUlaunchMemSyncDomainMap::default_
+Public Members
 
+`` unsigned char default_ ``
 
-The default domain ID to use for designated kernels
+The default domain ID to use for designated kernels.
 
-unsigned char CUlaunchMemSyncDomainMap::remote
+`` unsigned char remote ``
 
-
-The remote domain ID to use for designated kernels
-
+The remote domain ID to use for designated kernels.

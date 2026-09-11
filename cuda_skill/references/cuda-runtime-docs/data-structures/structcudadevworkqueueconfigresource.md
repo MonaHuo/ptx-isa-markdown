@@ -1,37 +1,22 @@
-# 7.13. cudaDevWorkqueueConfigResource
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaDevWorkqueueConfigResource.html
 
-**Source:** structcudaDevWorkqueueConfigResource.html#structcudaDevWorkqueueConfigResource
+#  7.12. cudaDevWorkqueueConfigResource
 
+`` struct cudaDevWorkqueueConfigResource ``
 
-### Public Variables
+Data for workqueue configuration related resources.
 
-int device
+Public Members
 
-enumcudaDevWorkqueueConfigScope sharingScope
+`` int device ``
 
-unsigned int wqConcurrencyLimit
+The device on which the workqueue resources are available.
 
+`` enum cudaDevWorkqueueConfigScope sharingScope ``
 
-### Variables
+The sharing scope for the workqueue resources.
 
-int cudaDevWorkqueueConfigResource::device
+`` unsigned int wqConcurrencyLimit ``
 
-
-The device on which the workqueue resources are available
-
-enumcudaDevWorkqueueConfigScopecudaDevWorkqueueConfigResource::sharingScope
-
-
-The sharing scope for the workqueue resources
-
-unsigned int cudaDevWorkqueueConfigResource::wqConcurrencyLimit
-
-
-The expected maximum number of concurrent stream-ordered workloads
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+The expected maximum number of concurrent stream-ordered workloads.

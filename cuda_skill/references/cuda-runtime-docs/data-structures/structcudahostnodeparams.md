@@ -1,30 +1,18 @@
-# 7.36. cudaHostNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaHostNodeParams.html
 
-**Source:** structcudaHostNodeParams.html#structcudaHostNodeParams
+#  7.37. cudaHostNodeParams
 
+`` struct cudaHostNodeParams ``
 
-### Public Variables
+CUDA host node parameters.
 
-cudaHostFn_t fn
+Public Members
 
-void * userData
+`` cudaHostFn_t fn ``
 
+The function to call when the node executes.
 
-### Variables
+`` void *userData ``
 
-cudaHostFn_tcudaHostNodeParams::fn
-
-
-The function to call when the node executes
-
-void * cudaHostNodeParams::userData
-
-
-Argument to pass to the function
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Argument to pass to the function.

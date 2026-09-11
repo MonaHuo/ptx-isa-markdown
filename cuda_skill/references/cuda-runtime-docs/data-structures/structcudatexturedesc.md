@@ -1,107 +1,62 @@
-# 7.66. cudaTextureDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaTextureDesc.html
 
-**Source:** structcudaTextureDesc.html#structcudaTextureDesc
+#  7.68. cudaTextureDesc
 
+`` struct cudaTextureDesc ``
 
-### Public Variables
+CUDA texture descriptor.
 
-enumcudaTextureAddressMode addressMode[3]
+Public Members
 
-float borderColor[4]
+`` enum cudaTextureAddressMode addressMode[3] ``
 
-int disableTrilinearOptimization
+Texture address mode for up to 3 dimensions.
 
-enumcudaTextureFilterMode filterMode
+`` float borderColor[4] ``
 
-unsigned int maxAnisotropy
+Texture Border Color.
 
-float maxMipmapLevelClamp
-
-float minMipmapLevelClamp
-
-enumcudaTextureFilterMode mipmapFilterMode
-
-float mipmapLevelBias
-
-int normalizedCoords
-
-enumcudaTextureReadMode readMode
-
-int sRGB
-
-int seamlessCubemap
-
-
-### Variables
-
-enumcudaTextureAddressModecudaTextureDesc::addressMode[3]
-
-
-Texture address mode for up to 3 dimensions
-
-float cudaTextureDesc::borderColor[4]
-
-
-Texture Border Color
-
-int cudaTextureDesc::disableTrilinearOptimization
-
+`` int disableTrilinearOptimization ``
 
 Disable any trilinear filtering optimizations.
 
-enumcudaTextureFilterModecudaTextureDesc::filterMode
+`` enum cudaTextureFilterMode filterMode ``
 
+Texture filter mode.
 
-Texture filter mode
+`` unsigned int maxAnisotropy ``
 
-unsigned int cudaTextureDesc::maxAnisotropy
+Limit to the anisotropy ratio.
 
+`` float maxMipmapLevelClamp ``
 
-Limit to the anisotropy ratio
+Upper end of the mipmap level range to clamp access to.
 
-float cudaTextureDesc::maxMipmapLevelClamp
+`` float minMipmapLevelClamp ``
 
+Lower end of the mipmap level range to clamp access to.
 
-Upper end of the mipmap level range to clamp access to
+`` enum cudaTextureFilterMode mipmapFilterMode ``
 
-float cudaTextureDesc::minMipmapLevelClamp
+Mipmap filter mode.
 
+`` float mipmapLevelBias ``
 
-Lower end of the mipmap level range to clamp access to
+Offset applied to the supplied mipmap level.
 
-enumcudaTextureFilterModecudaTextureDesc::mipmapFilterMode
+`` int normalizedCoords ``
 
+Indicates whether texture reads are normalized or not.
 
-Mipmap filter mode
+`` enum cudaTextureReadMode readMode ``
 
-float cudaTextureDesc::mipmapLevelBias
+Texture read mode.
 
-
-Offset applied to the supplied mipmap level
-
-int cudaTextureDesc::normalizedCoords
-
-
-Indicates whether texture reads are normalized or not
-
-enumcudaTextureReadModecudaTextureDesc::readMode
-
-
-Texture read mode
-
-int cudaTextureDesc::sRGB
-
-
-Perform sRGB->linear conversion during texture read
-
-int cudaTextureDesc::seamlessCubemap
-
+`` int seamlessCubemap ``
 
 Enable seamless cube map filtering.
 
-* * *
+`` int sRGB ``
 
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Perform sRGB->linear conversion during texture read.

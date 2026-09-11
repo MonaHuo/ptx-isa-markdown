@@ -1,51 +1,44 @@
-# 7.26. cudaExternalSemaphoreSignalParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalSemaphoreSignalParams.html
 
-**Source:** structcudaExternalSemaphoreSignalParams.html#structcudaExternalSemaphoreSignalParams
+#  7.26. cudaExternalSemaphoreSignalParams
 
+`` struct cudaExternalSemaphoreSignalParams ``
 
-### Public Variables
+External semaphore signal parameters, compatible with driver type.
 
-void * fence
+Public Members
 
-cudaExternalSemaphoreSignalParams::@15::@16 fence
+`` struct cudaExternalSemaphoreSignalParams::[anonymous]::[anonymous] fence ``
 
-unsigned int flags
+Parameters for fence objects.
 
-cudaExternalSemaphoreSignalParams::@15::@18 keyedMutex
+`` void *fence ``
 
-unsigned long long value
+Pointer to NvSciSyncFence.
 
+Valid if cudaExternalSemaphoreHandleType is of type cudaExternalSemaphoreHandleTypeNvSciSync.
 
-### Variables
+`` unsigned int flags ``
 
-void * cudaExternalSemaphoreSignalParams::fence
+Only when cudaExternalSemaphoreSignalParams is used to signal a cudaExternalSemaphore_t of type cudaExternalSemaphoreHandleTypeNvSciSync, the valid flag is cudaExternalSemaphoreSignalSkipNvSciBufMemSync: which indicates that while signaling the cudaExternalSemaphore_t, no memory synchronization operations should be performed for any external memory object imported as cudaExternalMemoryHandleTypeNvSciBuf.
 
+For all other types of cudaExternalSemaphore_t, flags must be zero.
 
-Pointer to NvSciSyncFence. Valid if cudaExternalSemaphoreHandleType is of type cudaExternalSemaphoreHandleTypeNvSciSync.
+`` unsigned long long key ``
 
-cudaExternalSemaphoreSignalParams::@15::@16 cudaExternalSemaphoreSignalParams::fence
+`` struct cudaExternalSemaphoreSignalParams::[anonymous]::[anonymous] keyedMutex ``
 
+Parameters for keyed mutex objects.
 
-Parameters for fence objects
+`` union cudaExternalSemaphoreSignalParams::[anonymous]::[anonymous] nvSciSync ``
 
-unsigned int cudaExternalSemaphoreSignalParams::flags
+`` struct cudaExternalSemaphoreSignalParams::[anonymous] params ``
 
+`` unsigned long long reserved ``
 
-Only when cudaExternalSemaphoreSignalParams is used to signal a cudaExternalSemaphore_t of type cudaExternalSemaphoreHandleTypeNvSciSync, the valid flag is cudaExternalSemaphoreSignalSkipNvSciBufMemSync: which indicates that while signaling the cudaExternalSemaphore_t, no memory synchronization operations should be performed for any external memory object imported as cudaExternalMemoryHandleTypeNvSciBuf. For all other types of cudaExternalSemaphore_t, flags must be zero.
+`` unsigned int reserved[12] ``
 
-cudaExternalSemaphoreSignalParams::@15::@18 cudaExternalSemaphoreSignalParams::keyedMutex
+`` unsigned long long value ``
 
-
-Parameters for keyed mutex objects
-
-unsigned long long cudaExternalSemaphoreSignalParams::value
-
-
-Value of fence to be signaled
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Value of fence to be signaled.

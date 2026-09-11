@@ -1,23 +1,14 @@
-# 7.18. cudaEventWaitNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaEventWaitNodeParams.html
 
-**Source:** structcudaEventWaitNodeParams.html#structcudaEventWaitNodeParams
+#  7.18. cudaEventWaitNodeParams
 
+`` struct cudaEventWaitNodeParams ``
 
-### Public Variables
+Event wait node parameters.
 
-cudaEvent_t event
+Public Members
 
+`` cudaEvent_t event ``
 
-### Variables
-
-cudaEvent_tcudaEventWaitNodeParams::event
-
-
-The event to wait on from the node
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+The event to wait on from the node.

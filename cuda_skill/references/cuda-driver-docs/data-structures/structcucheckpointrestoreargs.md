@@ -1,38 +1,32 @@
-# 7.8. CUcheckpointRestoreArgs
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUcheckpointRestoreArgs.html
 
-**Source:** structCUcheckpointRestoreArgs.html#structCUcheckpointRestoreArgs
+#  7.51. CUcheckpointRestoreArgs
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUcheckpointRestoreArgs ``
 
-CUcheckpointGpuPair * gpuPairs
+CUDA checkpoint optional restore arguments.
 
-unsigned int gpuPairsCount
+Public Members
 
-char reserved[52-sizeof(CUcheckpointGpuPair *)]
+`` CUcheckpointGpuPair *gpuPairs ``
 
-cuuint64_t reserved1
+Pointer to array of gpu pairs that indicate how to remap GPUs during restore.
 
+`` unsigned int gpuPairsCount ``
 
-### Variables
+Number of gpu pairs to remap.
 
-CUcheckpointGpuPair * CUcheckpointRestoreArgs::gpuPairs
+`` unsigned int padding0 ``
 
+Padding to align the following fields.
 
-Pointer to array of gpu pairs that indicate how to remap GPUs during restore
+`` CUcheckpointCustomStorageInfo **customStorageInfo_out ``
 
-unsigned int CUcheckpointRestoreArgs::gpuPairsCount
+Optional custom storage; if NULL, GPU memory is restored from host.
 
+`` char reserved[64 - sizeof(CUcheckpointGpuPair*) - 2 * sizeof(unsigned int) - sizeof(CUcheckpointCustomStorageInfo**)] ``
 
-Number of gpu pairs to remap
-
-char CUcheckpointRestoreArgs::reserved[52-sizeof(CUcheckpointGpuPair *)]
-
-
-Reserved for future use, must be zeroed
-
-cuuint64_t CUcheckpointRestoreArgs::reserved1
-
-
-Reserved for future use, must be zeroed
-
+Reserved for future use, must be zeroed; includes alignment before `customStorageInfo`.

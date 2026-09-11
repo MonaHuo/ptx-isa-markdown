@@ -1,69 +1,64 @@
-# 6.22. Direct3D 11 Interoperability [DEPRECATED]
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__D3D11__DEPRECATED.html
 
-**Source:** group__CUDART__D3D11__DEPRECATED.html#group__CUDART__D3D11__DEPRECATED
+#  6.8. Direct3D 11 Interoperability [DEPRECATED]
 
+This section describes deprecated Direct3D 11 interoperability functions.
 
-### Functions
+##  6.8.1. Functions
 
-__host__ cudaError_t cudaD3D11GetDirect3DDevice ( ID3D11Device** ppD3D11Device )
-
+`` __host__ cudaError_t cudaD3D11GetDirect3DDevice(ID3D11Device **ppD3D11Device) ``
 
 Gets the Direct3D device against which the current CUDA context was created.
 
-######  Parameters
-
-`ppD3D11Device`
-    \- Returns the Direct3D device for this thread
-
-###### Returns
-
-cudaSuccess, cudaErrorUnknown
-
-###### Deprecated
+`` Deprecated: ``
 
 This function is deprecated as of CUDA 5.0.
-
-###### Description
 
 This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA device with a D3D11 device in order to achieve maximum interoperability performance.
 
-**See also:**
+See also
 
 cudaD3D11SetDirect3DDevice
 
-__host__ cudaError_t cudaD3D11SetDirect3DDevice ( ID3D11Device* pD3D11Device, int  device = -1 )
+Note
 
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+**ppD3D11Device** – - Returns the Direct3D device for this thread
+
+Returns
+
+cudaSuccess, cudaErrorUnknown
+
+`` __host__ cudaError_t cudaD3D11SetDirect3DDevice(ID3D11Device *pD3D11Device, int device = -1) ``
 
 Sets the Direct3D 11 device to use for interoperability with a CUDA device.
 
-######  Parameters
-
-`pD3D11Device`
-    \- Direct3D device to use for interoperability
-`device`
-    \- The CUDA device to use. This device must be among the devices returned when querying cudaD3D11DeviceListAll from cudaD3D11GetDevices, may be set to -1 to automatically select an appropriate CUDA device.
-
-###### Returns
-
-cudaSuccess, cudaErrorInitializationError, cudaErrorInvalidValue, cudaErrorSetOnActiveProcess
-
-###### Deprecated
+`` Deprecated: ``
 
 This function is deprecated as of CUDA 5.0.
-
-###### Description
 
 This function is deprecated and should no longer be used. It is no longer necessary to associate a CUDA device with a D3D11 device in order to achieve maximum interoperability performance.
 
 This function will immediately initialize the primary context on `device` if needed.
 
-**See also:**
+See also
 
 cudaD3D11GetDevice, cudaGraphicsD3D11RegisterResource, cudaDeviceReset
 
-* * *
+Note
 
-!
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Parameters
 
-Copyright © 2025 NVIDIA Corporation
+  * **pD3D11Device** – - Direct3D device to use for interoperability
+
+  * **device** – - The CUDA device to use. This device must be among the devices returned when querying cudaD3D11DeviceListAll from cudaD3D11GetDevices, may be set to -1 to automatically select an appropriate CUDA device.
+
+Returns
+
+cudaSuccess, cudaErrorInitializationError, cudaErrorInvalidValue, cudaErrorSetOnActiveProcess

@@ -1,53 +1,44 @@
-# 7.62. cudaPointerAttributes
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaPointerAttributes.html
 
-**Source:** structcudaPointerAttributes.html#structcudaPointerAttributes
+#  7.64. cudaPointerAttributes
 
+`` struct cudaPointerAttributes ``
 
-### Public Variables
+CUDA pointer attributes.
 
-int device
+Public Members
 
-void * devicePointer
+`` union cudaPointerAttributes::[anonymous] [anonymous] ``
 
-void * hostPointer
+Locality domain ordinal for device allocations localized to a locality domain, or -1 when the allocation is not localized to a locality domain.
 
-long reserved[8]
+`` int device ``
 
-enumcudaMemoryType type
+The device against which the memory was allocated or registered.
 
+If the memory type is cudaMemoryTypeDevice then this identifies the device on which the memory referred physically resides. If the memory type is cudaMemoryTypeHost or::cudaMemoryTypeManaged then this identifies the device which was current when the memory was allocated or registered (and if that device is deinitialized then this allocation will vanish with that device’s state).
 
-### Variables
-
-int cudaPointerAttributes::device
-
-
-The device against which the memory was allocated or registered. If the memory type is cudaMemoryTypeDevice then this identifies the device on which the memory referred physically resides. If the memory type is cudaMemoryTypeHostor::cudaMemoryTypeManaged then this identifies the device which was current when the memory was allocated or registered (and if that device is deinitialized then this allocation will vanish with that device's state).
-
-void * cudaPointerAttributes::devicePointer
-
+`` void *devicePointer ``
 
 The address which may be dereferenced on the current device to access the memory or NULL if no such address exists.
 
-void * cudaPointerAttributes::hostPointer
-
+`` void *hostPointer ``
 
 The address which may be dereferenced on the host to access the memory or NULL if no such address exists.
 
-CUDA doesn't check if unregistered memory is allocated so this field may contain invalid pointer if an invalid pointer has been passed to CUDA.
+Note
 
-long cudaPointerAttributes::reserved[8]
+CUDA doesn’t check if unregistered memory is allocated so this field may contain invalid pointer if an invalid pointer has been passed to CUDA.
 
+`` int localityDomainOrdinal ``
 
-Must be zero
+`` long reserved[7] ``
 
-enumcudaMemoryTypecudaPointerAttributes::type
+Must be zero.
 
+`` enum cudaMemoryType type ``
 
 The type of memory - cudaMemoryTypeUnregistered, cudaMemoryTypeHost, cudaMemoryTypeDevice or cudaMemoryTypeManaged.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+`` long unused ``

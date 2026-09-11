@@ -1,79 +1,46 @@
-# 7.65. cudaResourceViewDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaResourceViewDesc.html
 
-**Source:** structcudaResourceViewDesc.html#structcudaResourceViewDesc
+#  7.67. cudaResourceViewDesc
 
+`` struct cudaResourceViewDesc ``
 
-### Public Variables
+CUDA resource view descriptor.
 
-size_t depth
+Public Members
 
-unsigned int firstLayer
+`` size_t depth ``
 
-unsigned int firstMipmapLevel
+Depth of the resource view.
 
-enumcudaResourceViewFormat format
+`` unsigned int firstLayer ``
 
-size_t height
+First layer index.
 
-unsigned int lastLayer
+`` unsigned int firstMipmapLevel ``
 
-unsigned int lastMipmapLevel
+First defined mipmap level.
 
-unsigned int reserved[16]
+`` enum cudaResourceViewFormat format ``
 
-size_t width
+Resource view format.
 
+`` size_t height ``
 
-### Variables
+Height of the resource view.
 
-size_t cudaResourceViewDesc::depth
+`` unsigned int lastLayer ``
 
+Last layer index.
 
-Depth of the resource view
+`` unsigned int lastMipmapLevel ``
 
-unsigned int cudaResourceViewDesc::firstLayer
+Last defined mipmap level.
 
+`` unsigned int reserved[16] ``
 
-First layer index
+Must be zero.
 
-unsigned int cudaResourceViewDesc::firstMipmapLevel
+`` size_t width ``
 
-
-First defined mipmap level
-
-enumcudaResourceViewFormatcudaResourceViewDesc::format
-
-
-Resource view format
-
-size_t cudaResourceViewDesc::height
-
-
-Height of the resource view
-
-unsigned int cudaResourceViewDesc::lastLayer
-
-
-Last layer index
-
-unsigned int cudaResourceViewDesc::lastMipmapLevel
-
-
-Last defined mipmap level
-
-unsigned int cudaResourceViewDesc::reserved[16]
-
-
-Must be zero
-
-size_t cudaResourceViewDesc::width
-
-
-Width of the resource view
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width of the resource view.

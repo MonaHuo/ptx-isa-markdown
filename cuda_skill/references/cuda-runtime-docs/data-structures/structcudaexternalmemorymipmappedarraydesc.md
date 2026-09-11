@@ -1,58 +1,36 @@
-# 7.22. cudaExternalMemoryMipmappedArrayDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalMemoryMipmappedArrayDesc.html
 
-**Source:** structcudaExternalMemoryMipmappedArrayDesc.html#structcudaExternalMemoryMipmappedArrayDesc
+#  7.22. cudaExternalMemoryMipmappedArrayDesc
 
+`` struct cudaExternalMemoryMipmappedArrayDesc ``
 
-### Public Variables
+External memory mipmap descriptor.
 
-struct cudaExtent extent
+Public Members
 
-unsigned int flags
+`` struct cudaExtent extent ``
 
-struct cudaChannelFormatDesc formatDesc
+Dimensions of base level of the mipmap chain.
 
-unsigned int numLevels
+`` unsigned int flags ``
 
-unsigned long long offset
+Flags associated with CUDA mipmapped arrays.
 
-unsigned int reserved[16]
+See cudaMallocMipmappedArray
 
+`` struct cudaChannelFormatDesc formatDesc ``
 
-### Variables
+Format of base level of the mipmap chain.
 
-struct cudaExtentcudaExternalMemoryMipmappedArrayDesc::extent
+`` unsigned int numLevels ``
 
+Total number of levels in the mipmap chain.
 
-Dimensions of base level of the mipmap chain
-
-unsigned int cudaExternalMemoryMipmappedArrayDesc::flags
-
-
-Flags associated with CUDA mipmapped arrays. See cudaMallocMipmappedArray
-
-struct cudaChannelFormatDesccudaExternalMemoryMipmappedArrayDesc::formatDesc
-
-
-Format of base level of the mipmap chain
-
-unsigned int cudaExternalMemoryMipmappedArrayDesc::numLevels
-
-
-Total number of levels in the mipmap chain
-
-unsigned long long cudaExternalMemoryMipmappedArrayDesc::offset
-
+`` unsigned long long offset ``
 
 Offset into the memory object where the base level of the mipmap chain is.
 
-unsigned int cudaExternalMemoryMipmappedArrayDesc::reserved[16]
+`` unsigned int reserved[16] ``
 
-
-Must be zero
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Must be zero.

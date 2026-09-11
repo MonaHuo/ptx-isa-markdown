@@ -1,72 +1,42 @@
-# 7.50. cudaMemcpy3DParms
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemcpy3DParms.html
 
-**Source:** structcudaMemcpy3DParms.html#structcudaMemcpy3DParms
+#  7.56. cudaMemcpy3DParms
 
+`` struct cudaMemcpy3DParms ``
 
-### Public Variables
+CUDA 3D memory copying parameters.
 
-cudaArray_t dstArray
+Public Members
 
-struct cudaPos dstPos
+`` cudaArray_t dstArray ``
 
-struct cudaPitchedPtr dstPtr
+Destination memory address.
 
-struct cudaExtent extent
+`` struct cudaPos dstPos ``
 
-enumcudaMemcpyKind kind
+Destination position offset.
 
-cudaArray_t srcArray
+`` struct cudaPitchedPtr dstPtr ``
 
-struct cudaPos srcPos
+Pitched destination memory address.
 
-struct cudaPitchedPtr srcPtr
+`` struct cudaExtent extent ``
 
+Requested memory copy size.
 
-### Variables
+`` enum cudaMemcpyKind kind ``
 
-cudaArray_tcudaMemcpy3DParms::dstArray
+Type of transfer.
 
+`` cudaArray_t srcArray ``
 
-Destination memory address
+Source memory address.
 
-struct cudaPoscudaMemcpy3DParms::dstPos
+`` struct cudaPos srcPos ``
 
+Source position offset.
 
-Destination position offset
+`` struct cudaPitchedPtr srcPtr ``
 
-struct cudaPitchedPtrcudaMemcpy3DParms::dstPtr
-
-
-Pitched destination memory address
-
-struct cudaExtentcudaMemcpy3DParms::extent
-
-
-Requested memory copy size
-
-enumcudaMemcpyKindcudaMemcpy3DParms::kind
-
-
-Type of transfer
-
-cudaArray_tcudaMemcpy3DParms::srcArray
-
-
-Source memory address
-
-struct cudaPoscudaMemcpy3DParms::srcPos
-
-
-Source position offset
-
-struct cudaPitchedPtrcudaMemcpy3DParms::srcPtr
-
-
-Pitched source memory address
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Pitched source memory address.

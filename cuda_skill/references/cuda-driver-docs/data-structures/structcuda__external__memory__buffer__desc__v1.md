@@ -1,31 +1,28 @@
-# 7.26. CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__EXTERNAL__MEMORY__BUFFER__DESC__v1.html
 
-**Source:** structCUDA__EXTERNAL__MEMORY__BUFFER__DESC__v1.html#structCUDA__EXTERNAL__MEMORY__BUFFER__DESC__v1
+#  7.11. CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1 ``
 
-unsigned int flags
+External memory buffer descriptor.
 
-unsigned long long offset
+Public Members
 
-unsigned long long size
+`` unsigned long long offset ``
 
+Offset into the memory object where the buffer’s base is.
 
-### Variables
+`` unsigned long long size ``
 
-unsigned int CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1::flags
+Size of the buffer.
 
+`` unsigned int flags ``
 
-Flags reserved for future use. Must be zero.
+Flags reserved for future use.
 
-unsigned long long CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1::offset
+Must be zero.
 
-
-Offset into the memory object where the buffer's base is
-
-unsigned long long CUDA_EXTERNAL_MEMORY_BUFFER_DESC_v1::size
-
-
-Size of the buffer
-
+`` unsigned int reserved[16] ``

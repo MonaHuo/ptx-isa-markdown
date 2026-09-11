@@ -1,52 +1,40 @@
-# 7.15. CUDA_ARRAY_SPARSE_PROPERTIES_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__ARRAY__SPARSE__PROPERTIES__v1.html
 
-**Source:** structCUDA__ARRAY__SPARSE__PROPERTIES__v1.html#structCUDA__ARRAY__SPARSE__PROPERTIES__v1
+#  7.4. CUDA_ARRAY_SPARSE_PROPERTIES_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_ARRAY_SPARSE_PROPERTIES_v1 ``
 
-unsigned int depth
+CUDA array sparse properties.
 
-unsigned int flags
+Public Members
 
-unsigned int height
+`` unsigned int width ``
 
-unsigned int miptailFirstLevel
+Width of sparse tile in elements.
 
-unsigned long long miptailSize
+`` unsigned int height ``
 
-unsigned int width
+Height of sparse tile in elements.
 
+`` unsigned int depth ``
 
-### Variables
+Depth of sparse tile in elements.
 
-unsigned int CUDA_ARRAY_SPARSE_PROPERTIES_v1::depth
+`` struct CUDA_ARRAY_SPARSE_PROPERTIES_v1::[anonymous] tileExtent ``
 
-
-Depth of sparse tile in elements
-
-unsigned int CUDA_ARRAY_SPARSE_PROPERTIES_v1::flags
-
-
-Flags will either be zero or CU_ARRAY_SPARSE_PROPERTIES_SINGLE_MIPTAIL
-
-unsigned int CUDA_ARRAY_SPARSE_PROPERTIES_v1::height
-
-
-Height of sparse tile in elements
-
-unsigned int CUDA_ARRAY_SPARSE_PROPERTIES_v1::miptailFirstLevel
-
+`` unsigned int miptailFirstLevel ``
 
 First mip level at which the mip tail begins.
 
-unsigned long long CUDA_ARRAY_SPARSE_PROPERTIES_v1::miptailSize
-
+`` unsigned long long miptailSize ``
 
 Total size of the mip tail.
 
-unsigned int CUDA_ARRAY_SPARSE_PROPERTIES_v1::width
+`` unsigned int flags ``
 
+Flags will either be zero or CU_ARRAY_SPARSE_PROPERTIES_SINGLE_MIPTAIL.
 
-Width of sparse tile in elements
-
+`` unsigned int reserved[4] ``

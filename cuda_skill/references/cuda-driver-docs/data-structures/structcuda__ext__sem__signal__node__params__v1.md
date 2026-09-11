@@ -1,31 +1,24 @@
-# 7.22. CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__EXT__SEM__SIGNAL__NODE__PARAMS__v1.html
 
-**Source:** structCUDA__EXT__SEM__SIGNAL__NODE__PARAMS__v1.html#structCUDA__EXT__SEM__SIGNAL__NODE__PARAMS__v1
+#  7.17. CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1 ``
 
-CUexternalSemaphore* * extSemArray
+Semaphore signal node parameters.
 
-unsigned int numExtSems
+Public Members
 
-const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS * paramsArray
-
-
-### Variables
-
-CUexternalSemaphore* * CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1::extSemArray
-
+`` CUexternalSemaphore *extSemArray ``
 
 Array of external semaphore handles.
 
-unsigned int CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1::numExtSems
-
-
-Number of handles and parameters supplied in extSemArray and paramsArray.
-
-const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS * CUDA_EXT_SEM_SIGNAL_NODE_PARAMS_v1::paramsArray
-
+`` const CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS *paramsArray ``
 
 Array of external semaphore signal parameters.
 
+`` unsigned int numExtSems ``
+
+Number of handles and parameters supplied in extSemArray and paramsArray.

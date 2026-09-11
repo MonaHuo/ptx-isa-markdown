@@ -1,44 +1,30 @@
-# 7.61. cudaPitchedPtr
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaPitchedPtr.html
 
-**Source:** structcudaPitchedPtr.html#structcudaPitchedPtr
+#  7.63. cudaPitchedPtr
 
+`` struct cudaPitchedPtr ``
 
-### Public Variables
+CUDA Pitched memory pointer.
 
-size_t pitch
+See also
 
-void * ptr
+make_cudaPitchedPtr
 
-size_t xsize
+Public Members
 
-size_t ysize
+`` size_t pitch ``
 
+Pitch of allocated memory in bytes.
 
-### Variables
+`` void *ptr ``
 
-size_t cudaPitchedPtr::pitch
+Pointer to allocated memory.
 
+`` size_t xsize ``
 
-Pitch of allocated memory in bytes
+Logical width of allocation in elements.
 
-void * cudaPitchedPtr::ptr
+`` size_t ysize ``
 
-
-Pointer to allocated memory
-
-size_t cudaPitchedPtr::xsize
-
-
-Logical width of allocation in elements
-
-size_t cudaPitchedPtr::ysize
-
-
-Logical height of allocation in elements
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Logical height of allocation in elements.

@@ -1,51 +1,42 @@
-# 7.49. cudaMemcpy3DOperand
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemcpy3DOperand.html
 
-**Source:** structcudaMemcpy3DOperand.html#structcudaMemcpy3DOperand
+#  7.55. cudaMemcpy3DOperand
 
+`` struct cudaMemcpy3DOperand ``
 
-### Public Variables
+Struct representing an operand for copy with cudaMemcpy3DBatchAsync.
 
-cudaMemcpy3DOperand::@8::@10 array
+Public Members
 
-size_t layerHeight
+`` cudaArray_t array ``
 
-struct cudaMemLocation locHint
+`` struct cudaMemcpy3DOperand::[anonymous]::[anonymous] array ``
 
-cudaMemcpy3DOperand::@8::@9 ptr
+Struct representing an operand when cudaMemcpy3DOperand::type is cudaMemcpyOperandTypeArray.
 
-size_t rowLength
-
-
-### Variables
-
-cudaMemcpy3DOperand::@8::@10 cudaMemcpy3DOperand::array
-
-
-Struct representing an operand when cudaMemcpy3DOperand::type is cudaMemcpyOperandTypeArray
-
-size_t cudaMemcpy3DOperand::layerHeight
-
+`` size_t layerHeight ``
 
 Height of each layer in elements.
 
-struct cudaMemLocationcudaMemcpy3DOperand::locHint
+`` struct cudaMemLocation locHint ``
 
+Hint location for the operand.
 
-Hint location for the operand. Ignored when the pointers are not managed memory or memory allocated outside CUDA.
+Ignored when the pointers are not managed memory or memory allocated outside CUDA.
 
-cudaMemcpy3DOperand::@8::@9 cudaMemcpy3DOperand::ptr
+`` struct cudaOffset3D offset ``
 
+`` union cudaMemcpy3DOperand::[anonymous] op ``
 
-Struct representing an operand when cudaMemcpy3DOperand::type is cudaMemcpyOperandTypePointer
+`` void *ptr ``
 
-size_t cudaMemcpy3DOperand::rowLength
+`` struct cudaMemcpy3DOperand::[anonymous]::[anonymous] ptr ``
 
+Struct representing an operand when cudaMemcpy3DOperand::type is cudaMemcpyOperandTypePointer.
+
+`` size_t rowLength ``
 
 Length of each row in elements.
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+`` enum cudaMemcpy3DOperandType type ``

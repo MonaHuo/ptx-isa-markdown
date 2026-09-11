@@ -1,45 +1,38 @@
-# Next >
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCU__DEV__SM__RESOURCE__GROUP__PARAMS.html
 
-**Source:** structCU__DEV__SM__RESOURCE__GROUP__PARAMS.html
+#  7.42. CU_DEV_SM_RESOURCE_GROUP_PARAMS
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CU_DEV_SM_RESOURCE_GROUP_PARAMS ``
 
-unsigned int coscheduledSmCount
+Input data for splitting SMs
 
-unsigned int flags
+Public Members
 
-unsigned int preferredCoscheduledSmCount
-
-unsigned int reserved[12]
-
-unsigned int smCount
-
-
-### Variables
-
-unsigned int CU_DEV_SM_RESOURCE_GROUP_PARAMS::coscheduledSmCount
-
-
-The amount of co-scheduled SMs grouped together for locality purposes.
-
-unsigned int CU_DEV_SM_RESOURCE_GROUP_PARAMS::flags
-
-
-Combination of `CUdevSmResourceGroup_flags` values to indicate this this group is created.
-
-unsigned int CU_DEV_SM_RESOURCE_GROUP_PARAMS::preferredCoscheduledSmCount
-
-
-When possible, combine co-scheduled groups together into larger groups of this size.
-
-unsigned int CU_DEV_SM_RESOURCE_GROUP_PARAMS::reserved[12]
-
-
-Reserved for future use - ensure this is is zero initialized.
-
-unsigned int CU_DEV_SM_RESOURCE_GROUP_PARAMS::smCount
-
+`` unsigned int smCount ``
 
 The amount of SMs available in this resource.
 
+`` unsigned int coscheduledSmCount ``
+
+The amount of co-scheduled SMs grouped together for locality purposes.
+
+`` unsigned int preferredCoscheduledSmCount ``
+
+When possible, combine co-scheduled groups together into larger groups of this size.
+
+`` unsigned int flags ``
+
+The flags set on this SM resource group.
+
+For possible values see CUdevSmResourceGroup_flags.
+
+`` unsigned int localityDomainId ``
+
+Locality domain that the SM must be located on.
+
+Only valid if CU_DEV_SM_RESOURCE_GROUP_LOCALITY_DOMAIN_ID is set in flags
+
+`` unsigned int reserved[11] ``

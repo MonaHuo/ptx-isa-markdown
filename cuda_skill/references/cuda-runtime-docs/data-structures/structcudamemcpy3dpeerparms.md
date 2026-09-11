@@ -1,79 +1,46 @@
-# 7.51. cudaMemcpy3DPeerParms
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemcpy3DPeerParms.html
 
-**Source:** structcudaMemcpy3DPeerParms.html#structcudaMemcpy3DPeerParms
+#  7.57. cudaMemcpy3DPeerParms
 
+`` struct cudaMemcpy3DPeerParms ``
 
-### Public Variables
+CUDA 3D cross-device memory copying parameters.
 
-cudaArray_t dstArray
+Public Members
 
-int dstDevice
+`` cudaArray_t dstArray ``
 
-struct cudaPos dstPos
+Destination memory address.
 
-struct cudaPitchedPtr dstPtr
+`` int dstDevice ``
 
-struct cudaExtent extent
+Destination device.
 
-cudaArray_t srcArray
+`` struct cudaPos dstPos ``
 
-int srcDevice
+Destination position offset.
 
-struct cudaPos srcPos
+`` struct cudaPitchedPtr dstPtr ``
 
-struct cudaPitchedPtr srcPtr
+Pitched destination memory address.
 
+`` struct cudaExtent extent ``
 
-### Variables
+Requested memory copy size.
 
-cudaArray_tcudaMemcpy3DPeerParms::dstArray
+`` cudaArray_t srcArray ``
 
+Source memory address.
 
-Destination memory address
+`` int srcDevice ``
 
-int cudaMemcpy3DPeerParms::dstDevice
+Source device.
 
+`` struct cudaPos srcPos ``
 
-Destination device
+Source position offset.
 
-struct cudaPoscudaMemcpy3DPeerParms::dstPos
+`` struct cudaPitchedPtr srcPtr ``
 
-
-Destination position offset
-
-struct cudaPitchedPtrcudaMemcpy3DPeerParms::dstPtr
-
-
-Pitched destination memory address
-
-struct cudaExtentcudaMemcpy3DPeerParms::extent
-
-
-Requested memory copy size
-
-cudaArray_tcudaMemcpy3DPeerParms::srcArray
-
-
-Source memory address
-
-int cudaMemcpy3DPeerParms::srcDevice
-
-
-Source device
-
-struct cudaPoscudaMemcpy3DPeerParms::srcPos
-
-
-Source position offset
-
-struct cudaPitchedPtrcudaMemcpy3DPeerParms::srcPtr
-
-
-Pitched source memory address
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Pitched source memory address.

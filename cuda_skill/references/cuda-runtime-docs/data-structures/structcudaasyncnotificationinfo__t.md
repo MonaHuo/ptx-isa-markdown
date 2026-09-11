@@ -1,44 +1,28 @@
-# 7.5. cudaAsyncNotificationInfo_t
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaAsyncNotificationInfo__t.html
 
-**Source:** structcudaAsyncNotificationInfo__t.html#structcudaAsyncNotificationInfo__t
+#  7.5. cudaAsyncNotificationInfo_t
 
+`` struct cudaAsyncNotificationInfo_t ``
 
-### Public Variables
+Information describing an async notification event.
 
-unsigned long long bytesOverBudget
+Public Members
 
-cudaAsyncNotificationInfo_t::@34 info
+`` unsigned long long bytesOverBudget ``
 
-cudaAsyncNotificationInfo_t::@34::@35 overBudget
+The number of bytes that the process has allocated above its device memory budget.
 
-cudaAsyncNotificationType type
+`` union cudaAsyncNotificationInfo_t::[anonymous] info ``
 
+Information about the notification.
 
-### Variables
+`type` must be checked in order to interpret this field.
 
-unsigned long long cudaAsyncNotificationInfo_t::bytesOverBudget
+`` struct cudaAsyncNotificationInfo_t::[anonymous]::[anonymous] overBudget ``
 
+Information about notifications of type `cudaAsyncNotificationTypeOverBudget`.
 
-The number of bytes that the process has allocated above its device memory budget
+`` cudaAsyncNotificationType type ``
 
-cudaAsyncNotificationInfo_t::@34 cudaAsyncNotificationInfo_t::info
-
-
-Information about the notification. `type` must be checked in order to interpret this field.
-
-cudaAsyncNotificationInfo_t::@34::@35 cudaAsyncNotificationInfo_t::overBudget
-
-
-Information about notifications of type `cudaAsyncNotificationTypeOverBudget`
-
-cudaAsyncNotificationTypecudaAsyncNotificationInfo_t::type
-
-
-The type of notification being sent
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+The type of notification being sent.

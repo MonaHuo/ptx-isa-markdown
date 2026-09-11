@@ -1,58 +1,38 @@
-# 7.4. cudaArraySparseProperties
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaArraySparseProperties.html
 
-**Source:** structcudaArraySparseProperties.html#structcudaArraySparseProperties
+#  7.4. cudaArraySparseProperties
 
+`` struct cudaArraySparseProperties ``
 
-### Public Variables
+Sparse CUDA array and CUDA mipmapped array properties.
 
-unsigned int depth
+Public Members
 
-unsigned int flags
+`` unsigned int depth ``
 
-unsigned int height
+Tile depth in elements.
 
-unsigned int miptailFirstLevel
+`` unsigned int flags ``
 
-unsigned long long miptailSize
+Flags will either be zero or cudaArraySparsePropertiesSingleMipTail.
 
-unsigned int width
+`` unsigned int height ``
 
+Tile height in elements.
 
-### Variables
+`` unsigned int miptailFirstLevel ``
 
-unsigned int cudaArraySparseProperties::depth
+First mip level at which the mip tail begins.
 
-
-Tile depth in elements
-
-unsigned int cudaArraySparseProperties::flags
-
-
-Flags will either be zero or cudaArraySparsePropertiesSingleMipTail
-
-unsigned int cudaArraySparseProperties::height
-
-
-Tile height in elements
-
-unsigned int cudaArraySparseProperties::miptailFirstLevel
-
-
-First mip level at which the mip tail begins
-
-unsigned long long cudaArraySparseProperties::miptailSize
-
+`` unsigned long long miptailSize ``
 
 Total size of the mip tail.
 
-unsigned int cudaArraySparseProperties::width
+`` unsigned int reserved[4] ``
 
+`` struct cudaArraySparseProperties::[anonymous] tileExtent ``
 
-Tile width in elements
+`` unsigned int width ``
 
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Tile width in elements.

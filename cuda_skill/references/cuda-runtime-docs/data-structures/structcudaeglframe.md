@@ -1,58 +1,50 @@
-# 7.15. cudaEglFrame
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaEglFrame.html
 
-**Source:** structcudaEglFrame.html#structcudaEglFrame
+#  7.15. cudaEglFrame
 
+`` struct cudaEglFrame ``
 
-### Public Variables
+CUDA EGLFrame Descriptor - structure defining one frame of EGL.
 
-cudaEglColorFormat eglColorFormat
+Each frame may contain one or more planes depending on whether the surface is Multiplanar or not. Each plane of EGLFrame is represented by cudaEglPlaneDesc which is defined as:
 
-cudaEglFrameType frameType
+```cpp
+typedef struct cudaEglPlaneDesc_st {
+    unsigned int width;
+    unsigned int height;
+    unsigned int depth;
+    unsigned int pitch;
+    unsigned int numChannels;
+    struct cudaChannelFormatDesc channelDesc;
+    unsigned int reserved[4];
+} cudaEglPlaneDesc;
+```
 
-cudaArray_t pArray[CUDA_EGL_MAX_PLANES]
+Public Members
 
-struct cudaPitchedPtr pPitch[CUDA_EGL_MAX_PLANES]
+`` cudaEglColorFormat eglColorFormat ``
 
-unsigned int planeCount
+CUDA EGL Color Format.
 
-struct cudaEglPlaneDesc planeDesc[CUDA_EGL_MAX_PLANES]
+`` union cudaEglFrame::[anonymous] frame ``
 
+`` cudaEglFrameType frameType ``
 
-### Variables
+Array or Pitch.
 
-cudaEglColorFormatcudaEglFrame::eglColorFormat
+`` cudaArray_t pArray[3] ``
 
+Array of CUDA arrays corresponding to each plane.
 
-CUDA EGL Color Format
+`` unsigned int planeCount ``
 
-cudaEglFrameTypecudaEglFrame::frameType
+Number of planes.
 
+`` cudaEglPlaneDesc planeDesc[3] ``
 
-Array or Pitch
+CUDA EGL Plane Descriptor cudaEglPlaneDesc.
 
-cudaArray_tcudaEglFrame::pArray[CUDA_EGL_MAX_PLANES]
+`` struct cudaPitchedPtr pPitch[3] ``
 
-
-Array of CUDA arrays corresponding to each plane
-
-struct cudaPitchedPtrcudaEglFrame::pPitch[CUDA_EGL_MAX_PLANES]
-
-
-Array of Pointers corresponding to each plane
-
-unsigned int cudaEglFrame::planeCount
-
-
-Number of planes
-
-struct cudaEglPlaneDesccudaEglFrame::planeDesc[CUDA_EGL_MAX_PLANES]
-
-
-CUDA EGL Plane Descriptor cudaEglPlaneDesc
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Array of Pointers corresponding to each plane.

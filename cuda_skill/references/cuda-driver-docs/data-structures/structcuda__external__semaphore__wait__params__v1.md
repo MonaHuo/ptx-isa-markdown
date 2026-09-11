@@ -1,59 +1,52 @@
-# 7.31. CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__EXTERNAL__SEMAPHORE__WAIT__PARAMS__v1.html
 
-**Source:** structCUDA__EXTERNAL__SEMAPHORE__WAIT__PARAMS__v1.html#structCUDA__EXTERNAL__SEMAPHORE__WAIT__PARAMS__v1
+#  7.16. CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1 ``
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@28 fence
+External semaphore wait parameters.
 
-unsigned int flags
+Public Members
 
-unsigned long long key
+`` unsigned long long value ``
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@30 keyedMutex
+Value of fence to be waited on.
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@29 nvSciSync
+`` struct CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::[anonymous]::[anonymous] fence ``
 
-unsigned int timeoutMs
+Parameters for fence objects.
 
-unsigned long long value
+`` void *fence ``
 
+`` unsigned long long reserved ``
 
-### Variables
+`` union CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::[anonymous]::[anonymous] nvSciSync ``
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@28 CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::fence
+Pointer to NvSciSyncFence.
 
+Valid if CUexternalSemaphoreHandleType is of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC.
 
-Parameters for fence objects
+`` unsigned long long key ``
 
-unsigned int CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::flags
+Value of key to acquire the mutex with.
 
+`` unsigned int timeoutMs ``
 
-Only when CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS is used to wait on a CUexternalSemaphore of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC, the valid flag is CUDA_EXTERNAL_SEMAPHORE_WAIT_SKIP_NVSCIBUF_MEMSYNC which indicates that while waiting for the CUexternalSemaphore, no memory synchronization operations should be performed for any external memory object imported as CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF. For all other types of CUexternalSemaphore, flags must be zero.
+Timeout in milliseconds to wait to acquire the mutex.
 
-unsigned long long CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::key
+`` struct CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::[anonymous]::[anonymous] keyedMutex ``
 
+Parameters for keyed mutex objects.
 
-Value of key to acquire the mutex with
+`` unsigned int reserved[10] ``
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@30 CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::keyedMutex
+`` struct CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::[anonymous] params ``
 
+`` unsigned int flags ``
 
-Parameters for keyed mutex objects
+Only when CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS is used to wait on a CUexternalSemaphore of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC, the valid flag is CUDA_EXTERNAL_SEMAPHORE_WAIT_SKIP_NVSCIBUF_MEMSYNC which indicates that while waiting for the CUexternalSemaphore, no memory synchronization operations should be performed for any external memory object imported as CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF.
 
-CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::@27::@29 CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::nvSciSync
-
-
-Pointer to NvSciSyncFence. Valid if CUexternalSemaphoreHandleType is of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC.
-
-unsigned int CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::timeoutMs
-
-
-Timeout in milliseconds to wait to acquire the mutex
-
-unsigned long long CUDA_EXTERNAL_SEMAPHORE_WAIT_PARAMS_v1::value
-
-
-Value of fence to be waited on
-
+For all other types of CUexternalSemaphore, flags must be zero.

@@ -1,80 +1,52 @@
-# 7.52. CUdevprop_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUdevprop__v1.html
 
-**Source:** structCUdevprop__v1.html#structCUdevprop__v1
+#  7.61. CUdevprop_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUdevprop_v1 ``
 
-int SIMDWidth
+Legacy device properties.
 
-int clockRate
+Public Members
 
-int maxGridSize[3]
+`` int maxThreadsPerBlock ``
 
-int maxThreadsDim[3]
+Maximum number of threads per block.
 
-int maxThreadsPerBlock
+`` int maxThreadsDim[3] ``
 
-int memPitch
+Maximum size of each dimension of a block.
 
-int regsPerBlock
+`` int maxGridSize[3] ``
 
-int sharedMemPerBlock
+Maximum size of each dimension of a grid.
 
-int textureAlign
+`` int sharedMemPerBlock ``
 
-int totalConstantMemory
+Shared memory available per block in bytes.
 
+`` int totalConstantMemory ``
 
-### Variables
+Constant memory available on device in bytes.
 
-int CUdevprop_v1::SIMDWidth
+`` int SIMDWidth ``
 
+Warp size in threads.
 
-Warp size in threads
+`` int memPitch ``
 
-int CUdevprop_v1::clockRate
+Maximum pitch in bytes allowed by memory copies.
 
-
-Clock frequency in kilohertz
-
-int CUdevprop_v1::maxGridSize[3]
-
-
-Maximum size of each dimension of a grid
-
-int CUdevprop_v1::maxThreadsDim[3]
-
-
-Maximum size of each dimension of a block
-
-int CUdevprop_v1::maxThreadsPerBlock
-
-
-Maximum number of threads per block
-
-int CUdevprop_v1::memPitch
-
-
-Maximum pitch in bytes allowed by memory copies
-
-int CUdevprop_v1::regsPerBlock
-
+`` int regsPerBlock ``
 
 32-bit registers available per block
 
-int CUdevprop_v1::sharedMemPerBlock
+`` int clockRate ``
 
+Clock frequency in kilohertz.
 
-Shared memory available per block in bytes
+`` int textureAlign ``
 
-int CUdevprop_v1::textureAlign
-
-
-Alignment requirement for textures
-
-int CUdevprop_v1::totalConstantMemory
-
-
-Constant memory available on device in bytes
-
+Alignment requirement for textures.

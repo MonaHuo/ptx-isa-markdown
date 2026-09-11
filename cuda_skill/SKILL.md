@@ -210,15 +210,15 @@ nvcc program.cu -lnvToolsExt -o program
 
 Complete reference documentation available for grep-based search:
 
-**PTX ISA 9.1** — `references/ptx-docs/` (405 files, 2.3MB)
+**PTX ISA 9.4** — `references/ptx-docs/` (506 files, 2.0MB)
 - Search guide: `references/ptx-isa.md`
 - Use for: Instruction-level optimization, inline PTX, TensorCore operations (WMMA, WGMMA, TMA), memory swizzling
 
-**CUDA Runtime API 13.1** — `references/cuda-runtime-docs/` (107 files, 0.9MB)
+**CUDA Runtime API 13.4** — `references/cuda-runtime-docs/` (115 files, 1.2MB)
 - Search guide: `references/cuda-runtime.md`
 - Use for: Error codes, API parameters, device properties (`cudaDeviceProp`), memory management, stream behavior
 
-**CUDA Driver API 13.1** — `references/cuda-driver-docs/` (128 files, 0.8MB)
+**CUDA Driver API 13.4** — `references/cuda-driver-docs/` (151 files, 1.3MB)
 - Search guide: `references/cuda-driver.md`
 - Use for: Context management (`cuCtxCreate`), module loading (`cuModuleLoad`), virtual memory, Driver errors (`CUDA_ERROR_*`), advanced features
 

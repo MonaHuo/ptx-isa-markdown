@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Local Documentation](#local-documentation) — 107 markdown files, 0.9MB
+- [Local Documentation](#local-documentation) — 115 markdown files, 1.2MB
 - [When to Use CUDA Runtime Documentation](#when-to-use-cuda-runtime-documentation) — Error codes, API details, device properties
 - [Quick Search Examples](#quick-search-examples) — Error codes, cudaDeviceProp, contexts, streams, memory pools
 - [Documentation Structure](#documentation-structure) — Modules and data structures organization
@@ -17,15 +17,15 @@
 
 ## Local Documentation
 
-**Complete CUDA Runtime API 13.1 documentation is available locally at `cuda-runtime-docs/`**
+**Complete CUDA Runtime API 13.4 documentation is available locally at `cuda-runtime-docs/`**
 
 The documentation has been converted to markdown with:
 - ✅ All function signatures, parameters, and return values preserved
-- ✅ 107 files organized by module and data structures (0.9 MB)
+- ✅ 115 files organized by module, data structures, and overview chapters (1.2 MB)
 - ✅ Full searchability with grep/ripgrep
 - ✅ Type and function names preserved (redundant URLs removed)
 - ✅ Detailed descriptions and notes
-- ✅ Navigation, duplicate content, URLs, and boilerplate removed (83% size reduction)
+- ✅ Navigation and duplicate summaries removed; semantic notes and examples retained
 
 **Note:** Documentation is local and searchable with grep. Links to online resources provided for reference only.
 
@@ -93,9 +93,9 @@ ls cuda-runtime-docs/modules/*pool*.md
 
 ```
 cuda-runtime-docs/
-├── modules/                               # 41 API module files
+├── modules/                               # 38 API module files
 │   ├── group__cudart__device.md          # Device management
-│   ├── group__cudart__memory.md          # Memory management (491KB!)
+│   ├── group__cudart__memory.md          # Memory management
 │   ├── group__cudart__stream.md          # Stream management
 │   ├── group__cudart__event.md           # Event management
 │   ├── group__cudart__execution.md       # Execution control
@@ -106,12 +106,13 @@ cuda-runtime-docs/
 │   ├── group__cudart__unified.md         # Unified addressing
 │   ├── group__cudart__peer.md            # Peer device access
 │   └── ...                                # Graphics interop, textures, etc.
-├── data-structures/                       # 66 struct/union files
+├── data-structures/                       # 69 struct/union files
 │   ├── structcudadeviceprop.md           # Device properties
 │   ├── structcudamemcpy3dparms.md        # 3D memcpy parameters
 │   ├── structcudalaunchconfig__t.md      # Launch configuration
 │   ├── structcudapointerattributes.md    # Pointer query results
 │   └── ...
+├── overview/                            # Synchronization, version mixing, notices
 └── INDEX.md                               # Complete table of contents
 ```
 
@@ -139,7 +140,7 @@ cudaGetDeviceProperties(&prop, 0);
 // Read: data-structures/structcudadeviceprop.md
 ```
 
-**Documentation**: `data-structures/structcudadeviceprop.md` lists all ~80 fields with types and descriptions.
+**Documentation**: `data-structures/structcudadeviceprop.md` lists all fields with types and descriptions.
 
 ### Stream Behavior
 
@@ -159,7 +160,7 @@ cudaStreamCreate(&stream);
 // Search: grep -A 5 "cudaMallocManaged\|cudaMallocAsync" cuda-runtime-docs/
 ```
 
-**Documentation**: `modules/group__cudart__memory.md` (491KB) has comprehensive memory API documentation.
+**Documentation**: `modules/group__cudart__memory.md` has comprehensive memory API documentation.
 
 ## Function Documentation Format
 

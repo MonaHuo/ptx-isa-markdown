@@ -1,24 +1,20 @@
-# 7.6. CUcheckpointGpuPair
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUcheckpointGpuPair.html
 
-**Source:** structCUcheckpointGpuPair.html#structCUcheckpointGpuPair
+#  7.49. CUcheckpointGpuPair
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUcheckpointGpuPair ``
 
-CUuuid newUuid
+CUDA checkpoint GPU UUID pairs for device remapping during restore.
 
-CUuuid oldUuid
+Public Members
 
+`` CUuuid oldUuid ``
 
-### Variables
+UUID of the GPU that was checkpointed.
 
-CUuuid CUcheckpointGpuPair::newUuid
+`` CUuuid newUuid ``
 
-
-UUID of the GPU to restore onto
-
-CUuuid CUcheckpointGpuPair::oldUuid
-
-
-UUID of the GPU that was checkpointed
-
+UUID of the GPU to restore onto.

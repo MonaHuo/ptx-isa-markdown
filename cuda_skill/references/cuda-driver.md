@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Local Documentation](#local-documentation) — 128 markdown files, 0.8MB
+- [Local Documentation](#local-documentation) — 151 markdown files, 1.3MB
 - [When to Use CUDA Driver API Documentation](#when-to-use-cuda-driver-api-documentation) — Context management, module loading, virtual memory
 - [Quick Search Examples](#quick-search-examples) — Error codes, contexts, module loading, virtual memory
 - [Driver API vs Runtime API](#driver-api-vs-runtime-api) — Key differences and when to use each
@@ -16,15 +16,15 @@
 
 ## Local Documentation
 
-**Complete CUDA Driver API 13.1 documentation is available locally at `cuda-driver-docs/`**
+**Complete CUDA Driver API 13.4 documentation is available locally at `cuda-driver-docs/`**
 
 The documentation has been converted to markdown with:
 - ✅ All function signatures, parameters, and return values preserved
-- ✅ 128 files organized by module and data structures (0.8 MB)
+- ✅ 151 files organized by module, data structures, and overview chapters (1.3 MB)
 - ✅ Full searchability with grep/ripgrep
 - ✅ Type and function names preserved (redundant URLs removed)
 - ✅ Detailed descriptions and notes
-- ✅ Navigation, duplicate TOC, "See also" sections, URLs, and footer removed (76% size reduction)
+- ✅ Navigation and duplicate summaries removed; semantic notes and examples retained
 
 **Note:** Documentation is local and searchable with grep. Links to online resources provided for reference only.
 
@@ -111,31 +111,32 @@ grep -r "CUdeviceptr" cuda-driver-docs/modules/group__cuda__types.md
 
 ```
 cuda-driver-docs/
-├── modules/                                    # 50 API module files
-│   ├── group__cuda__types.md                  # Data types (242KB!)
+├── modules/                                    # 51 API module files
+│   ├── group__cuda__types.md                  # Data types
 │   ├── group__cuda__error.md                  # Error handling
 │   ├── group__cuda__initialize.md             # cuInit
 │   ├── group__cuda__device.md                 # Device management
-│   ├── group__cuda__ctx.md                    # Context management (119KB)
+│   ├── group__cuda__ctx.md                    # Context management
 │   ├── group__cuda__module.md                 # Module loading
-│   ├── group__cuda__mem.md                    # Memory management (715KB!)
+│   ├── group__cuda__mem.md                    # Memory management
 │   ├── group__cuda__va.md                     # Virtual memory
 │   ├── group__cuda__malloc__async.md          # Stream-ordered allocator
-│   ├── group__cuda__stream.md                 # Stream management (120KB)
+│   ├── group__cuda__stream.md                 # Stream management
 │   ├── group__cuda__event.md                  # Event management
-│   ├── group__cuda__exec.md                   # Kernel execution (115KB)
-│   ├── group__cuda__graph.md                  # CUDA graphs (370KB!)
-│   ├── group__cuda__green__contexts.md        # Green contexts (79KB)
+│   ├── group__cuda__exec.md                   # Kernel execution
+│   ├── group__cuda__graph.md                  # CUDA graphs
+│   ├── group__cuda__green__contexts.md        # Green contexts
 │   ├── group__cuda__checkpoint.md             # Checkpointing
 │   ├── group__cuda__multicast.md              # Multicast
 │   ├── group__cuda__tensor__memory.md         # Tensor maps
 │   └── ...                                     # Interop, textures, etc.
-├── data-structures/                            # 80 struct files
+├── data-structures/                            # 92 struct/union files
 │   ├── structcudevprop__v1.md                 # Device properties
 │   ├── structcuda__memcpy3d__v2.md            # 3D memcpy params
 │   ├── structcuda__kernel__node__params__v3.md # Kernel node config
 │   ├── structcumemallocationprop__v1.md       # Virtual memory props
 │   └── ...
+├── overview/                            # Synchronization, version mixing, notices
 └── INDEX.md                                    # Complete table of contents
 ```
 
@@ -143,12 +144,12 @@ cuda-driver-docs/
 
 The following files contain extensive API documentation:
 
-1. **group__cuda__mem.md** (715 KB) — Complete memory management API
-2. **group__cuda__graph.md** (370 KB) — CUDA graph programming
-3. **group__cuda__types.md** (242 KB) — All type definitions and enums
-4. **group__cuda__ctx.md** (119 KB) — Context management
-5. **group__cuda__stream.md** (120 KB) — Stream operations
-6. **group__cuda__exec.md** (115 KB) — Kernel execution control
+1. **group__cuda__mem.md** — Complete memory management API
+2. **group__cuda__graph.md** — CUDA graph programming
+3. **group__cuda__types.md** — All type definitions and enums
+4. **group__cuda__ctx.md** — Context management
+5. **group__cuda__stream.md** — Stream operations
+6. **group__cuda__exec.md** — Kernel execution control
 
 ## Search Tips
 
@@ -244,8 +245,8 @@ grep "cuGraphLaunch" cuda-driver-docs/modules/group__cuda__graph.md
 
 ## Version Information
 
-- **CUDA Toolkit Version**: 13.1
+- **CUDA Toolkit Version**: 13.4
 - **Documentation Date**: December 4, 2025
-- **Total Size**: 0.8 MB (76% reduction from 3.6 MB raw)
-- **Files**: 50 modules + 80 data structures + 1 index
+- **Total Size**: 1.3 MB
+- **Files**: 51 modules + 92 data structures + 7 overview pages + 1 index
 - **Source**: https://docs.nvidia.com/cuda/cuda-driver-api/

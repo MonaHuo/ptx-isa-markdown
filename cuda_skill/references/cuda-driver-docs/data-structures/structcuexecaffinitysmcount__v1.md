@@ -1,17 +1,16 @@
-# 7.59. CUexecAffinitySmCount_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUexecAffinitySmCount__v1.html
 
-**Source:** structCUexecAffinitySmCount__v1.html#structCUexecAffinitySmCount__v1
+#  7.64. CUexecAffinitySmCount_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUexecAffinitySmCount_v1 ``
 
-unsigned int val
+Value for CU_EXEC_AFFINITY_TYPE_SM_COUNT.
 
+Public Members
 
-### Variables
-
-unsigned int CUexecAffinitySmCount_v1::val
-
+`` unsigned int val ``
 
 The number of SMs the context is limited to use.
-

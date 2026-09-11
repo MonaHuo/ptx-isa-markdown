@@ -1,17 +1,20 @@
-# 7.5. CUcheckpointCheckpointArgs
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUcheckpointCheckpointArgs.html
 
-**Source:** structCUcheckpointCheckpointArgs.html#structCUcheckpointCheckpointArgs
+#  7.46. CUcheckpointCheckpointArgs
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUcheckpointCheckpointArgs ``
 
-cuuint64_t reserved[8]
+CUDA checkpoint optional checkpoint arguments.
 
+Public Members
 
-### Variables
+`` CUcheckpointCustomStorageInfo **customStorageInfo_out ``
 
-cuuint64_t CUcheckpointCheckpointArgs::reserved[8]
+Optional custom storage; if NULL, GPU memory is checkpointed to host.
 
+`` char reserved[64 - sizeof(CUcheckpointCustomStorageInfo*)] ``
 
-Reserved for future use, must be zeroed
-
+Reserved for future use, must be zeroed.

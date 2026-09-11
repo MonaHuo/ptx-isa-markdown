@@ -1,65 +1,67 @@
-# 6.15. OpenGL Interoperability
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__OPENGL.html
 
-**Source:** group__CUDART__OPENGL.html#group__CUDART__OPENGL
+#  6.28. OpenGL Interoperability
 
+This section describes the OpenGL interoperability functions of the CUDA runtime application programming interface. Note that mapping of OpenGL resources is performed with the graphics API agnostic, resource mapping interface described in Graphics Interopability.
 
-### Enumerations
+##  6.28.1. Enumerations
 
-enum cudaGLDeviceList
+`` enum cudaGLDeviceList ``
 
+CUDA devices corresponding to the current OpenGL context.
 
-### Functions
+_Values:_
 
-__host__ cudaError_t cudaGLGetDevices ( unsigned int* pCudaDeviceCount, int* pCudaDevices, unsigned int  cudaDeviceCount, cudaGLDeviceList deviceList )
+`` enumerator cudaGLDeviceListAll ``
 
+The CUDA devices for all GPUs used by the current OpenGL context.
+
+`` enumerator cudaGLDeviceListCurrentFrame ``
+
+The CUDA devices for the GPUs used by the current OpenGL context in its currently rendering frame.
+
+`` enumerator cudaGLDeviceListNextFrame ``
+
+The CUDA devices for the GPUs to be used by the current OpenGL context in the next frame
+
+##  6.28.2. Functions
+
+`` __host__ cudaError_t cudaGLGetDevices(unsigned int *pCudaDeviceCount, int *pCudaDevices, unsigned int cudaDeviceCount, enum cudaGLDeviceList deviceList) ``
 
 Gets the CUDA devices associated with the current OpenGL context.
 
-######  Parameters
+Returns in `*pCudaDeviceCount` the number of CUDA-compatible devices corresponding to the current OpenGL context. Also returns in `*pCudaDevices` at most `cudaDeviceCount` of the CUDA-compatible devices corresponding to the current OpenGL context. If any of the GPUs being used by the current OpenGL context are not CUDA capable then the call will return cudaErrorNoDevice.
 
-`pCudaDeviceCount`
-    \- Returned number of CUDA devices corresponding to the current OpenGL context
-`pCudaDevices`
-    \- Returned CUDA devices corresponding to the current OpenGL context
-`cudaDeviceCount`
-    \- The size of the output device array `pCudaDevices`
-`deviceList`
-    \- The set of devices to return. This set may be cudaGLDeviceListAll for all devices, cudaGLDeviceListCurrentFrame for the devices used to render the current frame (in SLI), or cudaGLDeviceListNextFrame for the devices used to render the next frame (in SLI).
+See also
 
-###### Returns
+cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, ::cuGLGetDevices
+
+Note
+
+This function is not supported on Mac OS X.
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **pCudaDeviceCount** – - Returned number of CUDA devices corresponding to the current OpenGL context
+
+  * **pCudaDevices** – - Returned CUDA devices corresponding to the current OpenGL context
+
+  * **cudaDeviceCount** – - The size of the output device array `pCudaDevices`
+
+  * **deviceList** – - The set of devices to return. This set may be cudaGLDeviceListAll for all devices, cudaGLDeviceListCurrentFrame for the devices used to render the current frame (in SLI), or cudaGLDeviceListNextFrame for the devices used to render the next frame (in SLI).
+
+Returns
 
 cudaSuccess, cudaErrorNoDevice, cudaErrorInvalidGraphicsContext, cudaErrorOperatingSystem, cudaErrorUnknown
 
-###### Description
-
-Returns in `*pCudaDeviceCount` the number of CUDA-compatible devices corresponding to the current OpenGL context. Also returns in `*pCudaDevices` at most `cudaDeviceCount` of the CUDA-compatible devices corresponding to the current OpenGL context. If any of the GPUs being used by the current OpenGL context are not CUDA capable then the call will return cudaErrorNoDevice.
-
-  * This function is not supported on Mac OS X.
-
-  *
-**See also:**
-
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cudaGraphicsResourceGetMappedPointer, cuGLGetDevices
-
-__host__ cudaError_t cudaGraphicsGLRegisterBuffer ( cudaGraphicsResource** resource, GLuint buffer, unsigned int  flags )
-
+`` __host__ cudaError_t cudaGraphicsGLRegisterBuffer(struct cudaGraphicsResource **resource, GLuint buffer, unsigned int flags) ``
 
 Registers an OpenGL buffer object.
-
-######  Parameters
-
-`resource`
-    \- Pointer to the returned object handle
-`buffer`
-    \- name of buffer object to be registered
-`flags`
-    \- Register flags
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle, cudaErrorOperatingSystem, cudaErrorUnknown
-
-###### Description
 
 Registers the buffer object specified by `buffer` for access by CUDA. A handle to the registered object is returned as `resource`. The register flags `flags` specify the intended usage, as follows:
 
@@ -69,36 +71,33 @@ Registers the buffer object specified by `buffer` for access by CUDA. A handle t
 
   * cudaGraphicsRegisterFlagsWriteDiscard: Specifies that CUDA will not read from this resource and will write over the entire contents of the resource, so none of the data previously stored in the resource will be preserved.
 
+See also
 
-**See also:**
+cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsResourceGetMappedPointer, ::cuGraphicsGLRegisterBuffer
 
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsResourceGetMappedPointer, cuGraphicsGLRegisterBuffer
+Note
 
-__host__ cudaError_t cudaGraphicsGLRegisterImage ( cudaGraphicsResource** resource, GLuint image, GLenum target, unsigned int  flags )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Parameters
 
-Register an OpenGL texture or renderbuffer object.
+  * **resource** – - Pointer to the returned object handle
 
-######  Parameters
+  * **buffer** – - name of buffer object to be registered
 
-`resource`
-    \- Pointer to the returned object handle
-`image`
-    \- name of texture or renderbuffer object to be registered
-`target`
-    \- Identifies the type of object specified by `image`
-`flags`
-    \- Register flags
+  * **flags** – - Register flags
 
-###### Returns
+Returns
 
 cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle, cudaErrorOperatingSystem, cudaErrorUnknown
 
-###### Description
+`` __host__ cudaError_t cudaGraphicsGLRegisterImage(struct cudaGraphicsResource **resource, GLuint image, GLenum target, unsigned int flags) ``
+
+Register an OpenGL texture or renderbuffer object.
 
 Registers the texture or renderbuffer object specified by `image` for access by CUDA. A handle to the registered object is returned as `resource`.
 
-`target` must match the type of the object, and must be one of GL_TEXTURE_2D, GL_TEXTURE_RECTANGLE, GL_TEXTURE_CUBE_MAP, GL_TEXTURE_3D, GL_TEXTURE_2D_ARRAY, or GL_RENDERBUFFER.
+`target` must match the type of the object, and must be one of ::GL_TEXTURE_2D, ::GL_TEXTURE_RECTANGLE, ::GL_TEXTURE_CUBE_MAP, ::GL_TEXTURE_3D, ::GL_TEXTURE_2D_ARRAY, or ::GL_RENDERBUFFER.
 
 The register flags `flags` specify the intended usage, as follows:
 
@@ -112,8 +111,7 @@ The register flags `flags` specify the intended usage, as follows:
 
   * cudaGraphicsRegisterFlagsTextureGather: Specifies that CUDA will perform texture gather operations on this resource.
 
-
-The following image formats are supported. For brevity's sake, the list is abbreviated. For ex., {GL_R, GL_RG} X {8, 16} would expand to the following 4 formats {GL_R8, GL_R16, GL_RG8, GL_RG16} :
+The following image formats are supported. For brevity’s sake, the list is abbreviated. For ex., {GL_R, GL_RG} X {8, 16} would expand to the following 4 formats {GL_R8, GL_R16, GL_RG8, GL_RG16} :
 
   * GL_RED, GL_RG, GL_RGBA, GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA, GL_INTENSITY
 
@@ -121,45 +119,58 @@ The following image formats are supported. For brevity's sake, the list is abbre
 
   * {GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA, GL_INTENSITY} X {8, 16, 16F_ARB, 32F_ARB, 8UI_EXT, 16UI_EXT, 32UI_EXT, 8I_EXT, 16I_EXT, 32I_EXT}
 
-
 The following image classes are currently disallowed:
 
   * Textures with borders
 
   * Multisampled renderbuffers
 
+See also
 
-**See also:**
+cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, ::cuGraphicsGLRegisterImage
 
-cudaGraphicsUnregisterResource, cudaGraphicsMapResources, cudaGraphicsSubResourceGetMappedArray, cuGraphicsGLRegisterImage
+Note
 
-__host__ cudaError_t cudaWGLGetDevice ( int* device, HGPUNV hGpu )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Parameters
+
+  * **resource** – - Pointer to the returned object handle
+
+  * **image** – - name of texture or renderbuffer object to be registered
+
+  * **target** – - Identifies the type of object specified by `image`
+
+  * **flags** – - Register flags
+
+Returns
+
+cudaSuccess, cudaErrorInvalidDevice, cudaErrorInvalidValue, cudaErrorInvalidResourceHandle, cudaErrorOperatingSystem, cudaErrorUnknown
+
+`` __host__ cudaError_t cudaWGLGetDevice(int *device, HGPUNV hGpu) ``
 
 Gets the CUDA device associated with hGpu.
 
-######  Parameters
+Returns the CUDA device associated with a hGpu, if applicable.
 
-`device`
-    \- Returns the device associated with hGpu, or -1 if hGpu is not a compute device.
-`hGpu`
-    \- Handle to a GPU, as queried via WGL_NV_gpu_affinity
+See also
 
-###### Returns
+::WGL_NV_gpu_affinity, ::cuWGLGetDevice
+
+Note
+
+Note that this function may also return error codes from previous, asynchronous launches.
+
+Parameters
+
+  * **device** – - Returns the device associated with hGpu, or -1 if hGpu is not a compute device.
+
+  * **hGpu** – - Handle to a GPU, as queried via WGL_NV_gpu_affinity
+
+Returns
 
 cudaSuccess
 
-###### Description
+##  6.28.3. Typedefs
 
-Returns the CUDA device associated with a hGpu, if applicable.
-
-**See also:**
-
-WGL_NV_gpu_affinity, cuWGLGetDevice
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+`` typedef void *HGPUNV ``

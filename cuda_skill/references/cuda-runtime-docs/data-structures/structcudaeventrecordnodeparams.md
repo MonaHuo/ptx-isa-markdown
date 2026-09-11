@@ -1,23 +1,18 @@
-# 7.17. cudaEventRecordNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaEventRecordNodeParams.html
 
-**Source:** structcudaEventRecordNodeParams.html#structcudaEventRecordNodeParams
+#  7.17. cudaEventRecordNodeParams
 
+`` struct cudaEventRecordNodeParams ``
 
-### Public Variables
+Event record node parameters.
 
-cudaEvent_t event
+Public Members
 
+`` cudaExecutionContext_t ctx ``
 
-### Variables
+CUDA Execution Context.
 
-cudaEvent_tcudaEventRecordNodeParams::event
+`` cudaEvent_t event ``
 
-
-The event to record when the node executes
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+The event to record when the node executes.

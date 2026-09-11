@@ -1,58 +1,38 @@
-# 7.58. cudaMemsetParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemsetParams.html
 
-**Source:** structcudaMemsetParams.html#structcudaMemsetParams
+#  7.60. cudaMemsetParams
 
+`` struct cudaMemsetParams ``
 
-### Public Variables
+CUDA Memset node parameters.
 
-void * dst
+Public Members
 
-unsigned int elementSize
+`` void *dst ``
 
-size_t height
+Destination device pointer.
 
-size_t pitch
+`` unsigned int elementSize ``
 
-unsigned int value
+Size of each element in bytes.
 
-size_t width
+Must be 1, 2, or 4.
 
+`` size_t height ``
 
-### Variables
+Number of rows.
 
-void * cudaMemsetParams::dst
+`` size_t pitch ``
 
+Pitch of destination device pointer.
 
-Destination device pointer
+Unused if height is 1
 
-unsigned int cudaMemsetParams::elementSize
+`` unsigned int value ``
 
+Value to be set.
 
-Size of each element in bytes. Must be 1, 2, or 4.
+`` size_t width ``
 
-size_t cudaMemsetParams::height
-
-
-Number of rows
-
-size_t cudaMemsetParams::pitch
-
-
-Pitch of destination device pointer. Unused if height is 1
-
-unsigned int cudaMemsetParams::value
-
-
-Value to be set
-
-size_t cudaMemsetParams::width
-
-
-Width of the row in elements
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width of the row in elements.

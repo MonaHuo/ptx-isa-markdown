@@ -1,31 +1,24 @@
-# 7.7. CUcheckpointLockArgs
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUcheckpointLockArgs.html
 
-**Source:** structCUcheckpointLockArgs.html#structCUcheckpointLockArgs
+#  7.50. CUcheckpointLockArgs
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUcheckpointLockArgs ``
 
-unsigned int reserved0
+CUDA checkpoint optional lock arguments.
 
-cuuint64_t reserved1[7]
+Public Members
 
-unsigned int timeoutMs
+`` unsigned int timeoutMs ``
 
+Timeout in milliseconds to attempt to lock the process, 0 indicates no timeout.
 
-### Variables
+`` unsigned int reserved0 ``
 
-unsigned int CUcheckpointLockArgs::reserved0
+Reserved for future use, must be zero.
 
+`` cuuint64_t reserved1[7] ``
 
-Reserved for future use, must be zero
-
-cuuint64_t CUcheckpointLockArgs::reserved1[7]
-
-
-Reserved for future use, must be zeroed
-
-unsigned int CUcheckpointLockArgs::timeoutMs
-
-
-Timeout in milliseconds to attempt to lock the process, 0 indicates no timeout
-
+Reserved for future use, must be zeroed.

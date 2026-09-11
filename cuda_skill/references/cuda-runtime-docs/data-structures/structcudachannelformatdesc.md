@@ -1,51 +1,30 @@
-# 7.6. cudaChannelFormatDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaChannelFormatDesc.html
 
-**Source:** structcudaChannelFormatDesc.html#structcudaChannelFormatDesc
+#  7.6. cudaChannelFormatDesc
 
+`` struct cudaChannelFormatDesc ``
 
-### Public Variables
+CUDA Channel format descriptor.
 
-enumcudaChannelFormatKind f
+Public Members
 
-int w
+`` enum cudaChannelFormatKind f ``
 
-int x
+Channel format kind.
 
-int y
-
-int z
-
-
-### Variables
-
-enumcudaChannelFormatKindcudaChannelFormatDesc::f
-
-
-Channel format kind
-
-int cudaChannelFormatDesc::w
-
+`` int w ``
 
 w
 
-int cudaChannelFormatDesc::x
-
+`` int x ``
 
 x
 
-int cudaChannelFormatDesc::y
-
+`` int y ``
 
 y
 
-int cudaChannelFormatDesc::z
-
+`` int z ``
 
 z
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

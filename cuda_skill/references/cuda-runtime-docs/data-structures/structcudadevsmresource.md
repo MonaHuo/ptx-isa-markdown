@@ -1,44 +1,38 @@
-# 7.11. cudaDevSmResource
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaDevSmResource.html
 
-**Source:** structcudaDevSmResource.html#structcudaDevSmResource
+#  7.10. cudaDevSmResource
 
+`` struct cudaDevSmResource ``
 
-### Public Variables
+Data for SM-related resources All parameters in this structure are OUTPUT only.
 
-unsigned int flags
+Do not write to any of the fields in this structure.
 
-unsigned int minSmPartitionSize
+Public Members
 
-unsigned int smCoscheduledAlignment
+`` unsigned int flags ``
 
-unsigned int smCount
+The flags set on this SM resource.
 
+For available flags see cudaDevSmResourceGroup_flags.
 
-### Variables
+`` unsigned int localityDomainId ``
 
-unsigned int cudaDevSmResource::flags
+Locality domain that the SM must be located on.
 
+Only valid if cudaDevSmResourceConstraintTypeLocalityDomainId is set in flags
 
-The flags set on this SM resource. For available flags see cudaDevSmResourceGroup_flags.
-
-unsigned int cudaDevSmResource::minSmPartitionSize
-
+`` unsigned int minSmPartitionSize ``
 
 The minimum number of streaming multiprocessors required to partition this resource.
 
-unsigned int cudaDevSmResource::smCoscheduledAlignment
+`` unsigned int smCoscheduledAlignment ``
 
+The number of streaming multiprocessors in this resource that are guaranteed to be co-scheduled on the same GPU processing cluster.
 
-The number of streaming multiprocessors in this resource that are guaranteed to be co-scheduled on the same GPU processing cluster. smCount will be a multiple of this value, unless the backfill flag is set.
+smCount will be a multiple of this value, unless the backfill flag is set.
 
-unsigned int cudaDevSmResource::smCount
-
+`` unsigned int smCount ``
 
 The amount of streaming multiprocessors available in this resource.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

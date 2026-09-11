@@ -1,23 +1,14 @@
-# 7.54. cudaMemFreeNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemFreeNodeParams.html
 
-**Source:** structcudaMemFreeNodeParams.html#structcudaMemFreeNodeParams
+#  7.50. cudaMemFreeNodeParams
 
+`` struct cudaMemFreeNodeParams ``
 
-### Public Variables
+Memory free node parameters.
 
-void * dptr
+Public Members
 
-
-### Variables
-
-void * cudaMemFreeNodeParams::dptr
-
+`` void *dptr ``
 
 in: the pointer to free
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

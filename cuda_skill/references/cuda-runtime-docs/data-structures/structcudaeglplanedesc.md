@@ -1,65 +1,38 @@
-# 7.16. cudaEglPlaneDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaEglPlaneDesc.html
 
-**Source:** structcudaEglPlaneDesc.html#structcudaEglPlaneDesc
+#  7.16. cudaEglPlaneDesc
 
+`` struct cudaEglPlaneDesc ``
 
-### Public Variables
+CUDA EGL Plane Descriptor - structure defining each plane of a CUDA EGLFrame.
 
-struct cudaChannelFormatDesc channelDesc
+Public Members
 
-unsigned int depth
+`` struct cudaChannelFormatDesc channelDesc ``
 
-unsigned int height
+Channel Format Descriptor.
 
-unsigned int numChannels
+`` unsigned int depth ``
 
-unsigned int pitch
+Depth of plane.
 
-unsigned int reserved[4]
+`` unsigned int height ``
 
-unsigned int width
+Height of plane.
 
+`` unsigned int numChannels ``
 
-### Variables
+Number of channels for the plane.
 
-struct cudaChannelFormatDesccudaEglPlaneDesc::channelDesc
+`` unsigned int pitch ``
 
+Pitch of plane.
 
-Channel Format Descriptor
+`` unsigned int reserved[4] ``
 
-unsigned int cudaEglPlaneDesc::depth
+Reserved for future use.
 
+`` unsigned int width ``
 
-Depth of plane
-
-unsigned int cudaEglPlaneDesc::height
-
-
-Height of plane
-
-unsigned int cudaEglPlaneDesc::numChannels
-
-
-Number of channels for the plane
-
-unsigned int cudaEglPlaneDesc::pitch
-
-
-Pitch of plane
-
-unsigned int cudaEglPlaneDesc::reserved[4]
-
-
-Reserved for future use
-
-unsigned int cudaEglPlaneDesc::width
-
-
-Width of plane
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width of plane.

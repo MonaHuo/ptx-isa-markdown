@@ -1,65 +1,44 @@
-# 7.59. cudaMemsetParamsV2
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemsetParamsV2.html
 
-**Source:** structcudaMemsetParamsV2.html#structcudaMemsetParamsV2
+#  7.61. cudaMemsetParamsV2
 
+`` struct cudaMemsetParamsV2 ``
 
-### Public Variables
+CUDA Memset node parameters.
 
-cudaExecutionContext_t ctx
+Public Members
 
-void * dst
+`` cudaExecutionContext_t ctx ``
 
-unsigned int elementSize
+Context in which to run the memset.
 
-size_t height
+If NULL will try to use the current context.
 
-size_t pitch
+`` void *dst ``
 
-unsigned int value
+Destination device pointer.
 
-size_t width
+`` unsigned int elementSize ``
 
+Size of each element in bytes.
 
-### Variables
+Must be 1, 2, or 4.
 
-cudaExecutionContext_tcudaMemsetParamsV2::ctx
+`` size_t height ``
 
+Number of rows.
 
-Context in which to run the memset. If NULL will try to use the current context.
+`` size_t pitch ``
 
-void * cudaMemsetParamsV2::dst
+Pitch of destination device pointer.
 
+Unused if height is 1
 
-Destination device pointer
+`` unsigned int value ``
 
-unsigned int cudaMemsetParamsV2::elementSize
+Value to be set.
 
+`` size_t width ``
 
-Size of each element in bytes. Must be 1, 2, or 4.
-
-size_t cudaMemsetParamsV2::height
-
-
-Number of rows
-
-size_t cudaMemsetParamsV2::pitch
-
-
-Pitch of destination device pointer. Unused if height is 1
-
-unsigned int cudaMemsetParamsV2::value
-
-
-Value to be set
-
-size_t cudaMemsetParamsV2::width
-
-
-Width of the row in elements
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width of the row in elements.

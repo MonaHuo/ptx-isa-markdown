@@ -1,44 +1,55 @@
-# 7.10. cudaDevResource
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaDevResource.html
 
-**Source:** structcudaDevResource.html#structcudaDevResource
+#  7.9. cudaDevResource
 
+`` struct cudaDevResource ``
 
-### Public Variables
+A tagged union describing different resources identified by the type field.
 
-struct cudaDevSmResource sm
+This structure should not be directly modified outside of the API that created it.
 
-enumcudaDevResourceType type
+```cpp
+struct {
+    enum cudaDevResourceType type;
+    union {
+        struct cudaDevSmResource sm;
+        struct cudaDevWorkqueueConfigResource wqConfig;
+        struct cudaDevWorkqueueResource wq;
+    };
+};
+```
 
-struct cudaDevWorkqueueResource wq
+  * If `type` is `cudaDevResourceTypeInvalid`, this resoure is not valid and cannot be further accessed.
 
-struct cudaDevWorkqueueConfigResource wqConfig
+  * If `type` is `cudaDevResourceTypeSm`, the cudaDevSmResource structure `sm` is filled in. For example, `sm.smCount` will reflect the amount of streaming multiprocessors available in this resource.
 
+  * If `type` is `cudaDevResourceTypeWorkqueueConfig`, the cudaDevWorkqueueConfigResource structure `wqConfig` is filled in.
 
-### Variables
+  * If `type` is `cudaDevResourceTypeWorkqueue`, the cudaDevWorkqueueResource structure `wq` is filled in.
 
-struct cudaDevSmResourcecudaDevResource::sm
+Public Members
 
+`` union cudaDevResource::[anonymous] [anonymous] ``
+
+`` unsigned char _internal_padding[92] ``
+
+`` unsigned char _oversize[40] ``
+
+`` struct cudaDevResource_st *nextResource ``
+
+`` struct cudaDevSmResource sm ``
 
 Resource corresponding to cudaDevResourceTypeSm `type`.
 
-enumcudaDevResourceTypecudaDevResource::type
+`` enum cudaDevResourceType type ``
 
+Type of resource, dictates which union field was last set.
 
-Type of resource, dictates which union field was last set
-
-struct cudaDevWorkqueueResourcecudaDevResource::wq
-
+`` struct cudaDevWorkqueueResource wq ``
 
 Resource corresponding to cudaDevResourceTypeWorkqueue `type`.
 
-struct cudaDevWorkqueueConfigResourcecudaDevResource::wqConfig
-
+`` struct cudaDevWorkqueueConfigResource wqConfig ``
 
 Resource corresponding to cudaDevResourceTypeWorkqueueConfig `type`.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

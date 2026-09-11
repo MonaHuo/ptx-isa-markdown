@@ -1,44 +1,34 @@
-# 7.52. cudaMemcpyAttributes
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemcpyAttributes.html
 
-**Source:** structcudaMemcpyAttributes.html#structcudaMemcpyAttributes
+#  7.58. cudaMemcpyAttributes
 
+`` struct cudaMemcpyAttributes ``
 
-### Public Variables
+Attributes specific to copies within a batch.
 
-struct cudaMemLocation dstLocHint
+For more details on usage see cudaMemcpyBatchAsync.
 
-unsigned int flags
+Public Members
 
-enumcudaMemcpySrcAccessOrder srcAccessOrder
+`` struct cudaMemLocation dstLocHint ``
 
-struct cudaMemLocation srcLocHint
+Hint location for the destination operand.
 
+Ignored when the pointers are not managed memory or memory allocated outside CUDA.
 
-### Variables
+`` unsigned int flags ``
 
-struct cudaMemLocationcudaMemcpyAttributes::dstLocHint
+Additional flags for copies with this attribute.
 
+See cudaMemcpyFlags.
 
-Hint location for the destination operand. Ignored when the pointers are not managed memory or memory allocated outside CUDA.
-
-unsigned int cudaMemcpyAttributes::flags
-
-
-Additional flags for copies with this attribute. See cudaMemcpyFlags.
-
-enumcudaMemcpySrcAccessOrdercudaMemcpyAttributes::srcAccessOrder
-
+`` enum cudaMemcpySrcAccessOrder srcAccessOrder ``
 
 Source access ordering to be observed for copies with this attribute.
 
-struct cudaMemLocationcudaMemcpyAttributes::srcLocHint
+`` struct cudaMemLocation srcLocHint ``
 
+Hint location for the source operand.
 
-Hint location for the source operand. Ignored when the pointers are not managed memory or memory allocated outside CUDA.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Ignored when the pointers are not managed memory or memory allocated outside CUDA.

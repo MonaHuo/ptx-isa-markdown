@@ -1,86 +1,64 @@
-# 7.64. cudaResourceDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaResourceDesc.html
 
-**Source:** structcudaResourceDesc.html#structcudaResourceDesc
+#  7.66. cudaResourceDesc
 
+`` struct cudaResourceDesc ``
 
-### Public Variables
+CUDA resource descriptor.
 
-cudaArray_t array
+Public Members
 
-struct cudaChannelFormatDesc desc
+`` cudaArray_t array ``
 
-void * devPtr
+CUDA array.
 
-unsigned int flags
+`` struct cudaResourceDesc::[anonymous]::[anonymous] array ``
 
-size_t height
+`` struct cudaChannelFormatDesc desc ``
 
-cudaMipmappedArray_t mipmap
+Channel descriptor.
 
-size_t pitchInBytes
+`` void *devPtr ``
 
-enumcudaResourceType resType
+Device pointer.
 
-size_t sizeInBytes
-
-size_t width
-
-
-### Variables
-
-cudaArray_tcudaResourceDesc::array
-
-
-CUDA array
-
-struct cudaChannelFormatDesccudaResourceDesc::desc
-
-
-Channel descriptor
-
-void * cudaResourceDesc::devPtr
-
-
-Device pointer
-
-unsigned int cudaResourceDesc::flags
-
+`` unsigned int flags ``
 
 Flags (must be zero)
 
-size_t cudaResourceDesc::height
+`` size_t height ``
 
+Height of the array in elements.
 
-Height of the array in elements
+`` struct cudaResourceDesc::[anonymous]::[anonymous] linear ``
 
-cudaMipmappedArray_tcudaResourceDesc::mipmap
+`` cudaMipmappedArray_t mipmap ``
 
+CUDA mipmapped array.
 
-CUDA mipmapped array
+`` struct cudaResourceDesc::[anonymous]::[anonymous] mipmap ``
 
-size_t cudaResourceDesc::pitchInBytes
+`` struct cudaResourceDesc::[anonymous]::[anonymous] pitch2D ``
 
+`` size_t pitchInBytes ``
 
-Pitch between two rows in bytes
+Pitch between two rows in bytes.
 
-enumcudaResourceTypecudaResourceDesc::resType
+`` union cudaResourceDesc::[anonymous] res ``
 
+`` int reserved[32] ``
 
-Resource type
+`` struct cudaResourceDesc::[anonymous]::[anonymous] reserved ``
 
-size_t cudaResourceDesc::sizeInBytes
+`` enum cudaResourceType resType ``
 
+Resource type.
 
-Size in bytes
+`` size_t sizeInBytes ``
 
-size_t cudaResourceDesc::width
+Size in bytes.
 
+`` size_t width ``
 
-Width of the array in elements
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Width of the array in elements.

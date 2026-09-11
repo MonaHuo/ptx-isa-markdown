@@ -1,27 +1,17 @@
-# 6.2. Device Management [DEPRECATED]
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/group__CUDART__DEVICE__DEPRECATED.html
 
-**Source:** group__CUDART__DEVICE__DEPRECATED.html#group__CUDART__DEVICE__DEPRECATED
+#  6.4. Device Management [DEPRECATED]
 
+This section describes the deprecated device management functions of the CUDA runtime application programming interface.
 
-### Functions
+##  6.4.1. Functions
 
-__host__  __device__ cudaError_t cudaDeviceGetSharedMemConfig ( cudaSharedMemConfig ** pConfig )
-
+`` __host__ cudaError_t cudaDeviceGetSharedMemConfig(enum cudaSharedMemConfig *pConfig) ``
 
 Returns the shared memory configuration for the current device.
 
-######  Parameters
-
-`pConfig`
-    \- Returned cache configuration
-
-###### Returns
-
-cudaSuccess, cudaErrorInvalidValue
-
-###### Deprecated
-
-###### Description
+`` Deprecated: ``
 
 This function will return in `pConfig` the current size of shared memory banks on the current device. On devices with configurable shared memory banks, cudaDeviceSetSharedMemConfig can be used to change this setting, so that all subsequent kernel launches will by default use the new bank size. When cudaDeviceGetSharedMemConfig is called on devices without configurable shared memory, it will return the fixed bank size of the hardware.
 
@@ -31,28 +21,35 @@ The returned bank configurations can be either:
 
   * cudaSharedMemBankSizeEightByte - shared memory bank width is eight bytes.
 
+See also
 
-**See also:**
+cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceSetSharedMemConfig, cudaFuncSetCacheConfig, ::cuCtxGetSharedMemConfig
 
-cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceSetSharedMemConfig, cudaFuncSetCacheConfig, cuCtxGetSharedMemConfig
+Note
 
-__host__ cudaError_t cudaDeviceSetSharedMemConfig ( cudaSharedMemConfig config )
+Note that this function may also return error codes from previous, asynchronous launches.
 
+Note
 
-Sets the shared memory configuration for the current device.
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-######  Parameters
+Note
 
-`config`
-    \- Requested cache configuration
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
 
-###### Returns
+Parameters
+
+**pConfig** – - Returned cache configuration
+
+Returns
 
 cudaSuccess, cudaErrorInvalidValue
 
-###### Deprecated
+`` __host__ cudaError_t cudaDeviceSetSharedMemConfig(enum cudaSharedMemConfig config) ``
 
-###### Description
+Sets the shared memory configuration for the current device.
+
+`` Deprecated: ``
 
 On devices with configurable shared memory banks, this function will set the shared memory bank size which is used for all subsequent kernel launches. Any per-function setting of shared memory set via cudaFuncSetSharedMemConfig will override the device wide setting.
 
@@ -70,14 +67,26 @@ The supported bank configurations are:
 
   * cudaSharedMemBankSizeEightByte: set shared memory bank width to be eight bytes natively.
 
+See also
 
-**See also:**
+cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceGetSharedMemConfig, cudaFuncSetCacheConfig, ::cuCtxSetSharedMemConfig
 
-cudaDeviceSetCacheConfig, cudaDeviceGetCacheConfig, cudaDeviceGetSharedMemConfig, cudaFuncSetCacheConfig, cuCtxSetSharedMemConfig
+Note
 
-* * *
+Note that this function may also return error codes from previous, asynchronous launches.
 
-!
+Note
 
+Note that this function may also return cudaErrorInitializationError, cudaErrorInsufficientDriver or cudaErrorNoDevice if this call tries to initialize internal CUDA RT state.
 
-Copyright © 2025 NVIDIA Corporation
+Note
+
+Note that as specified by cudaStreamAddCallback no CUDA function may be called from callback. cudaErrorNotPermitted may, but is not guaranteed to, be returned as a diagnostic in such case.
+
+Parameters
+
+**config** – - Requested cache configuration
+
+Returns
+
+cudaSuccess, cudaErrorInvalidValue

@@ -1,51 +1,34 @@
-# 7.47. cudaMemAllocNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemAllocNodeParams.html
 
-**Source:** structcudaMemAllocNodeParams.html#structcudaMemAllocNodeParams
+#  7.47. cudaMemAllocNodeParams
 
+`` struct cudaMemAllocNodeParams ``
 
-### Public Variables
+Memory allocation node parameters.
 
-size_t accessDescCount
+Public Members
 
-cudaMemAccessDesc * accessDescs
-
-size_t bytesize
-
-void * dptr
-
-struct cudaMemPoolProps poolProps
-
-
-### Variables
-
-size_t cudaMemAllocNodeParams::accessDescCount
-
+`` size_t accessDescCount ``
 
 in: Number of `accessDescs`s
 
-cudaMemAccessDesc * cudaMemAllocNodeParams::accessDescs
+`` const struct cudaMemAccessDesc *accessDescs ``
 
+in: number of memory access descriptors.
 
-in: number of memory access descriptors. Must not exceed the number of GPUs.
+Must not exceed the number of GPUs.
 
-size_t cudaMemAllocNodeParams::bytesize
-
+`` size_t bytesize ``
 
 in: size in bytes of the requested allocation
 
-void * cudaMemAllocNodeParams::dptr
-
+`` void *dptr ``
 
 out: address of the allocation returned by CUDA
 
-struct cudaMemPoolPropscudaMemAllocNodeParams::poolProps
+`` struct cudaMemPoolProps poolProps ``
 
+in: location where the allocation should reside (specified in ::location).
 
-in: location where the allocation should reside (specified in location). handleTypes must be cudaMemHandleTypeNone. IPC is not supported. in: array of memory access descriptors. Used to describe peer GPU access
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+::handleTypes must be cudaMemHandleTypeNone. IPC is not supported. in: array of memory access descriptors. Used to describe peer GPU access

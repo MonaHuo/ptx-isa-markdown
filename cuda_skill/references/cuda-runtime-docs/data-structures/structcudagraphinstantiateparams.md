@@ -1,44 +1,28 @@
-# 7.33. cudaGraphInstantiateParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaGraphInstantiateParams.html
 
-**Source:** structcudaGraphInstantiateParams.html#structcudaGraphInstantiateParams
+#  7.33. cudaGraphInstantiateParams
 
+`` struct cudaGraphInstantiateParams ``
 
-### Public Variables
+Graph instantiation parameters.
 
-cudaGraphNode_t errNode_out
+Public Members
 
-unsigned long long flags
+`` cudaGraphNode_t errNode_out ``
 
-cudaGraphInstantiateResult result_out
+The node which caused instantiation to fail, if any.
 
-cudaStream_t uploadStream
+`` unsigned long long flags ``
 
+Instantiation flags.
 
-### Variables
+`` cudaGraphInstantiateResult result_out ``
 
-cudaGraphNode_tcudaGraphInstantiateParams::errNode_out
+Whether instantiation was successful.
 
+If it failed, the reason why
 
-The node which caused instantiation to fail, if any
+`` cudaStream_t uploadStream ``
 
-unsigned long long cudaGraphInstantiateParams::flags
-
-
-Instantiation flags
-
-cudaGraphInstantiateResultcudaGraphInstantiateParams::result_out
-
-
-Whether instantiation was successful. If it failed, the reason why
-
-cudaStream_tcudaGraphInstantiateParams::uploadStream
-
-
-Upload stream
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Upload stream.

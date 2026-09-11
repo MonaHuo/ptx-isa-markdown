@@ -1,23 +1,12 @@
-# 7.67. CUuuid_st
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structCUuuid__st.html
 
-**Source:** structCUuuid__st.html#structCUuuid__st
+#  7.1. CUuuid_st
 
+`` struct CUuuid_st ``
 
-### Public Variables
+Public Members
 
-char bytes[16]
-
-
-### Variables
-
-char CUuuid_st::bytes[16]
-
+`` char bytes[16] ``
 
 < CUDA definition of UUID
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

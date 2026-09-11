@@ -1,17 +1,16 @@
-# 7.56. CUdevWorkqueueResource
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUdevWorkqueueResource.html
 
-**Source:** structCUdevWorkqueueResource.html#structCUdevWorkqueueResource
+#  7.60. CUdevWorkqueueResource
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUdevWorkqueueResource ``
 
-unsigned char reserved[RESOURCE_ABI_BYTES]
+Handle to a pre-existing workqueue related resource
 
+Public Members
 
-### Variables
+`` unsigned char reserved[RESOURCE_ABI_BYTES] ``
 
-unsigned char CUdevWorkqueueResource::reserved[RESOURCE_ABI_BYTES]
-
-
-Reserved for future use
-
+Reserved for future use.

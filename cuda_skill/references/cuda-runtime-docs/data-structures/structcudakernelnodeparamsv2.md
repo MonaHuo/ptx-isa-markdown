@@ -1,65 +1,54 @@
-# 7.41. cudaKernelNodeParamsV2
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaKernelNodeParamsV2.html
 
-**Source:** structcudaKernelNodeParamsV2.html#structcudaKernelNodeParamsV2
+#  7.42. cudaKernelNodeParamsV2
 
+`` struct cudaKernelNodeParamsV2 ``
 
-### Public Variables
+CUDA GPU kernel node parameters.
 
-uint3 blockDim
+Public Members
 
-cudaExecutionContext_t ctx
+`` union cudaKernelNodeParamsV2::[anonymous] [anonymous] ``
 
-* extra
+`` uint3 blockDim ``
 
-void * func
+Block dimensions.
 
-uint3 gridDim
+`` cudaExecutionContext_t ctx ``
 
-* kernelParams
+Context in which to run the kernel.
 
-unsigned int sharedMemBytes
+If NULL will try to use the current context.
 
+`` cudaFunction_t cuFunc ``
 
-### Variables
+functionType = cudaKernelFucntionTypeFunction
 
-uint3 cudaKernelNodeParamsV2::blockDim
+`` void **extra ``
 
+Pointer to kernel arguments in the “extra” format.
 
-Block dimensions
+`` void *func ``
 
-cudaExecutionContext_tcudaKernelNodeParamsV2::ctx
+functionType = cudaKernelFucntionTypeDevice
 
+`` enum cudaKernelFunctionType functionType ``
 
-Context in which to run the kernel. If NULL will try to use the current context.
+Type of handle passed in the func/kern/cuFunc union above.
 
-* cudaKernelNodeParamsV2::extra
+`` uint3 gridDim ``
 
+Grid dimensions.
 
-Pointer to kernel arguments in the "extra" format
+`` cudaKernel_t kern ``
 
-void * cudaKernelNodeParamsV2::func
+functionType = cudaKernelFucntionTypeKernel
 
+`` void **kernelParams ``
 
-Kernel to launch
+Array of pointers to individual kernel arguments.
 
-uint3 cudaKernelNodeParamsV2::gridDim
+`` unsigned int sharedMemBytes ``
 
-
-Grid dimensions
-
-* cudaKernelNodeParamsV2::kernelParams
-
-
-Array of pointers to individual kernel arguments
-
-unsigned int cudaKernelNodeParamsV2::sharedMemBytes
-
-
-Dynamic shared-memory size per thread block in bytes
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Dynamic shared-memory size per thread block in bytes.

@@ -1,37 +1,22 @@
-# 7.24. cudaExternalSemaphoreSignalNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaExternalSemaphoreSignalNodeParams.html
 
-**Source:** structcudaExternalSemaphoreSignalNodeParams.html#structcudaExternalSemaphoreSignalNodeParams
+#  7.24. cudaExternalSemaphoreSignalNodeParams
 
+`` struct cudaExternalSemaphoreSignalNodeParams ``
 
-### Public Variables
+External semaphore signal node parameters.
 
-cudaExternalSemaphore_t* * extSemArray
+Public Members
 
-unsigned int numExtSems
-
-cudaExternalSemaphoreSignalParams * paramsArray
-
-
-### Variables
-
-cudaExternalSemaphore_t* * cudaExternalSemaphoreSignalNodeParams::extSemArray
-
+`` cudaExternalSemaphore_t *extSemArray ``
 
 Array of external semaphore handles.
 
-unsigned int cudaExternalSemaphoreSignalNodeParams::numExtSems
-
+`` unsigned int numExtSems ``
 
 Number of handles and parameters supplied in extSemArray and paramsArray.
 
-cudaExternalSemaphoreSignalParams * cudaExternalSemaphoreSignalNodeParams::paramsArray
-
+`` const struct cudaExternalSemaphoreSignalParams *paramsArray ``
 
 Array of external semaphore signal parameters.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

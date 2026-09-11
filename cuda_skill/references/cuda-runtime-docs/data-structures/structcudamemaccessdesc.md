@@ -1,30 +1,18 @@
-# 7.46. cudaMemAccessDesc
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemAccessDesc.html
 
-**Source:** structcudaMemAccessDesc.html#structcudaMemAccessDesc
+#  7.46. cudaMemAccessDesc
 
+`` struct cudaMemAccessDesc ``
 
-### Public Variables
+Memory access descriptor.
 
-enumcudaMemAccessFlags flags
+Public Members
 
-struct cudaMemLocation location
+`` enum cudaMemAccessFlags flags ``
 
+::CUmemProt accessibility flags to set on the request
 
-### Variables
+`` struct cudaMemLocation location ``
 
-enumcudaMemAccessFlagscudaMemAccessDesc::flags
-
-
-CUmemProt accessibility flags to set on the request
-
-struct cudaMemLocationcudaMemAccessDesc::location
-
-
-Location on which the request is to change it's accessibility
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Location on which the request is to change it’s accessibility.

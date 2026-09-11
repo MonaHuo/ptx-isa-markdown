@@ -1,30 +1,26 @@
-# 7.37. cudaHostNodeParamsV2
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaHostNodeParamsV2.html
 
-**Source:** structcudaHostNodeParamsV2.html#structcudaHostNodeParamsV2
+#  7.38. cudaHostNodeParamsV2
 
+`` struct cudaHostNodeParamsV2 ``
 
-### Public Variables
+CUDA host node parameters.
 
-cudaHostFn_t fn
+Public Members
 
-void * userData
+`` cudaExecutionContext_t ctx ``
 
+CUDA Execution Context.
 
-### Variables
+`` cudaHostFn_t fn ``
 
-cudaHostFn_tcudaHostNodeParamsV2::fn
+The function to call when the node executes.
 
+`` unsigned int syncMode ``
 
-The function to call when the node executes
+The synchronization mode to use for the host task.
 
-void * cudaHostNodeParamsV2::userData
+`` void *userData ``
 
-
-Argument to pass to the function
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Argument to pass to the function.

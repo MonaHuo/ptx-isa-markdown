@@ -1,44 +1,28 @@
-# 7.53. cudaMemcpyNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaMemcpyNodeParams.html
 
-**Source:** structcudaMemcpyNodeParams.html#structcudaMemcpyNodeParams
+#  7.59. cudaMemcpyNodeParams
 
+`` struct cudaMemcpyNodeParams ``
 
-### Public Variables
+Memcpy node parameters.
 
-struct cudaMemcpy3DParms copyParams
+Public Members
 
-cudaExecutionContext_t ctx
+`` struct cudaMemcpy3DParms copyParams ``
 
-int flags
+Parameters for the memory copy.
 
-int reserved
+`` cudaExecutionContext_t ctx ``
 
+Context in which to run the memcpy.
 
-### Variables
+If NULL will try to use the current context.
 
-struct cudaMemcpy3DParmscudaMemcpyNodeParams::copyParams
+`` int flags ``
 
+Must be zero.
 
-Parameters for the memory copy
+`` int reserved ``
 
-cudaExecutionContext_tcudaMemcpyNodeParams::ctx
-
-
-Context in which to run the memcpy. If NULL will try to use the current context.
-
-int cudaMemcpyNodeParams::flags
-
-
-Must be zero
-
-int cudaMemcpyNodeParams::reserved
-
-
-Must be zero
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Must be zero.

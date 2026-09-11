@@ -1,8 +1,30 @@
-# 7.32. CUDA_GRAPH_INSTANTIATE_PARAMS
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__GRAPH__INSTANTIATE__PARAMS.html
 
-**Source:** structCUDA__GRAPH__INSTANTIATE__PARAMS.html#structCUDA__GRAPH__INSTANTIATE__PARAMS
+#  7.21. CUDA_GRAPH_INSTANTIATE_PARAMS
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_GRAPH_INSTANTIATE_PARAMS ``
 
-cuuint64_t flags
+Graph instantiation parameters.
+
+Public Members
+
+`` cuuint64_t flags ``
+
+Instantiation flags.
+
+`` CUstream hUploadStream ``
+
+Upload stream.
+
+`` CUgraphNode hErrNode_out ``
+
+The node which caused instantiation to fail, if any.
+
+`` CUgraphInstantiateResult result_out ``
+
+Whether instantiation was successful.
+
+If it failed, the reason why

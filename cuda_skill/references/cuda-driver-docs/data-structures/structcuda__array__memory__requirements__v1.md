@@ -1,24 +1,22 @@
-# 7.14. CUDA_ARRAY_MEMORY_REQUIREMENTS_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__ARRAY__MEMORY__REQUIREMENTS__v1.html
 
-**Source:** structCUDA__ARRAY__MEMORY__REQUIREMENTS__v1.html#structCUDA__ARRAY__MEMORY__REQUIREMENTS__v1
+#  7.3. CUDA_ARRAY_MEMORY_REQUIREMENTS_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_ARRAY_MEMORY_REQUIREMENTS_v1 ``
 
-size_t alignment
+CUDA array memory requirements.
 
-size_t size
+Public Members
 
+`` size_t size ``
 
-### Variables
+Total required memory size.
 
-size_t CUDA_ARRAY_MEMORY_REQUIREMENTS_v1::alignment
-
+`` size_t alignment ``
 
 alignment requirement
 
-size_t CUDA_ARRAY_MEMORY_REQUIREMENTS_v1::size
-
-
-Total required memory size
-
+`` unsigned int reserved[4] ``

@@ -1,6 +1,16 @@
-# 7.21. CUDA_EVENT_WAIT_NODE_PARAMS
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__EVENT__WAIT__NODE__PARAMS.html
 
-**Source:** structCUDA__EVENT__WAIT__NODE__PARAMS.html#structCUDA__EVENT__WAIT__NODE__PARAMS
+#  7.10. CUDA_EVENT_WAIT_NODE_PARAMS
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_EVENT_WAIT_NODE_PARAMS ``
+
+Event wait node parameters.
+
+Public Members
+
+`` CUevent event ``
+
+The event to wait on from the node.

@@ -1,30 +1,20 @@
-# 7.3. cudaArrayMemoryRequirements
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaArrayMemoryRequirements.html
 
-**Source:** structcudaArrayMemoryRequirements.html#structcudaArrayMemoryRequirements
+#  7.3. cudaArrayMemoryRequirements
 
+`` struct cudaArrayMemoryRequirements ``
 
-### Public Variables
+CUDA array and CUDA mipmapped array memory requirements.
 
-size_t alignment
+Public Members
 
-size_t size
-
-
-### Variables
-
-size_t cudaArrayMemoryRequirements::alignment
-
+`` size_t alignment ``
 
 Alignment necessary for mapping the array.
 
-size_t cudaArrayMemoryRequirements::size
+`` unsigned int reserved[4] ``
 
+`` size_t size ``
 
 Total size of the array.
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

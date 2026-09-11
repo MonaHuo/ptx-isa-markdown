@@ -1,10 +1,36 @@
-# 7.12. CUDA_ARRAY3D_DESCRIPTOR_v2
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__ARRAY3D__DESCRIPTOR__v2.html
 
-**Source:** structCUDA__ARRAY3D__DESCRIPTOR__v2.html#structCUDA__ARRAY3D__DESCRIPTOR__v2
+#  7.1. CUDA_ARRAY3D_DESCRIPTOR_v2
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_ARRAY3D_DESCRIPTOR_v2 ``
 
-size_t Depth
+3D array descriptor
 
-unsigned int Flags
+Public Members
+
+`` size_t Width ``
+
+Width of 3D array.
+
+`` size_t Height ``
+
+Height of 3D array.
+
+`` size_t Depth ``
+
+Depth of 3D array.
+
+`` CUarray_format Format ``
+
+Array format.
+
+`` unsigned int NumChannels ``
+
+Channels per array element.
+
+`` unsigned int Flags ``
+
+Flags.

@@ -1,30 +1,20 @@
-# 7.42. cudaLaunchAttribute
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaLaunchAttribute.html
 
-**Source:** structcudaLaunchAttribute.html#structcudaLaunchAttribute
+#  7.43. cudaLaunchAttribute
 
+`` struct cudaLaunchAttribute ``
 
-### Public Variables
+Launch attribute.
 
-cudaLaunchAttributeID id
+Public Members
 
-union cudaLaunchAttributeValue val
+`` cudaLaunchAttributeID id ``
 
+Attribute to set.
 
-### Variables
+`` char pad[8 - sizeof(cudaLaunchAttributeID)] ``
 
-cudaLaunchAttributeIDcudaLaunchAttribute::id
+`` cudaLaunchAttributeValue val ``
 
-
-Attribute to set
-
-union cudaLaunchAttributeValuecudaLaunchAttribute::val
-
-
-Value of the attribute
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Value of the attribute.

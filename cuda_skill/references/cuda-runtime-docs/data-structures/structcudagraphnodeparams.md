@@ -1,128 +1,84 @@
-# 7.35. cudaGraphNodeParams
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaGraphNodeParams.html
 
-**Source:** structcudaGraphNodeParams.html#structcudaGraphNodeParams
+#  7.35. cudaGraphNodeParams
 
+`` struct cudaGraphNodeParams ``
 
-### Public Variables
+Graph node parameters.
 
-struct cudaMemAllocNodeParamsV2 alloc
+See cudaGraphAddNode.
 
-struct cudaConditionalNodeParams conditional
+Public Members
 
-struct cudaEventRecordNodeParams eventRecord
+`` union cudaGraphNodeParams::[anonymous] [anonymous] ``
 
-struct cudaEventWaitNodeParams eventWait
-
-struct cudaExternalSemaphoreSignalNodeParamsV2 extSemSignal
-
-struct cudaExternalSemaphoreWaitNodeParamsV2 extSemWait
-
-struct cudaMemFreeNodeParams free
-
-struct cudaChildGraphNodeParams graph
-
-struct cudaHostNodeParamsV2 host
-
-struct cudaKernelNodeParamsV2 kernel
-
-struct cudaMemcpyNodeParams memcpy
-
-struct cudaMemsetParamsV2 memset
-
-int reserved0[3]
-
-long long reserved1[29]
-
-long long reserved2
-
-enumcudaGraphNodeType type
-
-
-### Variables
-
-struct cudaMemAllocNodeParamsV2cudaGraphNodeParams::alloc
-
+`` struct cudaMemAllocNodeParamsV2 alloc ``
 
 Memory allocation node parameters.
 
-struct cudaConditionalNodeParamscudaGraphNodeParams::conditional
-
+`` struct cudaConditionalNodeParams conditional ``
 
 Conditional node parameters.
 
-struct cudaEventRecordNodeParamscudaGraphNodeParams::eventRecord
-
+`` struct cudaEventRecordNodeParams eventRecord ``
 
 Event record node parameters.
 
-struct cudaEventWaitNodeParamscudaGraphNodeParams::eventWait
-
+`` struct cudaEventWaitNodeParams eventWait ``
 
 Event wait node parameters.
 
-struct cudaExternalSemaphoreSignalNodeParamsV2cudaGraphNodeParams::extSemSignal
-
+`` struct cudaExternalSemaphoreSignalNodeParamsV2 extSemSignal ``
 
 External semaphore signal node parameters.
 
-struct cudaExternalSemaphoreWaitNodeParamsV2cudaGraphNodeParams::extSemWait
-
+`` struct cudaExternalSemaphoreWaitNodeParamsV2 extSemWait ``
 
 External semaphore wait node parameters.
 
-struct cudaMemFreeNodeParamscudaGraphNodeParams::free
-
+`` struct cudaMemFreeNodeParams free ``
 
 Memory free node parameters.
 
-struct cudaChildGraphNodeParamscudaGraphNodeParams::graph
-
+`` struct cudaChildGraphNodeParams graph ``
 
 Child graph node parameters.
 
-struct cudaHostNodeParamsV2cudaGraphNodeParams::host
-
+`` struct cudaHostNodeParamsV2 host ``
 
 Host node parameters.
 
-struct cudaKernelNodeParamsV2cudaGraphNodeParams::kernel
-
+`` struct cudaKernelNodeParamsV2 kernel ``
 
 Kernel node parameters.
 
-struct cudaMemcpyNodeParamscudaGraphNodeParams::memcpy
-
+`` struct cudaMemcpyNodeParams memcpy ``
 
 Memcpy node parameters.
 
-struct cudaMemsetParamsV2cudaGraphNodeParams::memset
-
+`` struct cudaMemsetParamsV2 memset ``
 
 Memset node parameters.
 
-int cudaGraphNodeParams::reserved0[3]
+`` int reserved0[3] ``
 
+Reserved.
 
-Reserved. Must be zero.
+Must be zero.
 
-long long cudaGraphNodeParams::reserved1[29]
+`` long long reserved1[29] ``
 
+Padding.
 
-Padding. Unused bytes must be zero.
+Unused bytes must be zero.
 
-long long cudaGraphNodeParams::reserved2
+`` long long reserved2 ``
 
+Reserved bytes.
 
-Reserved bytes. Must be zero.
+Must be zero.
 
-enumcudaGraphNodeTypecudaGraphNodeParams::type
+`` enum cudaGraphNodeType type ``
 
-
-Type of the node
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Type of the node.

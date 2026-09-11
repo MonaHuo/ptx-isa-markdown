@@ -1,37 +1,26 @@
-# 7.63. cudaPos
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaPos.html
 
-**Source:** structcudaPos.html#structcudaPos
+#  7.65. cudaPos
 
+`` struct cudaPos ``
 
-### Public Variables
+CUDA 3D position.
 
-size_t x
+See also
 
-size_t y
+make_cudaPos
 
-size_t z
+Public Members
 
-
-### Variables
-
-size_t cudaPos::x
-
+`` size_t x ``
 
 x
 
-size_t cudaPos::y
-
+`` size_t y ``
 
 y
 
-size_t cudaPos::z
-
+`` size_t z ``
 
 z
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation

@@ -1,79 +1,52 @@
-# 7.34. cudaGraphKernelNodeUpdate
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaGraphKernelNodeUpdate.html
 
-**Source:** structcudaGraphKernelNodeUpdate.html#structcudaGraphKernelNodeUpdate
+#  7.34. cudaGraphKernelNodeUpdate
 
+`` struct cudaGraphKernelNodeUpdate ``
 
-### Public Variables
+Struct to specify a single node update to pass as part of a larger array to cudaGraphKernelNodeUpdatesApply.
 
-enumcudaGraphKernelNodeField field
+Public Members
 
-uint3 gridDim
+`` enum cudaGraphKernelNodeField field ``
 
-unsigned int isEnabled
+Which type of update to apply.
 
-cudaGraphDeviceNode_t node
+Determines how updateData is interpreted
 
-size_t offset
+`` uint3 gridDim ``
 
-const void * pValue
+Grid dimensions.
 
-cudaGraphKernelNodeUpdate::@27::@28 param
+`` unsigned int isEnabled ``
 
-size_t size
+Node enable/disable data.
 
-cudaGraphKernelNodeUpdate::@27 updateData
+Nonzero if the node should be enabled, 0 if it should be disabled
 
+`` cudaGraphDeviceNode_t node ``
 
-### Variables
+Node to update.
 
-enumcudaGraphKernelNodeFieldcudaGraphKernelNodeUpdate::field
+`` size_t offset ``
 
+Offset into the parameter buffer at which to apply the update.
 
-Which type of update to apply. Determines how updateData is interpreted
+`` struct cudaGraphKernelNodeUpdate::[anonymous]::[anonymous] param ``
 
-uint3 cudaGraphKernelNodeUpdate::gridDim
+Kernel parameter data.
 
+`` const void *pValue ``
 
-Grid dimensions
+Kernel parameter data to write in.
 
-unsigned int cudaGraphKernelNodeUpdate::isEnabled
+`` size_t size ``
 
+Number of bytes to update.
 
-Node enable/disable data. Nonzero if the node should be enabled, 0 if it should be disabled
+`` union cudaGraphKernelNodeUpdate::[anonymous] updateData ``
 
-cudaGraphDeviceNode_tcudaGraphKernelNodeUpdate::node
+Update data to apply.
 
-
-Node to update
-
-size_t cudaGraphKernelNodeUpdate::offset
-
-
-Offset into the parameter buffer at which to apply the update
-
-const void * cudaGraphKernelNodeUpdate::pValue
-
-
-Kernel parameter data to write in
-
-cudaGraphKernelNodeUpdate::@27::@28 cudaGraphKernelNodeUpdate::param
-
-
-Kernel parameter data
-
-size_t cudaGraphKernelNodeUpdate::size
-
-
-Number of bytes to update
-
-cudaGraphKernelNodeUpdate::@27 cudaGraphKernelNodeUpdate::updateData
-
-
-Update data to apply. Which field is used depends on field's value
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Which field is used depends on field’s value

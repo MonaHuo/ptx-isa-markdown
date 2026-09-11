@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Local Documentation](#local-documentation) — 405 markdown files, 2.3MB
+- [Local Documentation](#local-documentation) — 506 markdown files, 2.0MB
 - [When to Use PTX Documentation](#when-to-use-ptx-documentation) — Inspecting code, inline PTX, TensorCore ops
 - [Quick Search Examples](#quick-search-examples) — WGMMA fragments, TMA swizzling, specific instructions
 - [Documentation Structure](#documentation-structure) — Chapter organization
@@ -16,14 +16,14 @@
 
 ## Local Documentation
 
-**Complete PTX ISA 9.1 documentation is available locally at `ptx-docs/`**
+**Complete PTX ISA 9.4 documentation is available locally at `ptx-docs/`**
 
 The documentation has been converted to markdown with:
-- ✅ All tables, code blocks, and formatting preserved
-- ✅ 405 files organized by chapter
+- ✅ Code blocks and table contents preserved (complex tables use HTML)
+- ✅ 506 files organized by chapter
 - ✅ Full searchability with grep/ripgrep
 - ✅ Section numbers for precise navigation
-- ✅ 1049 diagrams referenced as URLs (NVIDIA CDN)
+- ✅ 292 diagrams referenced as URLs (NVIDIA CDN)
 
 **Note:** Documentation is local and searchable with grep. Links to online resources provided for reference only.
 
@@ -48,10 +48,10 @@ grep -r "register fragment" ptx-docs/9-instruction-set/ | grep -i wgmma
 
 # Find specific shape (m64nNk16)
 find ptx-docs -name "*wgmma*" -type f
-# Then read: ptx-docs/9-instruction-set/9.7.15.5-asynchronous-warpgroup-level-matrix-multiply-accumulate-operation-usingwgmmamma_asyncinstruction.md
+# Then read: ptx-docs/9-instruction-set/9.7.17.5-asynchronous-warpgroup-level-matrix-multiply-accumulate-operation-usingwgmma.mma_asyncinstruction.md
 ```
 
-**Answer location**: Section 9.7.15.5.1.1 documents all WGMMA register fragment layouts for different matrix shapes (m64nNk16, m64nNk8, m64nNk32, m64nNk256).
+**Answer location**: Section 9.7.17.5.1.1 documents all WGMMA register fragment layouts for different matrix shapes (m64nNk16, m64nNk8, m64nNk32, m64nNk256).
 
 ### Disable TMA Swizzling
 
@@ -60,7 +60,7 @@ find ptx-docs -name "*wgmma*" -type f
 grep -r "swizzle_mode" ptx-docs/9-instruction-set/ | grep -i "no swizzling"
 ```
 
-**Answer**: Use `tensormap.replace` instruction with `.swizzle_mode` field set to value `0` (No swizzling). See `ptx-docs/9-instruction-set/9.7.9.28-data-movement-and-conversion-instructionstensormapreplace.md`
+**Answer**: Use `tensormap.replace` instruction with `.swizzle_mode` field set to value `0` (No swizzling). See `ptx-docs/9-instruction-set/9.7.10.29-data-movement-and-conversion-instructionstensormap.replace.md`
 
 ### Find Tensor Swizzling Modes
 
@@ -77,7 +77,7 @@ find ptx-docs -name "*swizzl*" -type f
 grep -r "mbarrier.init" ptx-docs/9-instruction-set/
 
 # Or find by section number
-find ptx-docs -name "9.7.13.15*"
+find ptx-docs -name "9.7.15.16*"
 ```
 
 ### Find Data Types and Memory Spaces
@@ -102,16 +102,16 @@ ptx-docs/
 ├── 6-instruction-operands/           # Operand types
 ├── 7-abstracting-the-abi/           # Functions, calling conventions
 ├── 8-memory-consistency-model/       # Memory ordering, atomics
-├── 9-instruction-set/               # Complete instruction reference (213 files!)
+├── 9-instruction-set/               # Complete instruction reference (228 files)
 │   ├── 9.7.1-*                      # Integer arithmetic
 │   ├── 9.7.3-*                      # Floating point
-│   ├── 9.7.9-*                      # Data movement (includes TMA)
-│   ├── 9.7.14-*                     # WMMA (warp-level MMA)
-│   ├── 9.7.15-*                     # WGMMA (warpgroup-level MMA)
-│   └── 9.7.16-*                     # TensorCore Gen5 (Hopper)
+│   ├── 9.7.10-*                     # Data movement (includes TMA)
+│   ├── 9.7.16-*                     # WMMA (warp-level MMA)
+│   ├── 9.7.17-*                     # WGMMA (warpgroup-level MMA)
+│   └── 9.7.18-*                     # TensorCore Gen5 (Blackwell)
 ├── 10-special-registers/            # %tid, %ctaid, %clock64, etc.
 ├── 11-directives/                   # .version, .target, .entry
-├── 12-descriptions-ofpragmastrings/ # Pragma directives
+├── 12-descriptions-of.pragmastrings/ # Pragma directives
 ├── 13-release-notes/                # Version history
 └── INDEX.md                         # Complete table of contents
 ```
@@ -201,18 +201,18 @@ cuobjdump -res-usage ./program
 ## Key TensorCore Sections
 
 ### WMMA (Warp-Level Matrix Operations)
-- **Location**: `ptx-docs/9-instruction-set/9.7.14-*`
+- **Location**: `ptx-docs/9-instruction-set/9.7.16-*`
 - **Use for**: sm_70+ (Volta, Turing, Ampere)
 - **Operations**: `wmma.load`, `wmma.mma`, `wmma.store`
 
 ### WGMMA (Warpgroup-Level Async MMA)
-- **Location**: `ptx-docs/9-instruction-set/9.7.15-*`
+- **Location**: `ptx-docs/9-instruction-set/9.7.17-*`
 - **Use for**: sm_90+ (Hopper)
 - **Operations**: `wgmma.mma_async`, register fragment layouts
-- **Key file**: `9.7.15.5-asynchronous-warpgroup-level-matrix-multiply-accumulate-operation-usingwgmmamma_asyncinstruction.md`
+- **Key file**: `9.7.17.5-asynchronous-warpgroup-level-matrix-multiply-accumulate-operation-usingwgmma.mma_asyncinstruction.md`
 
 ### TensorCore Gen5 (TMA, TMEM)
-- **Location**: `ptx-docs/9-instruction-set/9.7.16-*`
+- **Location**: `ptx-docs/9-instruction-set/9.7.18-*`
 - **Use for**: sm_100+ (Blackwell)
 - **Operations**: Tensor memory, TMA operations, specialized MMA
 
@@ -233,5 +233,5 @@ For understanding async operations, memory ordering, and barriers:
 ## External Resources
 
 - Official PTX docs online: https://docs.nvidia.com/cuda/parallel-thread-execution/
-- PTX ISA PDF: https://docs.nvidia.com/cuda/pdf/ptx_isa_9.1.pdf
+- PTX ISA PDF: https://docs.nvidia.com/cuda/pdf/ptx_isa_9.4.pdf
 - CUTLASS library: https://github.com/NVIDIA/cutlass (uses PTX heavily)

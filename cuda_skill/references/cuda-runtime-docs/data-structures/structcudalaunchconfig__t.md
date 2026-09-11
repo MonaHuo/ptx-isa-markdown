@@ -1,58 +1,34 @@
-# 7.44. cudaLaunchConfig_t
+<!-- CUDA Runtime API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-runtime-api/cuda_runtime_api/structcudaLaunchConfig__t.html
 
-**Source:** structcudaLaunchConfig__t.html#structcudaLaunchConfig__t
+#  7.44. cudaLaunchConfig_t
 
+`` struct cudaLaunchConfig_t ``
 
-### Public Variables
+CUDA extensible launch configuration.
 
-cudaLaunchAttribute * attrs
+Public Members
 
-dim3 blockDim
+`` cudaLaunchAttribute *attrs ``
 
-size_t dynamicSmemBytes
+List of attributes; nullable if cudaLaunchConfig_t::numAttrs == 0.
 
-dim3 gridDim
+`` dim3 blockDim ``
 
-unsigned int numAttrs
+Block dimensions.
 
-cudaStream_t stream
+`` size_t dynamicSmemBytes ``
 
+Dynamic shared-memory size per thread block in bytes.
 
-### Variables
+`` dim3 gridDim ``
 
-cudaLaunchAttribute * cudaLaunchConfig_t::attrs
+Grid dimensions.
 
+`` unsigned int numAttrs ``
 
-List of attributes; nullable if cudaLaunchConfig_t::numAttrs == 0
+Number of attributes populated in cudaLaunchConfig_t::attrs.
 
-dim3 cudaLaunchConfig_t::blockDim
+`` cudaStream_t stream ``
 
-
-Block dimensions
-
-size_t cudaLaunchConfig_t::dynamicSmemBytes
-
-
-Dynamic shared-memory size per thread block in bytes
-
-dim3 cudaLaunchConfig_t::gridDim
-
-
-Grid dimensions
-
-unsigned int cudaLaunchConfig_t::numAttrs
-
-
-Number of attributes populated in cudaLaunchConfig_t::attrs
-
-cudaStream_tcudaLaunchConfig_t::stream
-
-
-Stream identifier
-
-* * *
-
-!
-
-
-Copyright © 2025 NVIDIA Corporation
+Stream identifier.

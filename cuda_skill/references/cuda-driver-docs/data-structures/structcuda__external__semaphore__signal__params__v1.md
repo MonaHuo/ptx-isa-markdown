@@ -1,52 +1,48 @@
-# 7.30. CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1
+<!-- CUDA Driver API 13.4 -->
+Source: https://docs.nvidia.com/cuda/cuda-driver-api/cuda_driver_api/structCUDA__EXTERNAL__SEMAPHORE__SIGNAL__PARAMS__v1.html
 
-**Source:** structCUDA__EXTERNAL__SEMAPHORE__SIGNAL__PARAMS__v1.html#structCUDA__EXTERNAL__SEMAPHORE__SIGNAL__PARAMS__v1
+#  7.15. CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1
 
+Defined in cuda.h
 
-### Public Variables
+`` struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1 ``
 
-void * fence
+External semaphore signal parameters.
 
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::@23::@24 fence
+Public Members
 
-unsigned int flags
+`` unsigned long long value ``
 
-unsigned long long key
+Value of fence to be signaled.
 
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::@23::@26 keyedMutex
+`` struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::[anonymous]::[anonymous] fence ``
 
-unsigned long long value
+Parameters for fence objects.
 
+`` void *fence ``
 
-### Variables
+Pointer to NvSciSyncFence.
 
-void * CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::fence
+Valid if CUexternalSemaphoreHandleType is of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC.
 
+`` unsigned long long reserved ``
 
-Pointer to NvSciSyncFence. Valid if CUexternalSemaphoreHandleType is of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC.
+`` union CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::[anonymous]::[anonymous] nvSciSync ``
 
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::@23::@24 CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::fence
+`` unsigned long long key ``
 
+Value of key to release the mutex with.
 
-Parameters for fence objects
+`` struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::[anonymous]::[anonymous] keyedMutex ``
 
-unsigned int CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::flags
+Parameters for keyed mutex objects.
 
+`` unsigned int reserved[12] ``
 
-Only when CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS is used to signal a CUexternalSemaphore of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC, the valid flag is CUDA_EXTERNAL_SEMAPHORE_SIGNAL_SKIP_NVSCIBUF_MEMSYNC which indicates that while signaling the CUexternalSemaphore, no memory synchronization operations should be performed for any external memory object imported as CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF. For all other types of CUexternalSemaphore, flags must be zero.
+`` struct CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::[anonymous] params ``
 
-unsigned long long CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::key
+`` unsigned int flags ``
 
+Only when CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS is used to signal a CUexternalSemaphore of type CU_EXTERNAL_SEMAPHORE_HANDLE_TYPE_NVSCISYNC, the valid flag is CUDA_EXTERNAL_SEMAPHORE_SIGNAL_SKIP_NVSCIBUF_MEMSYNC which indicates that while signaling the CUexternalSemaphore, no memory synchronization operations should be performed for any external memory object imported as CU_EXTERNAL_MEMORY_HANDLE_TYPE_NVSCIBUF.
 
-Value of key to release the mutex with
-
-CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::@23::@26 CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::keyedMutex
-
-
-Parameters for keyed mutex objects
-
-unsigned long long CUDA_EXTERNAL_SEMAPHORE_SIGNAL_PARAMS_v1::value
-
-
-Value of fence to be signaled
-
+For all other types of CUexternalSemaphore, flags must be zero.
